@@ -1,5 +1,7 @@
 package com.example.app;
 
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -19,9 +21,7 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
+    private Fragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,15 +48,7 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        ArrayList<Project> listProject = new ArrayList<>();
-        listProject.add(new Project("Blog Project","BP"));
-        listProject.add(new Project("IS Project","IP"));
-        listProject.add(new Project("IoT Project","IoP"));
-        mRecyclerView = findViewById(R.id.rv_project);
-        mAdapter = new ProjectAdapter(this, listProject);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-
+        loadFragment(RoadmapFragment.newInstance("",""));
     }
 
     @Override
@@ -71,7 +63,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // Inflate the menu; this adds items     to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
     }
@@ -98,17 +90,24 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_roadmap) {
-            // Handle the camera action
+            fragment = RoadmapFragment.newInstance("","");
         } else if (id == R.id.nav_backlog) {
-
+            fragment = BacklogFragment.newInstance("","");
         } else if (id == R.id.nav_board) {
-
+            fragment = BoardFragment.newInstance("","");
         } else if (id == R.id.nav_setting) {
-
+            fragment = SettingFragment.newInstance("","");
         }
-
+        loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    private void loadFragment(Fragment fragment) {
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 }
