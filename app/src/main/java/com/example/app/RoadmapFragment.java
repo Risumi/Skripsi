@@ -3,9 +3,16 @@ package com.example.app;
 
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
+import android.view.animation.LayoutAnimationController;
+
+import java.util.ArrayList;
 
 
 /**
@@ -23,6 +30,9 @@ public class RoadmapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private RecyclerView.LayoutManager mLayoutManager;
 
     public RoadmapFragment() {
         // Required empty public constructor
@@ -58,8 +68,18 @@ public class RoadmapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_roadmap, container, false);
+        View view = inflater.inflate(R.layout.fragment_roadmap, container, false);
+        mRecyclerView = view.findViewById(R.id.rv_project);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        int resId = R.anim.layout_animation_fall_down;
+        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(view.getContext(), resId);
+        ArrayList<Project> listProject = new ArrayList<>();
+        listProject.add(new Project("Blog Project","BP"));
+        listProject.add(new Project("IS Project","IP"));
+        listProject.add(new Project("IoT Project","IoP"));
+        mAdapter = new ProjectAdapter(view.getContext(), listProject);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutAnimation(animation);
+        return view;
     }
-
 }

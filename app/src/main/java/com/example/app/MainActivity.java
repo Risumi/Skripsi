@@ -56,14 +56,6 @@ public class MainActivity extends AppCompatActivity
 
         loadFragment(RoadmapFragment.newInstance("",""));
 
-//        ArrayList<Project> listProject = new ArrayList<>();
-//        listProject.add(new Project("Blog Project","BP"));
-//        listProject.add(new Project("IS Project","IP"));
-//        listProject.add(new Project("IoT Project","IoP"));
-//        mRecyclerView = findViewById(R.id.rv_project);
-//        mAdapter = new ProjectAdapter(this, listProject);
-//        mRecyclerView.setAdapter(mAdapter);
-//        mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
     }
 
     @Override
