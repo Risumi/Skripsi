@@ -1,6 +1,8 @@
 package com.example.app;
 
 import android.content.Context;
+import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,27 +24,26 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         this._context = _context;
     }
 
-    class ProjectViewHolder extends RecyclerView.ViewHolder{
+    class ProjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView ProjectName;
         TextView ProjectStatus;
         ProjectAdapter mAdapter;
+        CardView cardView;
 
         public ProjectViewHolder(View itemView, ProjectAdapter adapter) {
             super(itemView);
             ProjectName = itemView.findViewById(R.id.txtName);
             ProjectStatus = itemView.findViewById(R.id.txtStatus);
+            cardView = itemView.findViewById(R.id.cardView);
+            cardView.setOnClickListener(this);
             this.mAdapter = adapter;
         }
 
-//        @Override
-//        public void onClick(View view) {
-//            Intent PokeIntent = new Intent(_context, PokemonInfo.class);
-//            Bundle bundle = new Bundle();
-//            PokeIntent.putExtra("nama",ProjectName.getText().toString());
-//
-//            _context.startActivities(new Intent[]{PokeIntent});
-//            Log.d("click","yay !");
-//        }
+        @Override
+        public void onClick(View view) {
+            Intent intent = new Intent(_context, MainActivity.class);
+            _context.startActivity(intent);
+        }
     }
 
     @Override

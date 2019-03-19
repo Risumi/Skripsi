@@ -6,8 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -17,8 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -54,8 +50,9 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        loadFragment(RoadmapFragment.newInstance("",""));
-
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.add(R.id.fragmentContainer,RoadmapFragment.newInstance("",""));
+        transaction.commit();
     }
 
     @Override
@@ -99,12 +96,19 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.nav_roadmap) {
             fragment = RoadmapFragment.newInstance("","");
+            fab.hide();
         } else if (id == R.id.nav_backlog) {
             fragment = BacklogFragment.newInstance("","");
-        } else if (id == R.id.nav_board) {
-            fragment = BoardFragment.newInstance("","");
+            fab.show();
+        } else if (id == R.id.nav_sprint) {
+            fragment = SprintFragment.newInstance("","");
+            fab.hide();
         } else if (id == R.id.nav_setting) {
             fragment = SettingFragment.newInstance("","");
+            fab.hide();
+        } else if (id == R.id.nav_burndown) {
+            fragment = BurndownFragment.newInstance("","");
+            fab.hide();
         }
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -117,5 +121,7 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+
+
     }
 }
