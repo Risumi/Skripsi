@@ -6,6 +6,8 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentActivity;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,8 +53,10 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        transaction.add(R.id.fragmentContainer,RoadmapFragment.newInstance("",""));
+        fragment = RoadmapFragment.newInstance("","");
+        transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
+        setFab();
     }
 
     @Override
@@ -63,6 +67,8 @@ public class MainActivity extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
+        Fragment fragmentInFrame = getFragmentManager().findFragmentById(R.id.drawer_layout);
+        setFab();
     }
 
     @Override
@@ -78,12 +84,10 @@ public class MainActivity extends AppCompatActivity
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -93,7 +97,6 @@ public class MainActivity extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-
         if (id == R.id.nav_roadmap) {
             fragment = RoadmapFragment.newInstance("","");
             fab.hide();
@@ -121,7 +124,15 @@ public class MainActivity extends AppCompatActivity
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
+    }
 
-
+    void setFab(){
+        Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentInFrame instanceof BacklogFragment){
+            fab.show();
+        }
+        else {
+            fab.hide();
+        }
     }
 }
