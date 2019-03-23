@@ -6,8 +6,6 @@ import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -18,15 +16,11 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class ActivityMain extends AppCompatActivity
+        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener{
     private Fragment fragment;
     private FloatingActionButton fab;
-
-//    private RecyclerView mRecyclerView;
-//    private RecyclerView.Adapter mAdapter;
-//    private RecyclerView.LayoutManager mLayoutManager;
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,13 +29,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
+        fab.setOnClickListener(this);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -53,7 +41,7 @@ public class MainActivity extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        fragment = RoadmapFragment.newInstance("","");
+        fragment = FragmentRoadmap.newInstance("","");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
         setFab();
@@ -98,19 +86,19 @@ public class MainActivity extends AppCompatActivity
         // Handle navigation view item clicks here.
         int id = item.getItemId();
         if (id == R.id.nav_roadmap) {
-            fragment = RoadmapFragment.newInstance("","");
+            fragment = FragmentRoadmap.newInstance("","");
             fab.hide();
         } else if (id == R.id.nav_backlog) {
-            fragment = BacklogFragment.newInstance("","");
+            fragment = FragmentBacklog.newInstance("","");
             fab.show();
         } else if (id == R.id.nav_sprint) {
-            fragment = SprintFragment.newInstance("","");
+            fragment = FragmentSprint.newInstance("","");
             fab.hide();
         } else if (id == R.id.nav_setting) {
-            fragment = SettingFragment.newInstance("","");
+            fragment = FragmentSetting.newInstance("","");
             fab.hide();
         } else if (id == R.id.nav_burndown) {
-            fragment = BurndownFragment.newInstance("","");
+            fragment = FragmentBurndown.newInstance("","");
             fab.hide();
         }
         loadFragment(fragment);
@@ -128,11 +116,17 @@ public class MainActivity extends AppCompatActivity
 
     void setFab(){
         Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragmentInFrame instanceof BacklogFragment){
+        if (fragmentInFrame instanceof FragmentBacklog){
             fab.show();
         }
         else {
             fab.hide();
         }
+    }
+
+    @Override
+    public void onClick(View view) {
+        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAction("Action", null).show();
     }
 }

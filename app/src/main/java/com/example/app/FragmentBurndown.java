@@ -3,24 +3,17 @@ package com.example.app;
 
 import android.os.Bundle;
 import android.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
-
-import java.util.ArrayList;
 
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link RoadmapFragment#newInstance} factory method to
+ * Use the {@link FragmentBurndown#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class RoadmapFragment extends Fragment {
+public class FragmentBurndown extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,7 +23,8 @@ public class RoadmapFragment extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    public RoadmapFragment() {
+
+    public FragmentBurndown() {
         // Required empty public constructor
     }
 
@@ -40,11 +34,11 @@ public class RoadmapFragment extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment RoadmapFragment.
+     * @return A new instance of fragment FragmentBurndown.
      */
     // TODO: Rename and change types and number of parameters
-    public static RoadmapFragment newInstance(String param1, String param2) {
-        RoadmapFragment fragment = new RoadmapFragment();
+    public static FragmentBurndown newInstance(String param1, String param2) {
+        FragmentBurndown fragment = new FragmentBurndown();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -64,7 +58,8 @@ public class RoadmapFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_roadmap, container, false);
-        return view;
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_burndown, container, false);
     }
+
 }

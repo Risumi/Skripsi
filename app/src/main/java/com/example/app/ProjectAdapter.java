@@ -41,21 +41,20 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
 
         @Override
         public void onClick(View view) {
-            Intent intent = new Intent(_context, MainActivity.class);
+            Intent intent = new Intent(_context, ActivityMain.class);
             _context.startActivity(intent);
         }
     }
 
     @Override
     public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.project_card,parent,false);
+        View itemView = mInflater.inflate(R.layout.card_project,parent,false);
         return new ProjectViewHolder(itemView,this);
     }
 
     @Override
     public void onBindViewHolder(ProjectViewHolder holder, int position) {
         current = projectArrayList.get(position);
-//        holder.PokemonImage.setImageResource(current.image);
         holder.ProjectName.setText(current.name);
         holder.ProjectStatus.setText(current.type);
     }
