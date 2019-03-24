@@ -5,11 +5,16 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Adapter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -21,7 +26,7 @@ import java.util.Date;
  * Use the {@link FragmentBacklog#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentBacklog extends Fragment {
+public class FragmentBacklog extends Fragment implements BacklogAdapter.BacklogViewHolder.ClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,9 +36,13 @@ public class FragmentBacklog extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    ArrayList<Backlog>listBacklog;
+
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private BacklogAdapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
+    private ActionModeCallback actionModeCallback = new ActionModeCallback();
+    private ActionMode actionMode;
 
     public FragmentBacklog() {
         // Required empty public constructor
@@ -74,11 +83,83 @@ public class FragmentBacklog extends Fragment {
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(view.getContext(), resId);
-        ArrayList<Backlog> listBacklog = new ArrayList<>();
-        listBacklog.add(new Backlog("Recycler View","Complete", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"",""));
-        mAdapter = new BacklogAdapter(view.getContext(), listBacklog);
+        listBacklog = new ArrayList<>();
+        listBacklog.add(new Backlog("Recycler View","Complete", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog.add(new Backlog("Burndown Chart","On Progress", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat chart untuk merepresentasikan backlog ke dalam bentuk chart sesuai dengan kaidah scrum"));
+        listBacklog.add(new Backlog("Sprint","On Progress", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat automatisasi proses sprint"));
+        mAdapter = new BacklogAdapter(view.getContext(), listBacklog,this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(animation);
         return view;
+    }
+
+    public void dataSet(Backlog backlog){
+        listBacklog.add(backlog);
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+        if (actionMode != null) {
+            toggleSelection(position);
+        }
+    }
+
+    @Override
+    public boolean onItemLongClicked(int position) {
+        if (actionMode == null) {
+            actionMode = this.getActivity().startActionMode(actionModeCallback);
+        }
+
+        toggleSelection(position);
+        return true;    }
+
+    private void toggleSelection(int position) {
+        mAdapter.toggleSelection(position);
+        int count = mAdapter.getSelectedItemCount();
+
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
+
+    private class ActionModeCallback implements ActionMode.Callback {
+        @SuppressWarnings("unused")
+        private final String TAG = ActionModeCallback.class.getSimpleName();
+
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            mode.getMenuInflater().inflate (R.menu.selected_menu, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.menu_remove:
+                    // TODO: actually remove items
+                    Log.d(TAG, "menu_remove");
+                    mode.finish();
+                    return true;
+
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            mAdapter.clearSelection();
+            actionMode = null;
+        }
     }
 }

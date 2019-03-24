@@ -3,7 +3,9 @@ package com.example.app;
 import android.annotation.SuppressLint;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.view.View;
@@ -20,7 +22,7 @@ public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener{
     private Fragment fragment;
     private FloatingActionButton fab;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,9 +126,26 @@ public class ActivityMain extends AppCompatActivity
         }
     }
 
+    final int REQ_ADD_PROJECT= 1;
     @Override
     public void onClick(View view) {
-        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show();
+//        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                .setAction("Action", null).show();
+        Intent intent = new Intent(this,ActivityAddBacklog.class);
+        startActivityForResult(intent,REQ_ADD_PROJECT);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQ_ADD_PROJECT) {
+            if (resultCode == RESULT_OK) {
+                Backlog newBacklog = data.getParcelableExtra("result");
+                Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentBacklog){
+                    ((FragmentBacklog) fragmentInFrame).dataSet(newBacklog);
+                }
+            }
+        }
     }
 }
