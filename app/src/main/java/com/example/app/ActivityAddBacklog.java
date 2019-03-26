@@ -3,6 +3,7 @@ package com.example.app;
 import android.annotation.SuppressLint;
 import android.app.DialogFragment;
 import android.content.Intent;
+import android.icu.text.UnicodeSetSpanner;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -58,14 +59,18 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         if (view == tvDate){
             openDateRangePicker();
         }else if (view == button){
-            name = etBlName.getText().toString();
-            desc = etBlDesc.getText().toString();
-            assignee = etBlAssignee.getText().toString();
-            newBacklog = new Backlog(name,status,begdda,endda,assignee,desc);
-            Intent resultIntent = getIntent();
-            resultIntent.putExtra("result",newBacklog);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            if (begdda == null || endda == null){
+                Toast.makeText(this,"Date cannot be empty",Toast.LENGTH_LONG).show();
+            }else {
+                name = etBlName.getText().toString();
+                desc = etBlDesc.getText().toString();
+                assignee = etBlAssignee.getText().toString();
+                newBacklog = new Backlog(name,status,begdda,endda,assignee,desc);
+                Intent resultIntent = getIntent();
+                resultIntent.putExtra("result",newBacklog);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
         }
     }
 

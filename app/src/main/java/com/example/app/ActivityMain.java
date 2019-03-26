@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -32,7 +33,6 @@ public class ActivityMain extends AppCompatActivity
 
         fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(this);
-
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -43,10 +43,13 @@ public class ActivityMain extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        fragment = FragmentRoadmap.newInstance("","");
+        fragment = FragmentBacklog.newInstance("","");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
-        setFab();
+//        setFab();
+
+        Intent intent = getIntent();
+        getSupportActionBar().setTitle(intent.getStringExtra("PName"));
     }
 
     @Override
