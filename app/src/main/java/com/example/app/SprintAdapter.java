@@ -1,137 +1,102 @@
 package com.example.app;
 
-import android.content.Context;
+import android.content.ClipData;
+import android.os.Build;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
-public class SprintAdapter extends SelectableAdapter<SprintAdapter.SprintViewHolder>{
+public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> implements  View.OnLongClickListener{
 
-    LayoutInflater mInflater;
-    ArrayList<Backlog> backlogArrayList;
-    Context _context;
-    Backlog current;
-    private SprintViewHolder.ClickListener clickListener;
+    ArrayList<Backlog> backlogList;
+    Listener listener;
 
-    public SprintAdapter(Context _context, ArrayList<Backlog> backlogArrayList, SprintViewHolder.ClickListener clickListener) {
-        this.mInflater = LayoutInflater.from(_context);
-        this.backlogArrayList = backlogArrayList;
-        this._context = _context;
-        this.clickListener = clickListener;
+    public SprintAdapter(ArrayList<Backlog> backlogList, Listener listener) {
+        this.backlogList = backlogList;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
     public SprintViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_sprint, parent, false);
-        return new SprintViewHolder(v,this,clickListener);
+        return new SprintViewHolder(v);
+    }
+
+    public ArrayList<Backlog> getList() {
+        return backlogList;
     }
 
     @Override
-    public void onBindViewHolder(SprintViewHolder holder, int position) {
-        current = backlogArrayList.get(position);
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
-        String endda= formatDate.format(current.getEndda().getTime());
-        holder.BacklogName.setText(current.getName());
-        holder.BacklogDate.setText(endda);
-//        holder.selectedOverlay.setVisibility(isSelected(position)?View.VISIBLE : View.INVISIBLE);
+    public void onBindViewHolder(@NonNull SprintViewHolder sprintViewHolder, int i) {
+        sprintViewHolder.name.setText(backlogList.get(i).getName());
+//        sprintViewHolder.date.setText(backlogList.get(i).getEndda().toString());
+        sprintViewHolder.fl.setTag(i);
+//        sprintViewHolder.fl.setOnTouchListener(this);
+        sprintViewHolder.fl.setOnLongClickListener(this);
     }
 
     @Override
     public int getItemCount() {
-        return backlogArrayList.size();
+        return backlogList.size();
     }
 
-    public void removeItem(int position) {
-        backlogArrayList.remove(position);
-        notifyItemRemoved(position);
-    }
+//    @Override
+//    public boolean onTouch(View v, MotionEvent event) {
+//        switch (event.getAction()) {
+//            case MotionEvent.ACTION_DOWN:
+//                ClipData data = ClipData.newPlainText("", "");
+//                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+//                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+//                    v.startDragAndDrop(data, shadowBuilder, v, 0);
+//                } else {
+//                    v.startDrag(data, shadowBuilder, v, 0);
+//                }
+//                return true;
+//        }
+//        return false;
+//    }
 
-    public void removeItems(List<Integer> positions) {
-        // Reverse-sort the list
-        Collections.sort(positions, new Comparator<Integer>() {
-            @Override
-            public int compare(Integer lhs, Integer rhs) {
-                return rhs - lhs;
-            }
-        });
-
-        // Split the list in ranges
-        while (!positions.isEmpty()) {
-            if (positions.size() == 1) {
-                removeItem(positions.get(0));
-                positions.remove(0);
-            } else {
-                int count = 1;
-                while (positions.size() > count && positions.get(count).equals(positions.get(count - 1) - 1)) {
-                    ++count;
-                }
-
-                if (count == 1) {
-                    removeItem(positions.get(0));
-                } else {
-                    removeRange(positions.get(count - 1), count);
-                }
-
-                for (int i = 0; i < count; ++i) {
-                    positions.remove(0);
-                }
-            }
+    DragListener getDragInstance() {
+        if (listener != null) {
+            return new DragListener(listener);
+        } else {
+            Log.e("ListAdapter", "Listener wasn't initialized!");
+            return null;
         }
     }
 
-    private void removeRange(int positionStart, int itemCount) {
-        for (int i = 0; i < itemCount; ++i) {
-            backlogArrayList.remove(positionStart);
-        }
-        notifyItemRangeRemoved(positionStart, itemCount);
+    void updateList(ArrayList<Backlog> list) {
+        this.backlogList = list;
     }
 
-    static class SprintViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,View.OnLongClickListener{
-        TextView BacklogName;
-        TextView BacklogDate;
-        SprintAdapter mAdapter;
-        View selectedOverlay;
-        private ClickListener listener;
+    @Override
+    public boolean onLongClick(View v) {
+        ClipData data = ClipData.newPlainText("", "");
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            v.startDragAndDrop(data, shadowBuilder, v, 0);
+        } else {
+            v.startDrag(data, shadowBuilder, v, 0);
+        }
+        return true;
+    }
 
-        public SprintViewHolder(View itemView, SprintAdapter adapter,ClickListener listener) {
+    class SprintViewHolder extends RecyclerView.ViewHolder{
+        TextView name, date;
+        FrameLayout fl;
+        public SprintViewHolder(View itemView) {
             super(itemView);
-            BacklogName = itemView.findViewById(R.id.txtName);
-            BacklogDate = itemView.findViewById(R.id.txtDate);
-            this.listener = listener;
-            itemView.setOnClickListener(this);
-            itemView.setOnLongClickListener(this);
-            this.mAdapter = adapter;
-        }
-
-        @Override
-        public void onClick(View v) {
-            if (listener != null) {
-                listener.onItemClicked(getPosition());
-            }
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            if (listener != null) {
-                return listener.onItemLongClicked(getPosition());
-            }
-            return false;
-        }
-
-        public interface ClickListener {
-            public void onItemClicked(int position);
-            public boolean onItemLongClicked(int position);
+            name = itemView.findViewById(R.id.txtName);
+            date = itemView.findViewById(R.id.txtDate);
+            fl = itemView.findViewById(R.id.FM1);
         }
     }
 }

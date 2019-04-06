@@ -9,19 +9,17 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
-import android.view.animation.LayoutAnimationController;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSprint extends Fragment implements BacklogAdapter.BacklogViewHolder.ClickListener, SprintAdapter.SprintViewHolder.ClickListener {
+public class FragmentSprint extends Fragment implements Listener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -31,13 +29,6 @@ public class FragmentSprint extends Fragment implements BacklogAdapter.BacklogVi
     private String mParam1;
     private String mParam2;
 
-    private ArrayList<Backlog>listBacklog, BacklogToDo,BacklogOnProgress,BacklogCompleted;
-    private RecyclerView mRecyclerView;
-    private RecyclerView mRecyclerView2;
-    private RecyclerView mRecyclerView3;
-    private SprintAdapter mAdapter;
-    private SprintAdapter mAdapter2;
-    private SprintAdapter mAdapter3;
 
     public FragmentSprint() {
         // Required empty public constructor
@@ -69,6 +60,14 @@ public class FragmentSprint extends Fragment implements BacklogAdapter.BacklogVi
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
+    ArrayList<Backlog> listBacklog, listBacklog2,listBacklog3;
+
+    RecyclerView rvTop;
+    RecyclerView rvBottom;
+    RecyclerView rvMiddle;
+    TextView tvEmptyListTop;
+    TextView tvEmptyListBottom;
+    TextView tvEmptyListMiddle;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -76,60 +75,80 @@ public class FragmentSprint extends Fragment implements BacklogAdapter.BacklogVi
         View view = inflater.inflate(R.layout.fragment_sprint, container, false);
 
         listBacklog = new ArrayList<>();
-        listBacklog.add(new Backlog("Recycler View","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog.add(new Backlog("Recycler View","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog.add(new Backlog("Recycler View","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog.add(new Backlog("Burndown Chart","On Progress", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat chart untuk merepresentasikan backlog ke dalam bentuk chart sesuai dengan kaidah scrum"));
-        listBacklog.add(new Backlog("Sprint","To Do", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat automatisasi proses sprint"));
-        listBacklog.add(new Backlog("Sprint","To Do", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat automatisasi proses sprint"));
-        BacklogToDo = new ArrayList<>();
-        BacklogOnProgress = new ArrayList<>();
-        BacklogCompleted= new ArrayList<>();
-        setBacklog(listBacklog);
+        listBacklog.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
-        mRecyclerView = view.findViewById(R.id.rvToDo);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        int resId = R.anim.layout_animation_fall_down;
-        LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(view.getContext(), resId);
-        mAdapter = new SprintAdapter(view.getContext(), BacklogToDo,this);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutAnimation(animation);
+        listBacklog2 = new ArrayList<>();
+        listBacklog2.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog2.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog2.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
-        mRecyclerView2 = view.findViewById(R.id.rvProgress);
-        mRecyclerView2.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        mAdapter2 = new SprintAdapter(view.getContext(), BacklogOnProgress,this);
-        mRecyclerView2.setAdapter(mAdapter2);
-        mRecyclerView2.setLayoutAnimation(animation);
+        listBacklog3 = new ArrayList<>();
+        listBacklog3.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog3.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+        listBacklog3.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
-        mRecyclerView3 = view.findViewById(R.id.rvCompleted);
-        mRecyclerView3.setLayoutManager(new LinearLayoutManager(this.getActivity()));
-        mAdapter3 = new SprintAdapter(view.getContext(), BacklogCompleted,this);
-        mRecyclerView3.setAdapter(mAdapter3);
-        mRecyclerView3.setLayoutAnimation(animation);
+        rvTop = view.findViewById(R.id.rvToDo);
+        rvBottom = view.findViewById(R.id.rvProgress);
+        rvMiddle = view.findViewById(R.id.rvCompleted);
+        tvEmptyListTop = view.findViewById(R.id.tvEmptyListTop);
+        tvEmptyListMiddle = view.findViewById(R.id.tvEmptyListMiddle);
+        tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
 
+        tvEmptyListTop.setVisibility(View.GONE);
+        tvEmptyListBottom.setVisibility(View.GONE);
+        tvEmptyListMiddle.setVisibility(View.GONE);
+
+        rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        SprintAdapter topListAdapter = new SprintAdapter(listBacklog,this);
+        rvTop.setAdapter(topListAdapter);
+        rvTop.setOnDragListener(topListAdapter.getDragInstance());
+        tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
+        rvTop.setOnDragListener(topListAdapter.getDragInstance());
+
+        rvMiddle.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        SprintAdapter middleListAdapter = new SprintAdapter(listBacklog2, this);
+        rvMiddle.setAdapter(middleListAdapter);
+        tvEmptyListMiddle.setOnDragListener(middleListAdapter.getDragInstance());
+        rvMiddle.setOnDragListener(middleListAdapter.getDragInstance());
+
+        rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        SprintAdapter bottomListAdapter = new SprintAdapter(listBacklog3, this);
+        rvBottom.setAdapter(bottomListAdapter);
+        tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
+        rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
 
         return view;
     }
 
     @Override
-    public void onItemClicked(int position) {
-
+    public void setEmptyListTop(boolean visibility) {
+        tvEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        rvTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        log();
     }
 
     @Override
-    public boolean onItemLongClicked(int position) {
-        return false;
+    public void setEmptyListMiddle(boolean visibility) {
+        tvEmptyListMiddle.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        rvMiddle.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        log();
     }
 
-    public void setBacklog(ArrayList<Backlog> listBacklog){
-        for (int i=0;i<listBacklog.size();i++){
-            if (listBacklog.get(i).getStatus().equalsIgnoreCase("To Do")){
-                BacklogToDo.add(listBacklog.get(i));
-            }else if (listBacklog.get(i).getStatus().equalsIgnoreCase("On Progress")){
-                BacklogOnProgress.add(listBacklog.get(i));
-            }else if (listBacklog.get(i).getStatus().equalsIgnoreCase("Completed")){
-                BacklogCompleted.add(listBacklog.get(i));
-            }
-        }
+    @Override
+    public void setEmptyListBottom(boolean visibility) {
+        tvEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.GONE);
+        rvBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
+        log();
+    }
+
+    void log(){
+        Log.d("rvTop", ((Integer) rvTop.getVisibility()).toString());
+        Log.d("rvMiddle",((Integer) rvMiddle.getVisibility()).toString());
+        Log.d("rvBottom",((Integer) rvBottom.getVisibility()).toString());
+        Log.d("tvTop", ((Integer) tvEmptyListTop.getVisibility()).toString());
+        Log.d("tvMiddle",((Integer) tvEmptyListMiddle.getVisibility()).toString());
+        Log.d("tvBottom",((Integer) tvEmptyListBottom.getVisibility()).toString());
     }
 }
