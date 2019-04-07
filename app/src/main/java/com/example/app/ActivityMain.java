@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -133,6 +134,7 @@ public class ActivityMain extends AppCompatActivity
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
         Intent intent = new Intent(this,ActivityAddBacklog.class);
+        intent.putExtra("req code",REQ_ADD_PROJECT);
         startActivityForResult(intent,REQ_ADD_PROJECT);
     }
 
@@ -144,7 +146,16 @@ public class ActivityMain extends AppCompatActivity
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).dataSet(newBacklog);
+                    ((FragmentBacklog) fragmentInFrame).AddDataSet(newBacklog);
+                }
+            }
+        }
+        if (requestCode == 2) {
+            if (resultCode == RESULT_OK) {
+                Backlog newBacklog = data.getParcelableExtra("result");
+                Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentBacklog){
+                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
                 }
             }
         }

@@ -56,7 +56,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == requestCode) {
+        if (requestCode == ADD_PROJECT) {
             if (resultCode == RESULT_OK) {
                 Project newProject = data.getParcelableExtra("result");
                 listProject.add(newProject);

@@ -1,7 +1,10 @@
 package com.example.app;
 
 
+import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -45,6 +48,7 @@ public class FragmentBacklog extends Fragment implements BacklogAdapter.BacklogV
     private RecyclerView.LayoutManager mLayoutManager;
     private ActionModeCallback actionModeCallback = new ActionModeCallback();
     private ActionMode actionMode;
+    final int  EDIT_BACKLOG = 2;
 //    private ActivityMain activity ;
 
     public FragmentBacklog() {
@@ -97,15 +101,30 @@ public class FragmentBacklog extends Fragment implements BacklogAdapter.BacklogV
         return view;
     }
 
-    public void dataSet(Backlog backlog){
+    public void AddDataSet(Backlog backlog){
         listBacklog.add(backlog);
         mAdapter.notifyDataSetChanged();
     }
 
+    public void EditDataSet(int position,Backlog backlog){
+        listBacklog.set(position,backlog);
+//        Log.d("position", ((Integer) position).toString());
+        mAdapter.notifyDataSetChanged();
+    }
+
+    @TargetApi(Build.VERSION_CODES.M)
     @Override
     public void onItemClicked(int position) {
         if (actionMode != null) {
             toggleSelection(position);
+        }
+        else{
+            Intent editBacklog =new Intent(getContext(),ActivityAddBacklog.class);
+            editBacklog.putExtra("backlog",listBacklog.get(position));
+            Log.d("position", ((Integer) position).toString());
+            editBacklog.putExtra("position",position);
+            editBacklog.putExtra("req code",EDIT_BACKLOG);
+            getActivity().startActivityForResult(editBacklog,EDIT_BACKLOG);
         }
     }
 

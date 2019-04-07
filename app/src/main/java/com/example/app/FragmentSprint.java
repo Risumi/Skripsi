@@ -80,14 +80,14 @@ public class FragmentSprint extends Fragment implements Listener {
         listBacklog.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
         listBacklog2 = new ArrayList<>();
-        listBacklog2.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog2.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog2.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog2.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog2.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog2.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
         listBacklog3 = new ArrayList<>();
-        listBacklog3.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog3.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog3.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog3.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog3.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog3.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
         rvTop = view.findViewById(R.id.rvToDo);
         rvBottom = view.findViewById(R.id.rvProgress);
@@ -96,9 +96,15 @@ public class FragmentSprint extends Fragment implements Listener {
         tvEmptyListMiddle = view.findViewById(R.id.tvEmptyListMiddle);
         tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
 
-        tvEmptyListTop.setVisibility(View.GONE);
-        tvEmptyListBottom.setVisibility(View.GONE);
-        tvEmptyListMiddle.setVisibility(View.GONE);
+        if (listBacklog.size()==0){
+            tvEmptyListTop.setVisibility(View.VISIBLE);
+        }
+        if (listBacklog2.size()==0){
+            tvEmptyListMiddle.setVisibility(View.VISIBLE);
+        }
+        if (listBacklog3.size()==0){
+            tvEmptyListBottom.setVisibility(View.VISIBLE);
+        }
 
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         SprintAdapter topListAdapter = new SprintAdapter(listBacklog,this);
@@ -125,21 +131,21 @@ public class FragmentSprint extends Fragment implements Listener {
     @Override
     public void setEmptyListTop(boolean visibility) {
         tvEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        rvTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
+//        rvTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
         log();
     }
 
     @Override
     public void setEmptyListMiddle(boolean visibility) {
         tvEmptyListMiddle.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        rvMiddle.setVisibility(visibility ? View.GONE : View.VISIBLE);
+//        rvMiddle.setVisibility(visibility ? View.GONE : View.VISIBLE);
         log();
     }
 
     @Override
     public void setEmptyListBottom(boolean visibility) {
         tvEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.GONE);
-        rvBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
+//        rvBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
         log();
     }
 
