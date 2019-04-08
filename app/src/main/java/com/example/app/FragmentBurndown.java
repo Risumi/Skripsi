@@ -7,6 +7,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,6 +32,7 @@ public class FragmentBurndown extends Fragment {
     private String mParam1;
     private String mParam2;
 
+    LineChart chart ;
 
     public FragmentBurndown() {
         // Required empty public constructor
@@ -59,7 +69,24 @@ public class FragmentBurndown extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_burndown, container, false);
+        View view = inflater.inflate(R.layout.fragment_burndown, container, false);
+        chart = view.findViewById(R.id.chart);
+
+        List<Entry> entries = new ArrayList<Entry>();
+        for (int i = 0 ; i<5;i++){
+            entries.add(new Entry(i,4-i));
+        }
+        LineDataSet dataSet = new LineDataSet(entries, "Ideal Effort");
+        LineData lineData = new LineData(dataSet);
+        Description description = new Description();
+        description.setText("");
+        chart.setDescription(description);    // Hide the description
+        chart.getAxisRight().setDrawLabels(false);
+        chart.getAxisLeft().setDrawGridLines(false); 
+        chart.getXAxis().setDrawGridLines(false);
+        chart.setData(lineData);
+        chart.invalidate();
+        return view;
     }
 
 }
