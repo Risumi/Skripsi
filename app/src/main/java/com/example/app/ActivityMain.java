@@ -1,8 +1,8 @@
 package com.example.app;
 
 import android.annotation.SuppressLint;
-import android.app.Fragment;
-import android.app.FragmentTransaction;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -41,7 +41,7 @@ public class ActivityMain extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragment = FragmentBacklog.newInstance("","");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
@@ -59,7 +59,7 @@ public class ActivityMain extends AppCompatActivity
         } else {
             super.onBackPressed();
         }
-        Fragment fragmentInFrame = getFragmentManager().findFragmentById(R.id.drawer_layout);
+        Fragment fragmentInFrame = getSupportFragmentManager().findFragmentById(R.id.drawer_layout);
         setFab();
     }
 
@@ -112,14 +112,14 @@ public class ActivityMain extends AppCompatActivity
     }
 
     private void loadFragment(Fragment fragment) {
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.addToBackStack(null);
         transaction.commit();
     }
 
     void setFab(){
-        Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         if (fragmentInFrame instanceof FragmentBacklog){
             fab.show();
         }
@@ -144,7 +144,7 @@ public class ActivityMain extends AppCompatActivity
         if (requestCode == REQ_ADD_PROJECT) {
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
-                Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
                     ((FragmentBacklog) fragmentInFrame).AddDataSet(newBacklog);
                 }
@@ -153,7 +153,7 @@ public class ActivityMain extends AppCompatActivity
         if (requestCode == 2) {
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
-                Fragment fragmentInFrame = this.getFragmentManager().findFragmentById(R.id.fragmentContainer);
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
                     ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
                 }

@@ -1,8 +1,9 @@
 package com.example.app;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -68,23 +69,25 @@ public class FragmentSprint extends Fragment implements Listener {
     TextView tvEmptyListTop;
     TextView tvEmptyListBottom;
     TextView tvEmptyListMiddle;
+    private BacklogViewModel model;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sprint, container, false);
+        model = ViewModelProviders.of(this.getActivity()).get(BacklogViewModel.class);
 
-        listBacklog = new ArrayList<>();
-        listBacklog.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-        listBacklog.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog = new ArrayList<>();
+//        listBacklog.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
+//        listBacklog.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
-        listBacklog2 = new ArrayList<>();
+//        listBacklog2 = new ArrayList<>();
 //        listBacklog2.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 //        listBacklog2.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 //        listBacklog2.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
-        listBacklog3 = new ArrayList<>();
+//        listBacklog3 = new ArrayList<>();
 //        listBacklog3.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 //        listBacklog3.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 //        listBacklog3.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
@@ -96,31 +99,31 @@ public class FragmentSprint extends Fragment implements Listener {
         tvEmptyListMiddle = view.findViewById(R.id.tvEmptyListMiddle);
         tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
 
-        if (listBacklog.size()==0){
+        if (model.getToDoBacklog().getValue().size()==0){
             tvEmptyListTop.setVisibility(View.VISIBLE);
         }
-        if (listBacklog2.size()==0){
+        if (model.getOnProgressBacklog().getValue().size()==0){
             tvEmptyListMiddle.setVisibility(View.VISIBLE);
         }
-        if (listBacklog3.size()==0){
+        if (model.getCompletedBacklog().getValue().size()==0){
             tvEmptyListBottom.setVisibility(View.VISIBLE);
         }
 
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter topListAdapter = new SprintAdapter(listBacklog,this);
+        SprintAdapter topListAdapter = new SprintAdapter(model.getToDoBacklog().getValue(),this);
         rvTop.setAdapter(topListAdapter);
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
         tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
 
         rvMiddle.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter middleListAdapter = new SprintAdapter(listBacklog2, this);
+        SprintAdapter middleListAdapter = new SprintAdapter(model.getOnProgressBacklog().getValue(), this);
         rvMiddle.setAdapter(middleListAdapter);
         tvEmptyListMiddle.setOnDragListener(middleListAdapter.getDragInstance());
         rvMiddle.setOnDragListener(middleListAdapter.getDragInstance());
 
         rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter bottomListAdapter = new SprintAdapter(listBacklog3, this);
+        SprintAdapter bottomListAdapter = new SprintAdapter(model.getCompletedBacklog().getValue(), this);
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());

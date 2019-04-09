@@ -2,7 +2,7 @@ package com.example.app;
 
 
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -82,7 +82,7 @@ public class FragmentBurndown extends Fragment {
         description.setText("");
         chart.setDescription(description);    // Hide the description
         chart.getAxisRight().setDrawLabels(false);
-        chart.getAxisLeft().setDrawGridLines(false); 
+        chart.getAxisLeft().setDrawGridLines(false);
         chart.getXAxis().setDrawGridLines(false);
         chart.setData(lineData);
         chart.invalidate();

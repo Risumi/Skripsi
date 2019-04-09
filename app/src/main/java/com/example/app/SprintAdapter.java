@@ -11,7 +11,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> implements  View.OnLongClickListener{
 
@@ -37,7 +39,7 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
     @Override
     public void onBindViewHolder(@NonNull SprintViewHolder sprintViewHolder, int i) {
         sprintViewHolder.name.setText(backlogList.get(i).getName());
-//        sprintViewHolder.date.setText(backlogList.get(i).getEndda().toString());
+        sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
         sprintViewHolder.fl.setTag(i);
 //        sprintViewHolder.fl.setOnTouchListener(this);
         sprintViewHolder.fl.setOnLongClickListener(this);
@@ -98,5 +100,10 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
             date = itemView.findViewById(R.id.txtDate);
             fl = itemView.findViewById(R.id.FM1);
         }
+    }
+    public String formatDate(Date rawDate){
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
+        String formattedDate = formatDate.format(rawDate);
+        return formattedDate;
     }
 }
