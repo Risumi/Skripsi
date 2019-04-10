@@ -1,0 +1,123 @@
+package com.example.app;
+
+import android.content.ClipData;
+import android.os.Build;
+import android.support.annotation.NonNull;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
+import android.widget.TextView;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+
+public class BacklogAdapter2 extends RecyclerView.Adapter<BacklogAdapter2.BacklogViewHolder2> implements View.OnLongClickListener {
+    ArrayList<Backlog> backlogList;
+    Listener listener;
+    private BacklogViewHolder2.ClickListener clickListener;
+
+    public BacklogAdapter2(ArrayList<Backlog> backlogList, Listener listener, BacklogViewHolder2.ClickListener clickListener) {
+        this.backlogList = backlogList;
+        this.listener = listener;
+        this.clickListener = clickListener;
+    }
+
+    @NonNull
+    @Override
+    public BacklogAdapter2.BacklogViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backlog2, parent, false);
+        return new BacklogAdapter2.BacklogViewHolder2(v,clickListener);
+    }
+
+
+
+    public ArrayList<Backlog> getList() {
+        return backlogList;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull BacklogAdapter2.BacklogViewHolder2 backlogViewHolder2, int i) {
+        backlogViewHolder2.BacklogName.setText(backlogList.get(i).getName());
+        backlogViewHolder2.BacklogStatus.setText(backlogList.get(i).getStatus());
+        backlogViewHolder2.BacklogDate.setText(formatDate(backlogList.get(i).getEndda()));
+        String desc = backlogList.get(i).getDescription();
+        if (desc.length()>40){
+            desc = desc.substring(0,40)+"...";
+        }
+        backlogViewHolder2.BacklogDescription.setText(desc);
+        backlogViewHolder2.fl.setTag(i);
+        backlogViewHolder2.fl.setOnLongClickListener(this);
+
+    }
+
+    @Override
+    public int getItemCount() {
+        return backlogList.size();
+    }
+
+    DragListenerStories getDragInstance() {
+        if (listener != null) {
+            return new DragListenerStories(listener);
+        } else {
+            Log.e("ListAdapter", "Listener wasn't initialized!");
+            return null;
+        }
+    }
+
+    void updateList(ArrayList<Backlog> list) {
+        this.backlogList = list;
+    }
+
+    @Override
+    public boolean onLongClick(View v) {
+        ClipData data = ClipData.newPlainText("", "");
+        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            v.startDragAndDrop(data, shadowBuilder, v, 0);
+        } else {
+            v.startDrag(data, shadowBuilder, v, 0);
+        }
+        return true;
+    }
+
+    static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
+        TextView BacklogName;
+        TextView BacklogStatus;
+        TextView BacklogDescription;
+        TextView BacklogDate;
+        FrameLayout fl;
+        private ClickListener listener;
+
+        public BacklogViewHolder2(View itemView,ClickListener listener) {
+            super(itemView);
+            BacklogName = itemView.findViewById(R.id.txtName);
+            BacklogStatus = itemView.findViewById(R.id.txtStatus);
+            BacklogDescription = itemView.findViewById(R.id.txtDescription);
+            BacklogDate = itemView.findViewById(R.id.txtDate);
+            fl = itemView.findViewById(R.id.FM1);
+            this.listener = listener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View view) {
+            if (listener != null) {
+                listener.onItemClicked(getPosition());
+            }
+        }
+
+        public interface ClickListener {
+            public void onItemClicked(int position);
+        }
+    }
+    public String formatDate(Date rawDate){
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
+        String formattedDate = formatDate.format(rawDate);
+        return formattedDate;
+    }
+
+
+}

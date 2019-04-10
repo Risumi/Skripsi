@@ -63,7 +63,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView3" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvToDo"
+                    android:id="@+id/rvTop"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
@@ -98,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:text="On Progress"
+                    android:text="In Progress"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -115,7 +115,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvProgress"
+                    android:id="@+id/rvMiddle"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"
@@ -167,7 +167,7 @@
                     app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
                 <android.support.v7.widget.RecyclerView
-                    android:id="@+id/rvCompleted"
+                    android:id="@+id/rvBottom"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginTop="8dp"

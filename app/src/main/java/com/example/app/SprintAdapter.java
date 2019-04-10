@@ -47,7 +47,12 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
 
     @Override
     public int getItemCount() {
-        return backlogList.size();
+        try {
+            return backlogList.size();
+        }catch (Exception e){
+            return 0;
+        }
+
     }
 
 //    @Override
@@ -66,9 +71,9 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
 //        return false;
 //    }
 
-    DragListener getDragInstance() {
+    DragListenerSprint getDragInstance() {
         if (listener != null) {
-            return new DragListener(listener);
+            return new DragListenerSprint(listener);
         } else {
             Log.e("ListAdapter", "Listener wasn't initialized!");
             return null;

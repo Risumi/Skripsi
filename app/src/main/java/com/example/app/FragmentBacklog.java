@@ -2,14 +2,10 @@ package com.example.app;
 
 
 import android.annotation.TargetApi;
-import android.app.Activity;
-import android.arch.lifecycle.Observer;
-import android.arch.lifecycle.ViewModelProvider;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,11 +19,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
-import android.widget.Adapter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 
 
 /**
@@ -91,24 +84,24 @@ public class FragmentBacklog extends Fragment implements BacklogAdapter.BacklogV
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_backlog, container, false);
-        mRecyclerView = view.findViewById(R.id.rv_backlog);
+        mRecyclerView = view.findViewById(R.id.rvTop);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(view.getContext(), resId);
         model = ViewModelProviders.of(this.getActivity()).get(BacklogViewModel.class);
-        mAdapter = new BacklogAdapter(view.getContext(), model.getListBacklog().getValue(),this);
+        mAdapter = new BacklogAdapter(view.getContext(), model.getListUserStories().getValue(),this);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutAnimation(animation);
         return view;
     }
 
     public void AddDataSet(Backlog backlog){
-        model.getListBacklog().getValue().add(backlog);
+        model.getListUserStories().getValue().add(backlog);
         mAdapter.notifyDataSetChanged();
     }
 
     public void EditDataSet(int position,Backlog backlog){
-        model.getListBacklog().getValue().set(position,backlog);
+        model.getListUserStories().getValue().set(position,backlog);
 //        Log.d("position", ((Integer) position).toString());
         mAdapter.notifyDataSetChanged();
     }
@@ -121,7 +114,7 @@ public class FragmentBacklog extends Fragment implements BacklogAdapter.BacklogV
         }
         else{
             Intent editBacklog =new Intent(getContext(),ActivityAddBacklog.class);
-            editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
+            editBacklog.putExtra("backlog",model.getListUserStories().getValue().get(position));
             Log.d("position", ((Integer) position).toString());
             editBacklog.putExtra("position",position);
             editBacklog.putExtra("req code",EDIT_BACKLOG);

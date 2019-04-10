@@ -6,12 +6,12 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class DragListener implements View.OnDragListener {
+public class DragListenerStories implements View.OnDragListener {
 
     private boolean isDropped = false;
     private Listener listener;
 
-    DragListener(Listener listener) {
+    DragListenerStories(Listener listener) {
         this.listener = listener;
     }
 
@@ -30,9 +30,9 @@ public class DragListener implements View.OnDragListener {
                 final int tvEmptyListTop = R.id.tvEmptyListTop;
                 final int tvEmptyListMiddle = R.id.tvEmptyListMiddle;
                 final int tvEmptyListBottom = R.id.tvEmptyListBottom;
-                final int rvTop = R.id.rvToDo;
-                final int rvMiddle = R.id.rvProgress;
-                final int rvBottom = R.id.rvCompleted;
+                final int rvTop = R.id.rvTop;
+                final int rvMiddle = R.id.rvMiddle;
+                final int rvBottom = R.id.rvBottom;
 
 //                Log.d("Drop",v.toString());
                 switch (viewId) {
@@ -65,7 +65,7 @@ public class DragListener implements View.OnDragListener {
 
                         if (viewSource != null) {
                             RecyclerView source = (RecyclerView) viewSource.getParent();
-                            SprintAdapter adapterSource = (SprintAdapter) source.getAdapter();
+                            BacklogAdapter2 adapterSource = (BacklogAdapter2) source.getAdapter();
                             int positionSource = (int) viewSource.getTag();
                             int sourceId = source.getId();
 
@@ -75,7 +75,7 @@ public class DragListener implements View.OnDragListener {
                             adapterSource.updateList(listSource);
                             adapterSource.notifyDataSetChanged();
 
-                            SprintAdapter adapterTarget = (SprintAdapter) target.getAdapter();
+                            BacklogAdapter2 adapterTarget = (BacklogAdapter2) target.getAdapter();
                             ArrayList<Backlog> customListTarget = adapterTarget.getList();
                             if (positionTarget >= 0) {
                                 customListTarget.add(positionTarget, list);

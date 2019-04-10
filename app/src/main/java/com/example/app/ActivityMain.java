@@ -42,7 +42,7 @@ public class ActivityMain extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = FragmentBacklog.newInstance("","");
+        fragment = FragmentBacklog2.newInstance("","");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
 //        setFab();
@@ -93,7 +93,7 @@ public class ActivityMain extends AppCompatActivity
             fragment = FragmentRoadmap.newInstance("","");
             fab.hide();
         } else if (id == R.id.nav_backlog) {
-            fragment = FragmentBacklog.newInstance("","");
+            fragment = FragmentBacklog2.newInstance("","");
             fab.show();
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
@@ -145,8 +145,8 @@ public class ActivityMain extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).AddDataSet(newBacklog);
+                if (fragmentInFrame instanceof FragmentBacklog2){
+                    ((FragmentBacklog2) fragmentInFrame).AddDataSet(newBacklog);
                 }
             }
         }
@@ -154,8 +154,8 @@ public class ActivityMain extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
+                if (fragmentInFrame instanceof FragmentBacklog2){
+                    ((FragmentBacklog2) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
                 }
             }
         }
