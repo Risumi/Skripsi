@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,10 +17,14 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener{
     private Fragment fragment;
-    private FloatingActionButton fab;
+    private FloatingActionButton fab,fab2;
+    FloatingActionsMenu fam;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,8 +33,14 @@ public class ActivityMain extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        fab = (FloatingActionButton) findViewById(R.id.fab);
+        fam = findViewById(R.id.fab2);
+
+        fab = (FloatingActionButton) findViewById(R.id.fab3);
         fab.setOnClickListener(this);
+
+        fab2 = (FloatingActionButton) findViewById(R.id.fab4);
+        fab2.setOnClickListener(this);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -91,19 +100,23 @@ public class ActivityMain extends AppCompatActivity
         int id = item.getItemId();
         if (id == R.id.nav_roadmap) {
             fragment = FragmentRoadmap.newInstance("","");
-            fab.hide();
+            fam.collapse();
+            fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_backlog) {
             fragment = FragmentBacklog2.newInstance("","");
-            fab.show();
+            fam.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
-            fab.hide();
+            fam.collapse();
+            fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_setting) {
             fragment = FragmentSetting.newInstance("","");
-            fab.hide();
+            fam.collapse();
+            fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_burndown) {
             fragment = FragmentBurndown.newInstance("","");
-            fab.hide();
+            fam.collapse();
+            fam.setVisibility(View.GONE);
         }
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -120,22 +133,32 @@ public class ActivityMain extends AppCompatActivity
 
     void setFab(){
         Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragmentInFrame instanceof FragmentBacklog){
-            fab.show();
+        if (fragmentInFrame instanceof FragmentBacklog2){
+//            fab.show();
+            fam.setVisibility(View.VISIBLE);
         }
         else {
-            fab.hide();
+//            fab.hide();
+            fam.setVisibility(View.GONE);
         }
     }
 
     final int REQ_ADD_PROJECT= 1;
+    final int REQ_ADD_SPRINT= 3;
     @Override
     public void onClick(View view) {
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
-        Intent intent = new Intent(this,ActivityAddBacklog.class);
-        intent.putExtra("req code",REQ_ADD_PROJECT);
-        startActivityForResult(intent,REQ_ADD_PROJECT);
+        if (view==fab){
+            Intent intent = new Intent(this,ActivityAddSprint.class);
+            intent.putExtra("req code",REQ_ADD_SPRINT);
+            startActivityForResult(intent,REQ_ADD_SPRINT);
+        }else if(view==fab2){
+            Intent intent = new Intent(this,ActivityAddBacklog.class);
+            intent.putExtra("req code",REQ_ADD_PROJECT);
+            startActivityForResult(intent,REQ_ADD_PROJECT);
+        }
+
     }
 
     @Override

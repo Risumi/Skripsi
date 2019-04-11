@@ -12,7 +12,7 @@
         <item
             android:id="@+id/nav_backlog"
             android:icon="@drawable/ic_baseline_assessment_24px"
-            android:title="User Stories" />
+            android:title="Backlog" />
         <item
             android:id="@+id/nav_sprint"
             android:icon="@drawable/ic_baseline_assignment_24px"

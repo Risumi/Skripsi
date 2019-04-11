@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ActivityAddBacklog"></activity>
+        <activity android:name=".ActivityAddSprint"></activity>
+        <activity android:name=".ActivityAddBacklog" />
         <activity android:name=".ActivityAddProject" />
         <activity
             android:name=".ActivityHome"
