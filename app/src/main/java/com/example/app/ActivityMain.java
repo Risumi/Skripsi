@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -51,7 +50,7 @@ public class ActivityMain extends AppCompatActivity
         navigationView.setNavigationItemSelectedListener(this);
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = FragmentBacklog2.newInstance("","");
+        fragment = FragmentBacklog.newInstance("","");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
 //        setFab();
@@ -103,7 +102,7 @@ public class ActivityMain extends AppCompatActivity
             fam.collapse();
             fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_backlog) {
-            fragment = FragmentBacklog2.newInstance("","");
+            fragment = FragmentBacklog.newInstance("","");
             fam.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
@@ -133,7 +132,7 @@ public class ActivityMain extends AppCompatActivity
 
     void setFab(){
         Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        if (fragmentInFrame instanceof FragmentBacklog2){
+        if (fragmentInFrame instanceof FragmentBacklog){
 //            fab.show();
             fam.setVisibility(View.VISIBLE);
         }
@@ -168,8 +167,8 @@ public class ActivityMain extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragmentInFrame instanceof FragmentBacklog2){
-                    ((FragmentBacklog2) fragmentInFrame).AddDataSet(newBacklog);
+                if (fragmentInFrame instanceof FragmentBacklog){
+                    ((FragmentBacklog) fragmentInFrame).AddDataSet(newBacklog);
                 }
             }
         }
@@ -177,8 +176,17 @@ public class ActivityMain extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragmentInFrame instanceof FragmentBacklog2){
-                    ((FragmentBacklog2) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
+                if (fragmentInFrame instanceof FragmentBacklog){
+                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
+                }
+            }
+        }
+        if (requestCode == 3) {
+            if (resultCode == RESULT_OK) {
+                Sprint newSprint = data.getParcelableExtra("sprint");
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentBacklog){
+                    ((FragmentBacklog) fragmentInFrame).setSprint(newSprint);
                 }
             }
         }

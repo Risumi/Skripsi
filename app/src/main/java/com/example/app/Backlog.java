@@ -12,26 +12,26 @@ public class Backlog implements Parcelable {
     private Date endda;
     private String assignee;
     private String description;
+    private String id;
+    private String idProject;
+    private String idSprint;
+    private String idComment;
 
-    public Backlog(String name, String status, Date begda, Date endda, String assignee, String description) {
+    public Backlog(String name, String status, Date begda, Date endda, String assignee, String description, String id, String idProject, String idSprint, String idComment) {
         this.name = name;
         this.status = status;
         this.begda = begda;
         this.endda = endda;
         this.assignee = assignee;
         this.description = description;
+        this.id = id;
+        this.idProject = idProject;
+        this.idSprint = idSprint;
+        this.idComment = idComment;
     }
 
     public String getName() {
         return name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public void setName(String name) {
@@ -70,6 +70,48 @@ public class Backlog implements Parcelable {
         this.assignee = assignee;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getIdProject() {
+        return idProject;
+    }
+
+    public void setIdProject(String idProject) {
+        this.idProject = idProject;
+    }
+
+    public String getIdSprint() {
+        return idSprint;
+    }
+
+    public void setIdSprint(String idSprint) {
+        this.idSprint = idSprint;
+    }
+
+    public String getIdComment() {
+        return idComment;
+    }
+
+    public void setIdComment(String idComment) {
+        this.idComment = idComment;
+    }
+
+
+
     protected Backlog(Parcel in) {
         name = in.readString();
         status = in.readString();
@@ -79,6 +121,10 @@ public class Backlog implements Parcelable {
         endda = tmpEndda != -1 ? new Date(tmpEndda) : null;
         assignee = in.readString();
         description = in.readString();
+        id = in.readString();
+        idProject = in.readString();
+        idSprint = in.readString();
+        idComment = in.readString();
     }
 
     @Override
@@ -94,6 +140,10 @@ public class Backlog implements Parcelable {
         dest.writeLong(endda != null ? endda.getTime() : -1L);
         dest.writeString(assignee);
         dest.writeString(description);
+        dest.writeString(id);
+        dest.writeString(idProject);
+        dest.writeString(idSprint);
+        dest.writeString(idComment);
     }
 
     @SuppressWarnings("unused")

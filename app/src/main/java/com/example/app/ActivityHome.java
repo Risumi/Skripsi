@@ -34,9 +34,9 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
-        listProject.add(new Project("Blog Project","BP"));
-        listProject.add(new Project("IS Project","IP"));
-        listProject.add(new Project("IoT Project","IoP"));
+        listProject.add(new Project("Blog Project","BP",true));
+        listProject.add(new Project("IS Project","IP",true));
+        listProject.add(new Project("IoT Project","IoP",false));
         mAdapter = new ProjectAdapter(this, listProject);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));

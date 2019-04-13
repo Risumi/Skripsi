@@ -84,7 +84,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                     name = etBlName.getText().toString();
                     desc = etBlDesc.getText().toString();
                     assignee = etBlAssignee.getText().toString();
-                    newBacklog = new Backlog(name,status,begdda,endda,assignee,desc);
+                    newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,"","","","");
                     resultIntent.putExtra("result",newBacklog);
                     if (resultIntent.getIntExtra("req code",1)==2){
                         resultIntent.putExtra("position",resultIntent.getIntExtra("position",0));
@@ -96,7 +96,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 //                    name = etBlName.getText().toString();
 //                    desc = etBlDesc.getText().toString();
 //                    assignee = etBlAssignee.getText().toString();
-//                    newBacklog = new Backlog(name,status,begdda,endda,assignee,desc);
+//                    newBacklog = new Backlog(name,status,begda,endda,assignee,desc);
 //                    resultIntent.putExtra("result",newBacklog);
 //                    setResult(RESULT_OK, resultIntent);
 //                    finish();

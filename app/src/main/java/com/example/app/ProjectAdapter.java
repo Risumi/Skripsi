@@ -57,7 +57,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     public void onBindViewHolder(ProjectViewHolder holder, int position) {
         current = projectArrayList.get(position);
         holder.ProjectName.setText(current.name);
-        holder.ProjectStatus.setText(current.type);
+        holder.ProjectStatus.setText(current.id);
     }
 
     @Override

@@ -13,7 +13,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -60,6 +59,7 @@ public class FragmentSprint extends Fragment implements Listener {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
     }
     ArrayList<Backlog> listBacklog, listBacklog2,listBacklog3;
 
@@ -69,28 +69,12 @@ public class FragmentSprint extends Fragment implements Listener {
     TextView tvEmptyListTop;
     TextView tvEmptyListBottom;
     TextView tvEmptyListMiddle;
-    private BacklogViewModel model;
+    private MainViewModel model;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sprint, container, false);
-        model = ViewModelProviders.of(this.getActivity()).get(BacklogViewModel.class);
-
-//        listBacklog = new ArrayList<>();
-//        listBacklog.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-//        listBacklog.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-//        listBacklog.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-
-//        listBacklog2 = new ArrayList<>();
-//        listBacklog2.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-//        listBacklog2.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-//        listBacklog2.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-
-//        listBacklog3 = new ArrayList<>();
-//        listBacklog3.add(new Backlog("1","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-//        listBacklog3.add(new Backlog("2","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
-//        listBacklog3.add(new Backlog("3","Completed", Calendar.getInstance().getTime(),Calendar.getInstance().getTime(),"","Membuat recycler view untuk menampilkan list backlog serta menghapus backlog "));
 
         rvTop = view.findViewById(R.id.rvTop);
         rvBottom = view.findViewById(R.id.rvBottom);
