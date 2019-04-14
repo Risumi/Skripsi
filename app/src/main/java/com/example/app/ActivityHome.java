@@ -1,6 +1,8 @@
 package com.example.app;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -8,11 +10,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
 
+import com.apollographql.apollo.ApolloCall;
+import com.apollographql.apollo.ApolloClient;
+import com.apollographql.apollo.api.Response;
+import com.apollographql.apollo.exception.ApolloException;
+
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
+
+import okhttp3.OkHttpClient;
 
 public class ActivityHome extends AppCompatActivity implements View.OnClickListener{
     private RecyclerView mRecyclerView;
@@ -20,12 +32,12 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Project> listProject;
     final int ADD_PROJECT =1;
+    private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql/graphql";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
-
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -34,13 +46,15 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
-        listProject.add(new Project("Blog Project","BP",true));
-        listProject.add(new Project("IS Project","IP",true));
-        listProject.add(new Project("IoT Project","IoP",false));
+        new getData().execute();
+//        listProject.add(new Project("Blog Project","BP",true));
+//        listProject.add(new Project("IS Project","IP",true));
+//        listProject.add(new Project("IoT Project","IoP",false));
         mAdapter = new ProjectAdapter(this, listProject);
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setLayoutAnimation(animation);
+
     }
 
     @Override
@@ -63,6 +77,60 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 mAdapter.notifyDataSetChanged();
             }
         }
+    }
+
+    private class getData extends AsyncTask<Void,Void,Void>{
+        ProgressDialog progressDialog;
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(ActivityHome.this);
+            progressDialog.setMessage("Loading ...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+            ApolloClient apolloClient = ApolloClient.builder()
+                    .serverUrl(BASE_URL)
+                    .okHttpClient(okHttpClient)
+                    .build();
+            AllProjectQuery allProjectQuery = AllProjectQuery.builder().build();
+            apolloClient.query(allProjectQuery).enqueue(new ApolloCall.Callback<AllProjectQuery.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<AllProjectQuery.Data> response) {
+                    for (int i = 0 ;i<response.data().allProject.size();i++){
+                        listProject.add(new Project(response.data().allProject.get(i).name,response.data().allProject.get(i).id,true));
+                    }
+                    Log.d("Berhasil","yay");
+                    ActivityHome.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                            Log.d("Berhasil","yay");
+                        }
+                    });
+                }
+
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    Log.d("Gagal",e.toString());
+                }
+            });
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+
     }
 }
 

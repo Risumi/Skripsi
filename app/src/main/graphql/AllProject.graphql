@@ -1,0 +1,8 @@
+query AllProject{
+  allProject{
+    id
+    name
+    description
+    status
+  }
+}
