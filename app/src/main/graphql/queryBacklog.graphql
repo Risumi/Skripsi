@@ -1,0 +1,10 @@
+query backlog($id: String!){
+  backlog(id:$id){
+    id
+    name
+    status
+    begindate
+    enddate
+    description
+  }
+}

@@ -99,7 +99,10 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
 
     public String formatDate(Date rawDate) {
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
+
         String formattedDate = formatDate.format(rawDate);
         return formattedDate;
     }
+
+
 }

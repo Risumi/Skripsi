@@ -32,7 +32,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Project> listProject;
     final int ADD_PROJECT =1;
-    private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql/graphql";
+    private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
 //        listProject.add(new Project("IS Project","IP",true));
 //        listProject.add(new Project("IoT Project","IoP",false));
         mAdapter = new ProjectAdapter(this, listProject);
+        Log.d("fool", ((Integer) mAdapter.getItemCount()).toString());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setLayoutAnimation(animation);
@@ -74,7 +75,9 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 Project newProject = data.getParcelableExtra("result");
                 listProject.add(newProject);
+                new setData(newProject).execute();
                 mAdapter.notifyDataSetChanged();
+
             }
         }
     }
@@ -104,13 +107,14 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 @Override
                 public void onResponse(@NotNull Response<AllProjectQuery.Data> response) {
                     for (int i = 0 ;i<response.data().allProject.size();i++){
-                        listProject.add(new Project(response.data().allProject.get(i).name,response.data().allProject.get(i).id,true));
+                        listProject.add(new Project(response.data().allProject.get(i).name,response.data().allProject.get(i).id,response.data().allProject.get(i).status,response.data().allProject.get(i).description));
                     }
-                    Log.d("Berhasil","yay");
+//                    Log.d("Berhasil","yay");
                     ActivityHome.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             mAdapter.notifyDataSetChanged();
+                            Log.d("foo", ((Integer) mAdapter.getItemCount()).toString());
                             Log.d("Berhasil","yay");
                         }
                     });
@@ -122,6 +126,54 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 }
             });
 
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Void aVoid) {
+            super.onPostExecute(aVoid);
+            progressDialog.dismiss();
+        }
+
+    }
+    private class setData extends AsyncTask<Void,Void,Void>{
+        ProgressDialog progressDialog;
+        Project project;
+
+        public setData(Project project) {
+            this.project = project;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            progressDialog = new ProgressDialog(ActivityHome.this);
+            progressDialog.setMessage("Loading ...");
+            progressDialog.setCancelable(false);
+            progressDialog.show();
+        }
+
+        @Override
+        protected Void doInBackground(Void... voids) {
+
+            OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+            ApolloClient apolloClient = ApolloClient.builder()
+                    .serverUrl(BASE_URL)
+                    .okHttpClient(okHttpClient)
+                    .build();
+            ProjectMutation projectMutation= ProjectMutation.builder().id(project.id).name(project.name).description(project.description).status("").build();
+            apolloClient.mutate(projectMutation).enqueue(new ApolloCall.Callback<ProjectMutation.Data>() {
+                @Override
+                public void onResponse(@NotNull Response<ProjectMutation.Data> response) {
+                    Log.d("berhasil","yay");
+                }
+
+                @Override
+                public void onFailure(@NotNull ApolloException e) {
+                    Log.d("gagal","shit");
+                }
+            });
             return null;
         }
 

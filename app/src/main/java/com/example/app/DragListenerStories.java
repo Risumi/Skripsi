@@ -65,7 +65,7 @@ public class DragListenerStories implements View.OnDragListener {
 
                         if (viewSource != null) {
                             RecyclerView source = (RecyclerView) viewSource.getParent();
-                            BacklogAdapter2 adapterSource = (BacklogAdapter2) source.getAdapter();
+                            BacklogAdapter adapterSource = (BacklogAdapter) source.getAdapter();
                             int positionSource = (int) viewSource.getTag();
                             int sourceId = source.getId();
 
@@ -75,7 +75,7 @@ public class DragListenerStories implements View.OnDragListener {
                             adapterSource.updateList(listSource);
                             adapterSource.notifyDataSetChanged();
 
-                            BacklogAdapter2 adapterTarget = (BacklogAdapter2) target.getAdapter();
+                            BacklogAdapter adapterTarget = (BacklogAdapter) target.getAdapter();
                             ArrayList<Backlog> customListTarget = adapterTarget.getList();
                             if (positionTarget >= 0) {
                                 customListTarget.add(positionTarget, list);

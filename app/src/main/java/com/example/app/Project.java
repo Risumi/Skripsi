@@ -6,12 +6,14 @@ import android.os.Parcelable;
 public class Project implements Parcelable {
     String name;
     String id;
-    Boolean isSprinting;
+    String status;
+    String description;
 
-    public Project(String name, String id, Boolean isSprinting) {
+    public Project(String name, String id, String status, String description) {
         this.name = name;
         this.id = id;
-        this.isSprinting = isSprinting;
+        this.status = status;
+        this.description = description;
     }
 
     public String getName() {
@@ -30,35 +32,39 @@ public class Project implements Parcelable {
         this.id = id;
     }
 
-    public Boolean getSprinting() {
-        return isSprinting;
+    public String getStatus() {
+        return status;
     }
 
-    public void setSprinting(Boolean sprinting) {
-        isSprinting = sprinting;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
     protected Project(Parcel in) {
-        name = in.readString();
-        id = in.readString();
-        byte isSprintingVal = in.readByte();
-        isSprinting = isSprintingVal == 0x02 ? null : isSprintingVal != 0x00;
+            name = in.readString();
+            id = in.readString();
+            status = in.readString();
+            description = in.readString();
     }
 
     @Override
-    public int describeContents() {
+    public int describeContents () {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel (Parcel dest,int flags){
         dest.writeString(name);
         dest.writeString(id);
-        if (isSprinting == null) {
-            dest.writeByte((byte) (0x02));
-        } else {
-            dest.writeByte((byte) (isSprinting ? 0x01 : 0x00));
-        }
+        dest.writeString(status);
+        dest.writeString(description);
     }
 
     @SuppressWarnings("unused")

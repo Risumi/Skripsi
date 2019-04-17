@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentBacklog extends Fragment implements Listener ,BacklogAdapter2.BacklogViewHolder2.ClickListener{
+public class FragmentBacklog extends Fragment implements Listener , BacklogAdapter.BacklogViewHolder2.ClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -53,7 +53,6 @@ public class FragmentBacklog extends Fragment implements Listener ,BacklogAdapte
         fragment.setArguments(args);
         return fragment;
     }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -78,8 +77,19 @@ public class FragmentBacklog extends Fragment implements Listener ,BacklogAdapte
                 }
             }
         });
+        model.getListUserStories().observe(this, new Observer<ArrayList<Backlog>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<Backlog> backlogs) {
+                synchronized (topListAdapter){
+                    topListAdapter.notifyDataSetChanged();
+                    topListAdapter.notifyAll();
+                }
+
+                Log.d("foo", ((Integer) topListAdapter.getItemCount()).toString());
+            }
+        });
+
     }
-    ArrayList<Backlog> listBacklog, listBacklog2,listBacklog3;
 
     RecyclerView rvTop;
     RecyclerView rvBottom;
@@ -89,7 +99,7 @@ public class FragmentBacklog extends Fragment implements Listener ,BacklogAdapte
     TextView tvSprint;
 
     private MainViewModel model;
-    BacklogAdapter2 topListAdapter;
+    BacklogAdapter topListAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -115,18 +125,17 @@ public class FragmentBacklog extends Fragment implements Listener ,BacklogAdapte
 
 
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        topListAdapter = new BacklogAdapter2(model.getListUserStories().getValue(),this,this);
+        topListAdapter = new BacklogAdapter(model.getListUserStories().getValue(),this,this);
         rvTop.setAdapter(topListAdapter);
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
         tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
 
         rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        BacklogAdapter2 bottomListAdapter = new BacklogAdapter2(model.getListSprint().getValue(), this,this);
+        BacklogAdapter bottomListAdapter = new BacklogAdapter(model.getListSprint().getValue(), this,this);
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
-
         return view;
     }
 

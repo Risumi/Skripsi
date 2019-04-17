@@ -14,12 +14,12 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class BacklogAdapter2 extends RecyclerView.Adapter<BacklogAdapter2.BacklogViewHolder2> implements View.OnLongClickListener {
+public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogViewHolder2> implements View.OnLongClickListener {
     ArrayList<Backlog> backlogList;
     Listener listener;
     private BacklogViewHolder2.ClickListener clickListener;
 
-    public BacklogAdapter2(ArrayList<Backlog> backlogList, Listener listener, BacklogViewHolder2.ClickListener clickListener) {
+    public BacklogAdapter(ArrayList<Backlog> backlogList, Listener listener, BacklogViewHolder2.ClickListener clickListener) {
         this.backlogList = backlogList;
         this.listener = listener;
         this.clickListener = clickListener;
@@ -27,9 +27,9 @@ public class BacklogAdapter2 extends RecyclerView.Adapter<BacklogAdapter2.Backlo
 
     @NonNull
     @Override
-    public BacklogAdapter2.BacklogViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
+    public BacklogAdapter.BacklogViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backlog2, parent, false);
-        return new BacklogAdapter2.BacklogViewHolder2(v,clickListener);
+        return new BacklogAdapter.BacklogViewHolder2(v,clickListener);
     }
 
 
@@ -39,7 +39,7 @@ public class BacklogAdapter2 extends RecyclerView.Adapter<BacklogAdapter2.Backlo
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BacklogAdapter2.BacklogViewHolder2 backlogViewHolder2, int i) {
+    public void onBindViewHolder(@NonNull BacklogAdapter.BacklogViewHolder2 backlogViewHolder2, int i) {
         backlogViewHolder2.BacklogName.setText(backlogList.get(i).getName());
         backlogViewHolder2.BacklogStatus.setText(backlogList.get(i).getStatus());
         backlogViewHolder2.BacklogDate.setText(formatDate(backlogList.get(i).getEndda()));

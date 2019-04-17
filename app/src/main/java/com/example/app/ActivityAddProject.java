@@ -27,7 +27,7 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
     public void onClick(View view) {
         if (view == btn){
             Intent resultIntent = getIntent();
-            Project newProject = new Project(etPName.getText().toString(),etPKey.getText().toString(),false);
+            Project newProject = new Project(etPName.getText().toString(),etPKey.getText().toString(),"",etDesc.getText().toString());
             resultIntent.putExtra("result",newProject);
             setResult(RESULT_OK, resultIntent);
             finish();

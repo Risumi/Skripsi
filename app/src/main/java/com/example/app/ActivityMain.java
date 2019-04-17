@@ -24,7 +24,7 @@ public class ActivityMain extends AppCompatActivity
     private Fragment fragment;
     private FloatingActionButton fab,fab2;
     FloatingActionsMenu fam;
-
+    Intent intent;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,7 +55,7 @@ public class ActivityMain extends AppCompatActivity
         transaction.commit();
 //        setFab();
 
-        Intent intent = getIntent();
+        intent = getIntent();
         getSupportActionBar().setTitle(intent.getStringExtra("PName"));
     }
 
@@ -102,7 +102,7 @@ public class ActivityMain extends AppCompatActivity
             fam.collapse();
             fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_backlog) {
-            fragment = FragmentBacklog.newInstance("","");
+            fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
             fam.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
