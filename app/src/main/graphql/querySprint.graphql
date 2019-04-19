@@ -1,4 +1,4 @@
-query sprint($id: String!){
+query currentSprint($id: String!){
   sprint(id:$id){
     id        
     begindate

@@ -29,12 +29,16 @@ import type.CustomType;
 
 @Generated("Apollo GraphQL")
 public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery.Data, BacklogQuery.Variables> {
-  public static final String OPERATION_ID = "29b66bc042fe41b1cdd34d6f0d16d9a65d732ab623209254f778c6a32de9e275";
+  public static final String OPERATION_ID = "cd662c298de2dca1fc8433825e14f9025bc4121e0ca15afc5977f2dba87a027f";
 
   public static final String QUERY_DOCUMENT = "query backlog($id: String!) {\n"
       + "  backlog(id: $id) {\n"
       + "    __typename\n"
       + "    id\n"
+      + "    idSprint {\n"
+      + "      __typename\n"
+      + "      id\n"
+      + "    }\n"
       + "    name\n"
       + "    status\n"
       + "    begindate\n"
@@ -239,6 +243,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("idSprint", "idSprint", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
@@ -249,6 +254,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
     final @NotNull String __typename;
 
     final @NotNull String id;
+
+    final @Nullable IdSprint idSprint;
 
     final @Nullable String name;
 
@@ -266,11 +273,12 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Backlog(@NotNull String __typename, @NotNull String id, @Nullable String name,
-        @Nullable String status, @Nullable Date begindate, @Nullable Date enddate,
-        @Nullable String description) {
+    public Backlog(@NotNull String __typename, @NotNull String id, @Nullable IdSprint idSprint,
+        @Nullable String name, @Nullable String status, @Nullable Date begindate,
+        @Nullable Date enddate, @Nullable String description) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
+      this.idSprint = idSprint;
       this.name = name;
       this.status = status;
       this.begindate = begindate;
@@ -284,6 +292,10 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     public @NotNull String id() {
       return this.id;
+    }
+
+    public @Nullable IdSprint idSprint() {
+      return this.idSprint;
     }
 
     public @Nullable String name() {
@@ -312,11 +324,12 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
-          writer.writeString($responseFields[2], name);
-          writer.writeString($responseFields[3], status);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], enddate);
-          writer.writeString($responseFields[6], description);
+          writer.writeObject($responseFields[2], idSprint != null ? idSprint.marshaller() : null);
+          writer.writeString($responseFields[3], name);
+          writer.writeString($responseFields[4], status);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], begindate);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], enddate);
+          writer.writeString($responseFields[7], description);
         }
       };
     }
@@ -327,6 +340,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         $toString = "Backlog{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
+          + "idSprint=" + idSprint + ", "
           + "name=" + name + ", "
           + "status=" + status + ", "
           + "begindate=" + begindate + ", "
@@ -346,6 +360,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         Backlog that = (Backlog) o;
         return this.__typename.equals(that.__typename)
          && this.id.equals(that.id)
+         && ((this.idSprint == null) ? (that.idSprint == null) : this.idSprint.equals(that.idSprint))
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
          && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
          && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
@@ -364,6 +379,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
+        h ^= (idSprint == null) ? 0 : idSprint.hashCode();
+        h *= 1000003;
         h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
         h ^= (status == null) ? 0 : status.hashCode();
@@ -380,16 +397,111 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
     }
 
     public static final class Mapper implements ResponseFieldMapper<Backlog> {
+      final IdSprint.Mapper idSprintFieldMapper = new IdSprint.Mapper();
+
       @Override
       public Backlog map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
-        final String name = reader.readString($responseFields[2]);
-        final String status = reader.readString($responseFields[3]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
-        final String description = reader.readString($responseFields[6]);
-        return new Backlog(__typename, id, name, status, begindate, enddate, description);
+        final IdSprint idSprint = reader.readObject($responseFields[2], new ResponseReader.ObjectReader<IdSprint>() {
+          @Override
+          public IdSprint read(ResponseReader reader) {
+            return idSprintFieldMapper.map(reader);
+          }
+        });
+        final String name = reader.readString($responseFields[3]);
+        final String status = reader.readString($responseFields[4]);
+        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
+        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
+        final String description = reader.readString($responseFields[7]);
+        return new Backlog(__typename, id, idSprint, name, status, begindate, enddate, description);
+      }
+    }
+  }
+
+  public static class IdSprint {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @NotNull String id;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public IdSprint(@NotNull String __typename, @NotNull String id) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.id = Utils.checkNotNull(id, "id == null");
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @NotNull String id() {
+      return this.id;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "IdSprint{"
+          + "__typename=" + __typename + ", "
+          + "id=" + id
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof IdSprint) {
+        IdSprint that = (IdSprint) o;
+        return this.__typename.equals(that.__typename)
+         && this.id.equals(that.id);
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= id.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<IdSprint> {
+      @Override
+      public IdSprint map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readString($responseFields[1]);
+        return new IdSprint(__typename, id);
       }
     }
   }

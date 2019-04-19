@@ -1,6 +1,9 @@
 query backlog($id: String!){
   backlog(id:$id){
     id
+    idSprint{
+      id
+    }
     name
     status
     begindate

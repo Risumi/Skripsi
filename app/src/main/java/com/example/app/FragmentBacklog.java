@@ -61,12 +61,12 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
-        model.fetchBacklog(PID);
-        model.getSprint().observe(this, new Observer<Sprint>() {
+//        model.fetchBacklog(PID);
+        model.getCurrentSprint().observe(this, new Observer<Sprint>() {
             @Override
             public void onChanged(@Nullable Sprint sprint) {
                 if (sprint != null){
-                    if (model.getListSprint().getValue().size()==0){
+                    if (model.getListBacklog().getValue().size()==0){
                         tvEmptyListBottom.setVisibility(View.VISIBLE);
                     }
                     rvBottom.setVisibility(View.VISIBLE);
@@ -78,12 +78,12 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
                 }
             }
         });
-        model.getListUserStories().observe(this, new Observer<ArrayList<Backlog>>() {
+        model.getListBacklog().observe(this, new Observer<ArrayList<Backlog>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Backlog> backlogs) {
 //                synchronized (topListAdapter){
                 topListAdapter.notifyDataSetChanged();
-                Log.d("foo", ((Integer) topListAdapter.getItemCount()).toString());
+                Log.d("Item Count : ", ((Integer) topListAdapter.getItemCount()).toString());
             }
         });
         Log.d("PID", PID);
@@ -109,11 +109,11 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
         tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
         tvSprint= view.findViewById(R.id.textView8);
 
-        if (model.getListUserStories().getValue().size()==0){
+        if (model.getListBacklog().getValue().size()==0){
             tvEmptyListTop.setVisibility(View.VISIBLE);
         }
-        if(model.getSprint().getValue()!=null){
-            if (model.getListSprint().getValue().size()==0){
+        if(model.getCurrentSprint().getValue()!=null){
+            if (model.getListBacklogSprint().getValue().size()==0){
                 tvEmptyListBottom.setVisibility(View.VISIBLE);
             }
         }else {
@@ -124,14 +124,14 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
 
 
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        topListAdapter = new BacklogAdapter(model.getListUserStories().getValue(),this,this);
+        topListAdapter = new BacklogAdapter(model.getListBacklog().getValue(),this,this);
         rvTop.setAdapter(topListAdapter);
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
         tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
 
         rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        BacklogAdapter bottomListAdapter = new BacklogAdapter(model.getListSprint().getValue(), this,this);
+        BacklogAdapter bottomListAdapter = new BacklogAdapter(model.getListBacklogSprint().getValue(), this,this);
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
@@ -166,28 +166,29 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
     @Override
     public void onItemClicked(int position) {
         Intent editBacklog =new Intent(getContext(),ActivityAddBacklog.class);
-        editBacklog.putExtra("backlog",model.getListUserStories().getValue().get(position));
+        editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
         Log.d("position", ((Integer) position).toString());
         editBacklog.putExtra("PID", PID);
-        editBacklog.putExtra("blsID",model.getListUserStories().getValue().get(position).getId());
+        editBacklog.putExtra("blsID",model.getListBacklog().getValue().get(position).getId());
         editBacklog.putExtra("position",position);
         editBacklog.putExtra("req code",EDIT_BACKLOG);
         getActivity().startActivityForResult(editBacklog,EDIT_BACKLOG);
     }
 
     public void AddDataSet(Backlog backlog){
-        model.getListUserStories().getValue().add(backlog);
+        model.getListBacklog().getValue().add(backlog);
         topListAdapter.notifyDataSetChanged();
         model.mutateBacklog(backlog);
     }
 
     public void EditDataSet(int position,Backlog backlog){
-        model.getListUserStories().getValue().set(position,backlog);
+        model.getListBacklog().getValue().set(position,backlog);
         topListAdapter.notifyDataSetChanged();
         model.mutateBacklog(backlog);
     }
 
     public void setSprint(Sprint sprint){
-        model.setSprint(sprint);
+        model.setCurrentSprint(sprint);
+        model.mutateSprint(sprint);
     }
 }

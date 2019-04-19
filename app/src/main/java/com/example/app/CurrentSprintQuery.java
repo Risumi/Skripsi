@@ -28,10 +28,10 @@ import javax.annotation.Generated;
 import type.CustomType;
 
 @Generated("Apollo GraphQL")
-public final class SprintQuery implements Query<SprintQuery.Data, SprintQuery.Data, SprintQuery.Variables> {
-  public static final String OPERATION_ID = "114bea0a21ee98c15e5189c47b65bc12b1054e4eebb088cd2c36d004bc8fcbb6";
+public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, CurrentSprintQuery.Data, CurrentSprintQuery.Variables> {
+  public static final String OPERATION_ID = "c1eddc0ecaa122d7cd48a58321c67d7655bb7bef495468d198272a8aa5e17475";
 
-  public static final String QUERY_DOCUMENT = "query sprint($id: String!) {\n"
+  public static final String QUERY_DOCUMENT = "query currentSprint($id: String!) {\n"
       + "  sprint(id: $id) {\n"
       + "    __typename\n"
       + "    id\n"
@@ -44,15 +44,15 @@ public final class SprintQuery implements Query<SprintQuery.Data, SprintQuery.Da
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "sprint";
+      return "currentSprint";
     }
   };
 
-  private final SprintQuery.Variables variables;
+  private final CurrentSprintQuery.Variables variables;
 
-  public SprintQuery(@NotNull String id) {
+  public CurrentSprintQuery(@NotNull String id) {
     Utils.checkNotNull(id, "id == null");
-    variables = new SprintQuery.Variables(id);
+    variables = new CurrentSprintQuery.Variables(id);
   }
 
   @Override
@@ -66,12 +66,12 @@ public final class SprintQuery implements Query<SprintQuery.Data, SprintQuery.Da
   }
 
   @Override
-  public SprintQuery.Data wrapData(SprintQuery.Data data) {
+  public CurrentSprintQuery.Data wrapData(CurrentSprintQuery.Data data) {
     return data;
   }
 
   @Override
-  public SprintQuery.Variables variables() {
+  public CurrentSprintQuery.Variables variables() {
     return variables;
   }
 
@@ -100,9 +100,9 @@ public final class SprintQuery implements Query<SprintQuery.Data, SprintQuery.Da
       return this;
     }
 
-    public SprintQuery build() {
+    public CurrentSprintQuery build() {
       Utils.checkNotNull(id, "id == null");
-      return new SprintQuery(id);
+      return new CurrentSprintQuery(id);
     }
   }
 

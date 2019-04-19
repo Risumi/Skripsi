@@ -33,7 +33,10 @@ public class ActivityMain extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
         model = ViewModelProviders.of(this).get(MainViewModel.class);
+
+
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -56,14 +59,18 @@ public class ActivityMain extends AppCompatActivity
 
 
         intent = getIntent();
+        PID= intent.getStringExtra("PID");
+
+
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
 //        setFab();
 
+        model.fetchBacklog(PID);
+
         getSupportActionBar().setTitle(intent.getStringExtra("PName"));
-        PID= intent.getStringExtra("PID");
         Log.d("PID",PID);
     }
 
@@ -159,13 +166,15 @@ public class ActivityMain extends AppCompatActivity
         if (view==fab){
             Intent intent = new Intent(this,ActivityAddSprint.class);
             intent.putExtra("req code",REQ_ADD_SPRINT);
+            intent.putExtra("PID",PID);
+            intent.putExtra("SCount",model.getSprintCount().getValue());
 //            Log.d("PID",this.intent.getStringExtra("PID"));
             startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
             Intent intent = new Intent(this,ActivityAddBacklog.class);
             intent.putExtra("req code",REQ_ADD_PROJECT);
             intent.putExtra("PID",PID);
-            intent.putExtra("blID",model.getListUserStories().getValue().size());
+            intent.putExtra("blID",model.getListBacklog().getValue().size());
             startActivityForResult(intent,REQ_ADD_PROJECT);
         }
 

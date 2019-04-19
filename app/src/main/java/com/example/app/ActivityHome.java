@@ -70,7 +70,6 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
 //            mAdapter.notifyDataSetChanged();
         }
     }
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);

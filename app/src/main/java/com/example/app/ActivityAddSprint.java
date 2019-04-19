@@ -54,7 +54,7 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
             if (begda == null || endda == null) {
                 Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
             } else {
-                Sprint newSprint = new Sprint("Sprint", "", begda, endda, sprintGoal.getText().toString());
+                Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), begda, endda, sprintGoal.getText().toString());
                 resultIntent.putExtra("sprint", newSprint);
                 setResult(RESULT_OK, resultIntent);
                 finish();
