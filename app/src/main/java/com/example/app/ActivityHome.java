@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,6 +15,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -46,7 +48,8 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
-        new getData().execute();
+//        new getData().execute();
+        getData();
 //        listProject.add(new Project("Blog Project","BP",true));
 //        listProject.add(new Project("IS Project","IP",true));
 //        listProject.add(new Project("IoT Project","IoP",false));
@@ -75,67 +78,103 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             if (resultCode == RESULT_OK) {
                 Project newProject = data.getParcelableExtra("result");
                 listProject.add(newProject);
-                new setData(newProject).execute();
+//                new setData(newProject).execute();
                 mAdapter.notifyDataSetChanged();
+                setData(newProject);
 
             }
         }
     }
 
-    private class getData extends AsyncTask<Void,Void,Void>{
+    private void getData(){
         ProgressDialog progressDialog;
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            progressDialog = new ProgressDialog(ActivityHome.this);
-            progressDialog.setMessage("Loading ...");
-            progressDialog.setCancelable(false);
-            progressDialog.show();
-        }
-
-        @Override
-        protected Void doInBackground(Void... voids) {
-
-            OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-
-            ApolloClient apolloClient = ApolloClient.builder()
-                    .serverUrl(BASE_URL)
-                    .okHttpClient(okHttpClient)
-                    .build();
-            AllProjectQuery allProjectQuery = AllProjectQuery.builder().build();
-            apolloClient.query(allProjectQuery).enqueue(new ApolloCall.Callback<AllProjectQuery.Data>() {
-                @Override
-                public void onResponse(@NotNull Response<AllProjectQuery.Data> response) {
-                    for (int i = 0 ;i<response.data().allProject.size();i++){
-                        listProject.add(new Project(response.data().allProject.get(i).name,response.data().allProject.get(i).id,response.data().allProject.get(i).status,response.data().allProject.get(i).description));
-                    }
+        progressDialog = new ProgressDialog(ActivityHome.this);
+        progressDialog.setMessage("Loading ...");
+        progressDialog.setCancelable(false);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        AllProjectQuery allProjectQuery = AllProjectQuery.builder().build();
+        apolloClient.query(allProjectQuery).enqueue(new ApolloCall.Callback<AllProjectQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<AllProjectQuery.Data> response) {
+                for (int i = 0 ;i<response.data().allProject.size();i++){
+                    listProject.add(new Project(response.data().allProject.get(i).name,response.data().allProject.get(i).id,response.data().allProject.get(i).status,response.data().allProject.get(i).description));
+                }
 //                    Log.d("Berhasil","yay");
-                    ActivityHome.this.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            mAdapter.notifyDataSetChanged();
-                            Log.d("foo", ((Integer) mAdapter.getItemCount()).toString());
-                            Log.d("Berhasil","yay");
-                        }
-                    });
+                ActivityHome.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.notifyDataSetChanged();
+                        Log.d("foo", ((Integer) mAdapter.getItemCount()).toString());
+                        Log.d("Berhasil","yay");
+                    }
+                });
+            }
+            /**
+             * Gets called whenever any action happen to this {@link ApolloCall}.
+             *
+             * @param event status that corresponds to a {@link ApolloCall} action
+             */
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (!event.name().equalsIgnoreCase("COMPLETED")){
+                    progressDialog.show();
+                }else {
+                    progressDialog.dismiss();
                 }
-
-                @Override
-                public void onFailure(@NotNull ApolloException e) {
-                    Log.d("Gagal",e.toString());
-                }
-            });
-
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void aVoid) {
-            super.onPostExecute(aVoid);
-            progressDialog.dismiss();
-        }
-
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal",e.toString());
+            }
+        });
     }
+
+    private void setData(Project project){
+        ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(ActivityHome.this);
+        progressDialog.setMessage("Loading ...");
+        progressDialog.setCancelable(false);
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        ProjectMutation projectMutation= ProjectMutation.builder().id(project.id).name(project.name).description(project.description).status("").build();
+        apolloClient.mutate(projectMutation).enqueue(new ApolloCall.Callback<ProjectMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<ProjectMutation.Data> response) {
+                Log.d("berhasil","yay");
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("gagal","shit");
+            }
+
+            /**
+             * Gets called whenever any action happen to this {@link ApolloCall}.
+             *
+             * @param event status that corresponds to a {@link ApolloCall} action
+             */
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                if (!event.name().equalsIgnoreCase("COMPLETED")){
+                    progressDialog.show();
+                }else {
+                    progressDialog.dismiss();
+                }
+            }
+        });
+    }
+
     private class setData extends AsyncTask<Void,Void,Void>{
         ProgressDialog progressDialog;
         Project project;
@@ -182,7 +221,6 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             super.onPostExecute(aVoid);
             progressDialog.dismiss();
         }
-
     }
 }
 

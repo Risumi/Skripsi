@@ -1,0 +1,9 @@
+mutation Sprint($id:String!,$idProject:String!,$begindate:Date!,$enddate:Date!,$goal:String!){
+  createSprint(id:$id,idProject:$idProject,begindate:$begindate,enddate:$enddate,goal:$goal){
+    id
+    idProject
+    begindate
+    enddate
+    goal
+  }
+}

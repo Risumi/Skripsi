@@ -1,11 +1,13 @@
 package com.example.app;
 
 import android.annotation.SuppressLint;
+import android.arch.lifecycle.ViewModelProviders;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -25,10 +27,13 @@ public class ActivityMain extends AppCompatActivity
     private FloatingActionButton fab,fab2;
     FloatingActionsMenu fam;
     Intent intent;
+    private MainViewModel model;
+    String PID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        model = ViewModelProviders.of(this).get(MainViewModel.class);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -49,14 +54,17 @@ public class ActivityMain extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
+
+        intent = getIntent();
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = FragmentBacklog.newInstance("","");
+        fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
 //        setFab();
 
-        intent = getIntent();
         getSupportActionBar().setTitle(intent.getStringExtra("PName"));
+        PID= intent.getStringExtra("PID");
+        Log.d("PID",PID);
     }
 
     @Override
@@ -151,10 +159,13 @@ public class ActivityMain extends AppCompatActivity
         if (view==fab){
             Intent intent = new Intent(this,ActivityAddSprint.class);
             intent.putExtra("req code",REQ_ADD_SPRINT);
+//            Log.d("PID",this.intent.getStringExtra("PID"));
             startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
             Intent intent = new Intent(this,ActivityAddBacklog.class);
             intent.putExtra("req code",REQ_ADD_PROJECT);
+            intent.putExtra("PID",PID);
+            intent.putExtra("blID",model.getListUserStories().getValue().size());
             startActivityForResult(intent,REQ_ADD_PROJECT);
         }
 
@@ -166,6 +177,7 @@ public class ActivityMain extends AppCompatActivity
         if (requestCode == REQ_ADD_PROJECT) {
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
+                Log.d("isi",newBacklog.getIdProject());
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
                     ((FragmentBacklog) fragmentInFrame).AddDataSet(newBacklog);

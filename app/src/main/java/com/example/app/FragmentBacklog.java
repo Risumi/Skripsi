@@ -28,7 +28,7 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
     private static final String ARG_PARAM2 = "param2";
     final int  EDIT_BACKLOG = 2;
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String PID;
     private String mParam2;
 
 
@@ -57,10 +57,11 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            PID = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
+        model.fetchBacklog(PID);
         model.getSprint().observe(this, new Observer<Sprint>() {
             @Override
             public void onChanged(@Nullable Sprint sprint) {
@@ -80,14 +81,12 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
         model.getListUserStories().observe(this, new Observer<ArrayList<Backlog>>() {
             @Override
             public void onChanged(@Nullable ArrayList<Backlog> backlogs) {
-                synchronized (topListAdapter){
-                    topListAdapter.notifyDataSetChanged();
-                    topListAdapter.notifyAll();
-                }
-
+//                synchronized (topListAdapter){
+                topListAdapter.notifyDataSetChanged();
                 Log.d("foo", ((Integer) topListAdapter.getItemCount()).toString());
             }
         });
+        Log.d("PID", PID);
 
     }
 
@@ -97,7 +96,7 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
     TextView tvEmptyListTop;
     TextView tvEmptyListBottom;
     TextView tvSprint;
-
+    ArrayList<Backlog> listBacklog;
     private MainViewModel model;
     BacklogAdapter topListAdapter;
     @Override
@@ -169,6 +168,8 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
         Intent editBacklog =new Intent(getContext(),ActivityAddBacklog.class);
         editBacklog.putExtra("backlog",model.getListUserStories().getValue().get(position));
         Log.d("position", ((Integer) position).toString());
+        editBacklog.putExtra("PID", PID);
+        editBacklog.putExtra("blsID",model.getListUserStories().getValue().get(position).getId());
         editBacklog.putExtra("position",position);
         editBacklog.putExtra("req code",EDIT_BACKLOG);
         getActivity().startActivityForResult(editBacklog,EDIT_BACKLOG);
@@ -177,11 +178,13 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
     public void AddDataSet(Backlog backlog){
         model.getListUserStories().getValue().add(backlog);
         topListAdapter.notifyDataSetChanged();
+        model.mutateBacklog(backlog);
     }
 
     public void EditDataSet(int position,Backlog backlog){
         model.getListUserStories().getValue().set(position,backlog);
         topListAdapter.notifyDataSetChanged();
+        model.mutateBacklog(backlog);
     }
 
     public void setSprint(Sprint sprint){

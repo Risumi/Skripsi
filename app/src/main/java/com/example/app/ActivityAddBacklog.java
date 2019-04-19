@@ -70,6 +70,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
 
         }
+        Log.d("PID",resultIntent.getStringExtra("PID"));
     }
 
     @Override
@@ -84,7 +85,12 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                     name = etBlName.getText().toString();
                     desc = etBlDesc.getText().toString();
                     assignee = etBlAssignee.getText().toString();
-                    newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,"","","","");
+                    if (resultIntent.getIntExtra("req code",1)==2){
+                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),"","");
+                    }else {
+                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"","");
+                    }
+                    Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
                     resultIntent.putExtra("result",newBacklog);
                     if (resultIntent.getIntExtra("req code",1)==2){
                         resultIntent.putExtra("position",resultIntent.getIntExtra("position",0));

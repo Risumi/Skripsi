@@ -24,9 +24,28 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         this._context = _context;
     }
 
+    @Override
+    public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View itemView = mInflater.inflate(R.layout.card_project,parent,false);
+        return new ProjectViewHolder(itemView,this);
+    }
+
+    @Override
+    public void onBindViewHolder(ProjectViewHolder holder, int position) {
+        current = projectArrayList.get(position);
+        holder.ProjectName.setText(current.name);
+        holder.ProjectStatus.setText(current.id);
+        holder.ProjectDesc.setText(current.description);
+    }
+
+    @Override
+    public int getItemCount() {
+        return projectArrayList.size();
+    }
     class ProjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView ProjectName;
         TextView ProjectStatus;
+        TextView ProjectDesc;
         ProjectAdapter mAdapter;
         CardView cardView;
 
@@ -34,6 +53,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             super(itemView);
             ProjectName = itemView.findViewById(R.id.txtName);
             ProjectStatus = itemView.findViewById(R.id.txtStatus);
+            ProjectDesc = itemView.findViewById(R.id.txtDescription);
             cardView = itemView.findViewById(R.id.cardView);
             cardView.setOnClickListener(this);
             this.mAdapter = adapter;
@@ -46,23 +66,5 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             intent.putExtra("PID",projectArrayList.get(getAdapterPosition()).id);
             _context.startActivity(intent);
         }
-    }
-
-    @Override
-    public ProjectViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View itemView = mInflater.inflate(R.layout.card_project,parent,false);
-        return new ProjectViewHolder(itemView,this);
-    }
-
-    @Override
-    public void onBindViewHolder(ProjectViewHolder holder, int position) {
-        current = projectArrayList.get(position);
-        holder.ProjectName.setText(current.name);
-        holder.ProjectStatus.setText(current.id);
-    }
-
-    @Override
-    public int getItemCount() {
-        return projectArrayList.size();
     }
 }

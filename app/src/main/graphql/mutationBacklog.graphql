@@ -1,0 +1,11 @@
+mutation Backlog($id:String!,$idProject:String!,$name:String!,$status:String!,$begindate:Date!,$enddate:Date!,$description:String!){
+  createBacklog(id:$id,idProject:$idProject,name:$name,status:$status,begindate:$begindate,enddate:$enddate,description:$description){
+    id
+    idProject
+    name
+    status
+    begindate
+    enddate
+    description
+  }
+}

@@ -1,0 +1,12 @@
+mutation BacklogSprint($id:String!,$idProject:String!,$idSprint:String!,$name:String!,$status:String!,$begindate:Date!,$enddate:Date!,$description:String!){
+  createBacklogsprint(id:$id,idProject:$idProject,idSprint:$idSprint,name:$name,status:$status,begindate:$begindate,enddate:$enddate,description:$description){
+    id
+    idProject
+    idSprint
+    name
+    status
+    begindate
+    enddate
+    description
+  }
+}

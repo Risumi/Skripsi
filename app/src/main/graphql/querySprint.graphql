@@ -1,0 +1,8 @@
+query sprint($id: String!){
+  sprint(id:$id){
+    id        
+    begindate
+    enddate
+    goal    
+  }
+}
