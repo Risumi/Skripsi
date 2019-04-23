@@ -1,19 +1,33 @@
 package com.example.app;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
+import org.joda.time.format.DateTimeFormat;
+import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 
@@ -31,7 +45,7 @@ public class FragmentBurndown extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    private MainViewModel model;
     LineChart chart ;
 
     public FragmentBurndown() {
@@ -71,15 +85,31 @@ public class FragmentBurndown extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_burndown, container, false);
         chart = view.findViewById(R.id.chart);
+        model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
+        int daysDiff;
 
+        DateTime dateTime = new DateTime();
+        if (model.getCurrentSprint()!=null){
+            dateTime = new DateTime(model.getCurrentSprint().getValue().begda);
+            daysDiff= dateDiff(model.getCurrentSprint().getValue().begda,model.getCurrentSprint().getValue().endda);
+        }else {
+            daysDiff = 5;
+        }
+        Log.d("daysDiff", ((Integer) daysDiff).toString());
         List<Entry> entries = new ArrayList<Entry>();
-        for (int i = 0 ; i<5;i++){
-            entries.add(new Entry(i,4-i));
+        DateTime tempDate = dateTime;
+        for (int i = 0 ; i<daysDiff;i++){
+            dateTime = tempDate.plusDays(i);
+            entries.add(new Entry(dateTime.getMillis(),(daysDiff-1)-i));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Ideal Effort");
         LineData lineData = new LineData(dataSet);
         Description description = new Description();
         description.setText("");
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setValueFormatter(new formatter());
+        xAxis.setLabelCount(daysDiff/3);
         chart.setDescription(description);    // Hide the description
         chart.getAxisRight().setDrawLabels(false);
         chart.getAxisLeft().setDrawGridLines(false);
@@ -88,5 +118,43 @@ public class FragmentBurndown extends Fragment {
         chart.invalidate();
         return view;
     }
+    int dateDiff(Date beggda, Date endda){
+        DateTime startDate = new DateTime(beggda);
+        DateTime endDate = new DateTime(endda);
+        Days d = Days.daysBetween(startDate, endDate);
+        int days = d.getDays();
+        return days;
+    }
+//    public class xAxisFormatter extends IAxisValueFormatter {
+//
+//        /**
+//         * Called when a value from an axis is to be formatted
+//         * before being drawn. For performance reasons, avoid excessive calculations
+//         * and memory allocations inside this method.
+//         *
+//         * @param value the value to be formatted
+//         * @param axis  the axis the value belongs to
+//         * @return
+//         * @deprecated Extend {@link ValueFormatter} and use {@link ValueFormatter#getAxisLabel(float, AxisBase)}
+//         */
+//        @Override
+//        public String getFormattedValue(float value, AxisBase axis) {
+//            return null;
+//        }
+//    }
 
+    class formatter extends ValueFormatter{
+        /**
+         * Used to draw axis labels, calls {@link #getFormattedValue(float)} by default.
+         *
+         * @param value float to be formatted
+         * @param axis  axis being labeled
+         * @return formatted string label
+         */
+        @Override
+        public String getAxisLabel(float value, AxisBase axis) {
+            DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yyyy");
+            return fmt.print(((Float) value).longValue());
+        }
+    }
 }

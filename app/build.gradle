@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.apollographql.apollo:apollo-runtime:1.0.0-alpha5'
     implementation 'com.getbase:floatingactionbutton:1.10.1'
     implementation 'com.squareup.okhttp3:okhttp:3.14.1'
+    implementation 'joda-time:joda-time:2.10.1'
 }
 apollo {
     customTypeMapping = [

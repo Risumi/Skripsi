@@ -115,7 +115,7 @@ public class MainViewModel extends ViewModel {
         }
         );
     }
-
+    int sCount;
     protected void fetchSprint(String PID){
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -160,9 +160,11 @@ public class MainViewModel extends ViewModel {
                     if (count[0]!=null){
                         Log.d("SCount", ((Integer) count[0]).toString());
                         sprintCount.postValue(((Integer) count[0]));
+                        sCount = count[0];
                         splitData();
                     }else {
                         sprintCount.postValue(0);
+                        sCount = 0;
                     }
                 }
             }
@@ -323,13 +325,16 @@ public class MainViewModel extends ViewModel {
     }
 
     void splitData(){
-        Log.d("Tes Backlog", ((Integer) listAllBacklog.getValue().size()).toString());
-        if (sprintCount.getValue() == null ){
+        Log.d("Backlog count", ((Integer) listAllBacklog.getValue().size()).toString());
+        if (sCount == 0){
             listBacklog = listAllBacklog;
+            Log.d("Sprint status", "No sprint");
         }else {
             for (int i = 0; i< listAllBacklog.getValue().size(); i++){
                 //backlog di dalam sprint
-                if (listAllBacklog.getValue().get(i).getIdProject().equalsIgnoreCase(currentSprint.getValue().id)){
+                Log.d("Backlog : "+i ,listAllBacklog.getValue().get(i).getIdProject());
+                Log.d("Sprint",currentSprint.getValue().id);
+                if (listAllBacklog.getValue().get(i).getIdSprint().equalsIgnoreCase(currentSprint.getValue().id)){
                     listBacklogSprint.getValue().add(listAllBacklog.getValue().get(i));
                 }else {
                     listBacklog.getValue().add(listAllBacklog.getValue().get(i));
