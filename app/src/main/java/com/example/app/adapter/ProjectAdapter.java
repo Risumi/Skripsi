@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.adapter;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,6 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.app.R;
+import com.example.app.activity.ActivityMain;
+import com.example.app.model.Project;
+
 import java.util.ArrayList;
 
 public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectViewHolder> {
@@ -33,9 +38,13 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     @Override
     public void onBindViewHolder(ProjectViewHolder holder, int position) {
         current = projectArrayList.get(position);
-        holder.ProjectName.setText(current.name);
-        holder.ProjectStatus.setText(current.id);
-        holder.ProjectDesc.setText(current.description);
+        holder.ProjectName.setText(current.getName());
+        holder.ProjectStatus.setText(current.getId());
+        String desc = current.getDescription();
+        if (desc.length()>45){
+            desc = desc.substring(0,45)+"...";
+        }
+        holder.ProjectDesc.setText(desc);
     }
 
     @Override
@@ -62,8 +71,8 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(_context, ActivityMain.class);
-            intent.putExtra("PName",projectArrayList.get(getAdapterPosition()).name);
-            intent.putExtra("PID",projectArrayList.get(getAdapterPosition()).id);
+            intent.putExtra("PName",projectArrayList.get(getAdapterPosition()).getName());
+            intent.putExtra("PID",projectArrayList.get(getAdapterPosition()).getId());
             _context.startActivity(intent);
         }
     }

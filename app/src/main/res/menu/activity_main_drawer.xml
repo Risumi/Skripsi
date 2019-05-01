@@ -5,10 +5,9 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_roadmap"
+            android:id="@+id/nav_epic"
             android:icon="@drawable/ic_baseline_list_24px"
-            android:title="Roadmap"
-            android:visible="false" />
+            android:title="Epic"/>
         <item
             android:id="@+id/nav_backlog"
             android:icon="@drawable/ic_baseline_assessment_24px"

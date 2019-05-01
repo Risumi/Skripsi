@@ -1,8 +1,13 @@
-package com.example.app;
+package com.example.app.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.DragEvent;
 import android.view.View;
+
+import com.example.app.Listener;
+import com.example.app.R;
+import com.example.app.adapter.BacklogAdapter;
+import com.example.app.model.Backlog;
 
 import java.util.ArrayList;
 
@@ -11,7 +16,7 @@ public class DragListenerStories implements View.OnDragListener {
     private boolean isDropped = false;
     private Listener listener;
 
-    DragListenerStories(Listener listener) {
+    public DragListenerStories(Listener listener) {
         this.listener = listener;
     }
 

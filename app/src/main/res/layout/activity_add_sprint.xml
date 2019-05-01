@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ActivityAddSprint">
+    tools:context=".activity.ActivityAddSprint">
 
     <TextView
         android:id="@+id/tvSprint"

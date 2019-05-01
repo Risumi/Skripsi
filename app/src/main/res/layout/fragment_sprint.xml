@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:visibility="visible"
-    tools:context=".FragmentSprint">
+    tools:context=".fragment.FragmentSprint">
 
     <!-- TODO: Update blank fragment layout -->
     <android.support.constraint.ConstraintLayout

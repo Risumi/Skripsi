@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -16,6 +16,7 @@ public class Backlog implements Parcelable {
     private String idProject;
     private String idSprint;
     private String idComment;
+    private String idEpic;
 
     public Backlog(String name, String status, Date begda, Date endda, String assignee, String description, String id, String idProject, String idSprint, String idComment) {
         this.name = name;

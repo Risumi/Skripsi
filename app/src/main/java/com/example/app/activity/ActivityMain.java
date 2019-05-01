@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.activity;
 
 import android.annotation.SuppressLint;
 import android.arch.lifecycle.ViewModelProviders;
@@ -18,6 +18,15 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.app.model.Backlog;
+import com.example.app.fragment.FragmentBacklog;
+import com.example.app.fragment.FragmentBurndown;
+import com.example.app.fragment.FragmentEpic;
+import com.example.app.fragment.FragmentSetting;
+import com.example.app.fragment.FragmentSprint;
+import com.example.app.MainViewModel;
+import com.example.app.R;
+import com.example.app.model.Sprint;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -112,8 +121,8 @@ public class ActivityMain extends AppCompatActivity
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
         int id = item.getItemId();
-        if (id == R.id.nav_roadmap) {
-            fragment = FragmentRoadmap.newInstance("","");
+        if (id == R.id.nav_epic) {
+            fragment = FragmentEpic.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_backlog) {
@@ -164,14 +173,14 @@ public class ActivityMain extends AppCompatActivity
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
         if (view==fab){
-            Intent intent = new Intent(this,ActivityAddSprint.class);
+            Intent intent = new Intent(this, ActivityAddSprint.class);
             intent.putExtra("req code",REQ_ADD_SPRINT);
             intent.putExtra("PID",PID);
             intent.putExtra("SCount",model.getSprintCount().getValue());
 //            Log.d("PID",this.intent.getStringExtra("PID"));
             startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
-            Intent intent = new Intent(this,ActivityAddBacklog.class);
+            Intent intent = new Intent(this, ActivityAddBacklog.class);
             intent.putExtra("req code",REQ_ADD_PROJECT);
             intent.putExtra("PID",PID);
             intent.putExtra("blID",model.getListBacklog().getValue().size());

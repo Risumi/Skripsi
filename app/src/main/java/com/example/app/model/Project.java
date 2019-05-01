@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;

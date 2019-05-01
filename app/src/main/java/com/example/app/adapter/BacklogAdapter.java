@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.adapter;
 
 import android.content.ClipData;
 import android.os.Build;
@@ -10,6 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+
+import com.example.app.Listener;
+import com.example.app.R;
+import com.example.app.model.Backlog;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -28,7 +33,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     @NonNull
     @Override
     public BacklogAdapter.BacklogViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backlog2, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backlog, parent, false);
         return new BacklogAdapter.BacklogViewHolder2(v,clickListener);
     }
 
@@ -58,7 +63,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         return backlogList.size();
     }
 
-    DragListenerStories getDragInstance() {
+     public DragListenerStories getDragInstance() {
         if (listener != null) {
             return new DragListenerStories(listener);
         } else {
@@ -67,7 +72,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         }
     }
 
-    void updateList(ArrayList<Backlog> list) {
+    public void updateList(ArrayList<Backlog> list) {
         this.backlogList = list;
     }
 
@@ -83,7 +88,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         return true;
     }
 
-    static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView BacklogName;
         TextView BacklogStatus;
         TextView BacklogDescription;

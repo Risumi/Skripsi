@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_epic_detail"
+        android:icon="@drawable/ic_subject_black_24dp"
+        android:title="@string/title_epic_detail" />
+
+    <item
+        android:id="@+id/navigation_list_task"
+        android:icon="@drawable/ic_baseline_list_24px"
+        android:title="@string/title_list_task" />
+
+</menu>

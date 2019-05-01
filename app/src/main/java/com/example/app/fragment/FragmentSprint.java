@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.fragment;
 
 
 import android.arch.lifecycle.ViewModelProviders;
@@ -11,6 +11,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.example.app.model.Backlog;
+import com.example.app.Listener;
+import com.example.app.MainViewModel;
+import com.example.app.R;
+import com.example.app.adapter.SprintAdapter;
 
 import java.util.ArrayList;
 

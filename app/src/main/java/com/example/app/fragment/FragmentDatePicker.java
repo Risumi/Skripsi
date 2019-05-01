@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.fragment;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
@@ -12,6 +12,7 @@ import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
 import com.appeaser.sublimepickerlibrary.helpers.SublimeListenerAdapter;
 import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
 import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
+import com.example.app.R;
 
 import java.text.DateFormat;
 import java.util.Locale;

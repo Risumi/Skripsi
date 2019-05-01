@@ -1,19 +1,27 @@
-package com.example.app;
+package com.example.app.fragment;
 
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.app.model.Epic;
+import com.example.app.adapter.EpicAdapter;
+import com.example.app.R;
+
+import java.util.ArrayList;
+
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentRoadmap#newInstance} factory method to
+ * Use the {@link FragmentEpic#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentRoadmap extends Fragment {
+public class FragmentEpic extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -22,8 +30,11 @@ public class FragmentRoadmap extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private RecyclerView mRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    ArrayList<Epic> listEpic;
 
-    public FragmentRoadmap() {
+    public FragmentEpic() {
         // Required empty public constructor
     }
 
@@ -33,11 +44,11 @@ public class FragmentRoadmap extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentRoadmap.
+     * @return A new instance of fragment FragmentEpic.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentRoadmap newInstance(String param1, String param2) {
-        FragmentRoadmap fragment = new FragmentRoadmap();
+    public static FragmentEpic newInstance(String param1, String param2) {
+        FragmentEpic fragment = new FragmentEpic();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -57,7 +68,15 @@ public class FragmentRoadmap extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_roadmap, container, false);
+        View view = inflater.inflate(R.layout.fragment_epic, container, false);
+        listEpic = new ArrayList<>();
+        for (int i = 0 ; i< 5;i++){
+            listEpic.add(new Epic(((Integer) i).toString(),((Integer) i).toString(),((Integer) i).toString()));
+        }
+        mRecyclerView=view.findViewById(R.id.rvTop);
+        mAdapter = new EpicAdapter(this.getActivity(), listEpic);
+        mRecyclerView.setAdapter(mAdapter);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         return view;
     }
 }

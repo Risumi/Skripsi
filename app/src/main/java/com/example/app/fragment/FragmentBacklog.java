@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.fragment;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
@@ -14,6 +14,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.example.app.model.Backlog;
+import com.example.app.adapter.BacklogAdapter;
+import com.example.app.Listener;
+import com.example.app.MainViewModel;
+import com.example.app.R;
+import com.example.app.model.Sprint;
+import com.example.app.activity.ActivityAddBacklog;
+
 import java.util.ArrayList;
 
 /**
@@ -21,7 +29,7 @@ import java.util.ArrayList;
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentBacklog extends Fragment implements Listener , BacklogAdapter.BacklogViewHolder2.ClickListener{
+public class FragmentBacklog extends Fragment implements Listener, BacklogAdapter.BacklogViewHolder2.ClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -61,7 +69,6 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
-//        model.fetchBacklog(PID);
         model.getCurrentSprint().observe(this, new Observer<Sprint>() {
             @Override
             public void onChanged(@Nullable Sprint sprint) {
@@ -96,7 +103,6 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
     TextView tvEmptyListTop;
     TextView tvEmptyListBottom;
     TextView tvSprint;
-    ArrayList<Backlog> listBacklog;
     private MainViewModel model;
     BacklogAdapter topListAdapter;
     @Override
@@ -165,7 +171,7 @@ public class FragmentBacklog extends Fragment implements Listener , BacklogAdapt
 
     @Override
     public void onItemClicked(int position) {
-        Intent editBacklog =new Intent(getContext(),ActivityAddBacklog.class);
+        Intent editBacklog =new Intent(getContext(), ActivityAddBacklog.class);
         editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
         Log.d("position", ((Integer) position).toString());
         editBacklog.putExtra("PID", PID);

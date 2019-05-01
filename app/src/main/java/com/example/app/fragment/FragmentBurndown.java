@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.fragment;
 
 
 import android.arch.lifecycle.ViewModelProviders;
@@ -9,6 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.app.MainViewModel;
+import com.example.app.R;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Description;
@@ -16,8 +18,6 @@ import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
-import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.joda.time.DateTime;
@@ -26,7 +26,6 @@ import org.joda.time.format.DateTimeFormat;
 import org.joda.time.format.DateTimeFormatter;
 
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -90,8 +89,12 @@ public class FragmentBurndown extends Fragment {
 
         DateTime dateTime = new DateTime();
         if (model.getCurrentSprint()!=null){
-            dateTime = new DateTime(model.getCurrentSprint().getValue().begda);
-            daysDiff= dateDiff(model.getCurrentSprint().getValue().begda,model.getCurrentSprint().getValue().endda);
+            try {
+                dateTime = new DateTime(model.getCurrentSprint().getValue().getBegda());
+                daysDiff= dateDiff(model.getCurrentSprint().getValue().getBegda(),model.getCurrentSprint().getValue().getEndda());
+            }catch (Exception e){
+                daysDiff = 5;
+            }
         }else {
             daysDiff = 5;
         }

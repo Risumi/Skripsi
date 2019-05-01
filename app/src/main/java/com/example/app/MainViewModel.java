@@ -10,6 +10,8 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
+import com.example.app.model.Backlog;
+import com.example.app.model.Sprint;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -37,6 +39,7 @@ public class MainViewModel extends ViewModel {
         listBacklogSprint = new MutableLiveData<>();
         listBacklogSprint.setValue(backlog2);
         currentSprint = new MutableLiveData<>();
+        currentSprint.setValue(new Sprint());
         sprintCount = new MutableLiveData<>();
 //        sprintCount.setValue(0);
         ArrayList<Backlog> backlog3 = new ArrayList<>();
@@ -44,7 +47,7 @@ public class MainViewModel extends ViewModel {
         listBacklog.setValue(backlog3);
     }
 
-    protected void fetchBacklog(String PID){
+    public void fetchBacklog(String PID){
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
@@ -80,7 +83,7 @@ public class MainViewModel extends ViewModel {
                     }catch (NullPointerException e){
 
                     }finally {
-                        backlog.add(new Backlog(response.data().backlog.get(i).name,
+                        listAllBacklog.getValue().add(new Backlog(response.data().backlog.get(i).name,
                                 response.data().backlog.get(i).status,
                                 response.data().backlog.get(i).begindate,
                                 response.data().backlog.get(i).enddate,
@@ -102,10 +105,11 @@ public class MainViewModel extends ViewModel {
                  super.onStatusEvent(event);
                  Log.d("event",event.name());
                  if (event.name().equalsIgnoreCase("completed")){
-                     listAllBacklog.postValue(backlog);
+//                     listAllBacklog.postValue(backlog);
                      fetchSprint(PID);
                  }
              }
+
 
              @Override
              public void onFailure(@NotNull ApolloException e) {
@@ -116,7 +120,7 @@ public class MainViewModel extends ViewModel {
         );
     }
     int sCount;
-    protected void fetchSprint(String PID){
+    public void fetchSprint(String PID){
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
@@ -145,7 +149,7 @@ public class MainViewModel extends ViewModel {
             public void onResponse(@NotNull Response<CurrentSprintQuery.Data> response) {
                 if (response.data().sprint().size()!=0){
                     sprint[0] = new Sprint(response.data().sprint.get(response.data().sprint.size()-1).id,PID,response.data().sprint.get(response.data().sprint.size()-1).begindate,response.data().sprint.get(response.data().sprint.size()-1).enddate,response.data().sprint.get(response.data().sprint.size()-1).goal);
-                    Log.d("SID",sprint[0].id);
+                    Log.d("SID",sprint[0].getId());
                     count[0] = response.data().sprint.size();
                 }
                 Log.d("Berhasil","yay");
@@ -165,6 +169,7 @@ public class MainViewModel extends ViewModel {
                     }else {
                         sprintCount.postValue(0);
                         sCount = 0;
+                        splitData();
                     }
                 }
             }
@@ -239,7 +244,7 @@ public class MainViewModel extends ViewModel {
                 .okHttpClient(okHttpClient)
                 .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
                 .build();
-        SprintMutation sprintMutation = SprintMutation.builder().id(sprint.id).idProject(sprint.idProject).begindate(sprint.begda).enddate(sprint.endda).goal(sprint.sprintGoal).build();
+        SprintMutation sprintMutation = SprintMutation.builder().id(sprint.getId()).idProject(sprint.getIdProject()).begindate(sprint.getBegda()).enddate(sprint.getEndda()).goal(sprint.getSprintGoal()).build();
         apolloClient.mutate(sprintMutation).enqueue(new ApolloCall.Callback<SprintMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<SprintMutation.Data> response) {
@@ -333,8 +338,8 @@ public class MainViewModel extends ViewModel {
             for (int i = 0; i< listAllBacklog.getValue().size(); i++){
                 //backlog di dalam sprint
                 Log.d("Backlog : "+i ,listAllBacklog.getValue().get(i).getIdProject());
-                Log.d("Sprint",currentSprint.getValue().id);
-                if (listAllBacklog.getValue().get(i).getIdSprint().equalsIgnoreCase(currentSprint.getValue().id)){
+//                Log.d("Sprint",currentSprint.getValue().id);
+                if (listAllBacklog.getValue().get(i).getIdSprint().equalsIgnoreCase(currentSprint.getValue().getId())){
                     listBacklogSprint.getValue().add(listAllBacklog.getValue().get(i));
                 }else {
                     listBacklog.getValue().add(listAllBacklog.getValue().get(i));

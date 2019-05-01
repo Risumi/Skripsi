@@ -15,4 +15,7 @@
         <item>In Progress</item>
         <item>Completed</item>
     </string-array>
+    <string name="title_activity_epic">Epic</string>
+    <string name="title_epic_detail">Detail</string>
+    <string name="title_list_task">List Tasks</string>
 </resources>

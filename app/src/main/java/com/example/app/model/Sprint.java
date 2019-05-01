@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.model;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -18,6 +18,9 @@ public class Sprint implements Parcelable {
         this.begda = begda;
         this.endda = endda;
         this.sprintGoal = sprintGoal;
+    }
+
+    public Sprint() {
     }
 
     public String getId() {
