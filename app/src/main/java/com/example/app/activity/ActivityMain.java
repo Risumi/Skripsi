@@ -214,6 +214,7 @@ public class ActivityMain extends AppCompatActivity
         if (requestCode == 3) {
             if (resultCode == RESULT_OK) {
                 Sprint newSprint = data.getParcelableExtra("sprint");
+                model.getSprintCount().setValue(model.getSprintCount().getValue()+1);
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
                     ((FragmentBacklog) fragmentInFrame).setSprint(newSprint);

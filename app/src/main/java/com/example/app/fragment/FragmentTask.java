@@ -9,19 +9,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.app.model.Epic;
-import com.example.app.adapter.EpicAdapter;
+import com.example.app.Listener;
 import com.example.app.R;
+import com.example.app.adapter.BacklogAdapter;
+import com.example.app.model.Backlog;
 
 import java.util.ArrayList;
-
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
- * Use the {@link FragmentEpic#newInstance} factory method to
+ * Use the {@link FragmentTask#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentEpic extends Fragment {
+public class FragmentTask extends Fragment implements Listener, BacklogAdapter.BacklogViewHolder2.ClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -30,11 +31,9 @@ public class FragmentEpic extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    ArrayList<Epic> listEpic;
 
-    public FragmentEpic() {
+
+    public FragmentTask() {
         // Required empty public constructor
     }
 
@@ -44,11 +43,11 @@ public class FragmentEpic extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentEpic.
+     * @return A new instance of fragment FragmentTask.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentEpic newInstance(String param1, String param2) {
-        FragmentEpic fragment = new FragmentEpic();
+    public static FragmentTask newInstance(String param1, String param2) {
+        FragmentTask fragment = new FragmentTask();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -65,18 +64,46 @@ public class FragmentEpic extends Fragment {
         }
     }
 
+    RecyclerView rvTop;
+    BacklogAdapter topListAdapter;
+    ArrayList <Backlog> backlogArrayList;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_epic, container, false);
-        listEpic = new ArrayList<>();
-        for (int i = 0 ; i< 5;i++){
-            listEpic.add(new Epic(("Epic "+(Integer) (i+1)),(Integer) (i+2)+"Task ",(Integer) (i+2)+" Tasks"));
+        // Inflate the layout for this fragment
+        View view =inflater.inflate(R.layout.fragment_task, container, false);
+        rvTop = view.findViewById(R.id.rvTop);
+
+        backlogArrayList = new ArrayList<>();
+        for (int i = 1 ;i<6;i++){
+            backlogArrayList.add(new Backlog("Task "+i,"Status",new Date(),new Date(),"","Deskripsi","","","",""));
         }
-        mRecyclerView=view.findViewById(R.id.rvTop);
-        mAdapter = new EpicAdapter(this.getActivity(), listEpic);
-        mRecyclerView.setAdapter(mAdapter);
-        mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+
+        rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        topListAdapter = new BacklogAdapter(backlogArrayList,this,this);
+        rvTop.setAdapter(topListAdapter);
+
         return view;
+    }
+
+    @Override
+    public void setEmptyListTop(boolean visibility) {
+
+    }
+
+    @Override
+    public void setEmptyListMiddle(boolean visibility) {
+
+    }
+
+    @Override
+    public void setEmptyListBottom(boolean visibility) {
+
+    }
+
+    @Override
+    public void onItemClicked(int position) {
+
     }
 }

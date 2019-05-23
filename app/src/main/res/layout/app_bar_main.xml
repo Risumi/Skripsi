@@ -55,7 +55,7 @@
             app:fab_colorNormal="@color/colorWhite"
             app:fab_colorPressed="@color/colorAccent"
             app:fab_size="mini"
-            app:fab_title="User Story"/>
+            app:fab_title="Backlog"/>
 
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.app.model.Backlog;
@@ -17,15 +18,17 @@ import com.example.app.Listener;
 import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.SprintAdapter;
+import com.example.app.model.Sprint;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSprint extends Fragment implements Listener {
+public class FragmentSprint extends Fragment implements Listener, View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -75,12 +78,33 @@ public class FragmentSprint extends Fragment implements Listener {
     TextView tvEmptyListTop;
     TextView tvEmptyListBottom;
     TextView tvEmptyListMiddle;
+    TextView tvSprint;
+    Button btnSprint;
     private MainViewModel model;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_sprint, container, false);
+
+        btnSprint = view.findViewById(R.id.button2);
+        btnSprint.setOnClickListener(this);
+        tvSprint = view.findViewById(R.id.textView7);
+
+        if (model.getCurrentSprint().getValue()!=null){
+            btnSprint.setVisibility(View.VISIBLE);
+            tvSprint.setText("Sprint "+model.getSprintCount().getValue());
+            Date date = new Date();
+            Date date1 = new Date(1999,01,01);
+            if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
+                btnSprint.setText("Start");
+            }
+            else if (date.before(model.getCurrentSprint().getValue().getEndda())){
+                btnSprint.setText("End");
+            }
+        }else {
+            btnSprint.setVisibility(View.GONE);
+        }
 
         rvTop = view.findViewById(R.id.rvTop);
         rvBottom = view.findViewById(R.id.rvBottom);
@@ -149,5 +173,27 @@ public class FragmentSprint extends Fragment implements Listener {
         Log.d("tvTop", ((Integer) tvEmptyListTop.getVisibility()).toString());
         Log.d("tvMiddle",((Integer) tvEmptyListMiddle.getVisibility()).toString());
         Log.d("tvBottom",((Integer) tvEmptyListBottom.getVisibility()).toString());
+    }
+
+    @Override
+    public void onClick(View view) {
+        if (btnSprint.getText().toString().equalsIgnoreCase("End")){
+
+            // TODO: 24-May-19 change status project to no run
+//            Sprint sprint = model.getCurrentSprint().getValue();
+//            sprint.setBegda(new Date(1999,01,01));
+//            model.mutateSprint(sprint);
+            model.setCurrentSprint(null);
+
+            btnSprint.setVisibility(View.GONE);
+        }else {
+            Date date = new Date();
+            model.getCurrentSprint().getValue().setBegda(date);
+            model.mutateSprint(model.getCurrentSprint().getValue());
+
+            // TODO: 24-May-19 change status project to running
+
+            btnSprint.setText("End");
+        }
     }
 }

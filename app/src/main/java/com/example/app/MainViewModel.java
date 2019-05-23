@@ -68,7 +68,6 @@ public class MainViewModel extends ViewModel {
                 .okHttpClient(okHttpClient)
                 .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
                 .build();
-        ArrayList<Backlog> backlog = new ArrayList<>();
         BacklogQuery backlogQuery= BacklogQuery.builder().id(PID).build();
         apolloClient.query(backlogQuery).enqueue(new ApolloCall.Callback<BacklogQuery.Data>() {
             @Override

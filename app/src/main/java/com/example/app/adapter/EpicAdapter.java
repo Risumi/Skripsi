@@ -38,13 +38,8 @@ public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder
     @Override
     public void onBindViewHolder(EpicViewHolder holder, int position) {
         current = projectArrayList.get(position);
-        holder.ProjectName.setText(current.getName());
-        holder.ProjectStatus.setText(current.getId());
-        String desc = current.getDescription();
-        if (desc.length()>45){
-            desc = desc.substring(0,45)+"...";
-        }
-        holder.ProjectDesc.setText(desc);
+        holder.EpicName.setText(current.getName());
+        holder.EpicTask.setText(current.getId());
     }
 
     @Override
@@ -52,17 +47,15 @@ public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder
         return projectArrayList.size();
     }
     class EpicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
-        TextView ProjectName;
-        TextView ProjectStatus;
-        TextView ProjectDesc;
+        TextView EpicName;
+        TextView EpicTask;
         EpicAdapter mAdapter;
         CardView cardView;
 
         public EpicViewHolder(View itemView, EpicAdapter adapter) {
             super(itemView);
-            ProjectName = itemView.findViewById(R.id.txtName);
-            ProjectStatus = itemView.findViewById(R.id.txtStatus);
-            ProjectDesc = itemView.findViewById(R.id.txtDescription);
+            EpicName = itemView.findViewById(R.id.txtName);
+            EpicTask = itemView.findViewById(R.id.txtTask);
             cardView = itemView.findViewById(R.id.cardView);
             cardView.setOnClickListener(this);
             this.mAdapter = adapter;

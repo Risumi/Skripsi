@@ -157,7 +157,7 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
     Variables(@NotNull String id, @NotNull String idProject, @NotNull Date begindate,
-        @NotNull Date enddate, @NotNull String goal) {
+              @NotNull Date enddate, @NotNull String goal) {
       this.id = id;
       this.idProject = idProject;
       this.begindate = begindate;

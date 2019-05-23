@@ -33,8 +33,8 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_sprint);
 
-        startDate = findViewById(R.id.tvBegda);
-        startDate.setOnClickListener(this);
+//        startDate = findViewById(R.id.tvBegda);
+//        startDate.setOnClickListener(this);
 
         endDate = findViewById(R.id.tvEndda);
         endDate.setOnClickListener(this);
@@ -54,7 +54,8 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         } else if (view == endDate) {
             openDateRangePicker(endDate, 2);
         } else if (view == button) {
-            if (begda == null || endda == null) {
+            begda = new Date(1999,01,01);
+            if (endda == null) {
                 Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
             } else {
                 Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), begda, endda, sprintGoal.getText().toString());
