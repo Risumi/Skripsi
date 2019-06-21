@@ -1,0 +1,9 @@
+mutation Epic($id:String!,$idProject:String!,$name:String!,$description:String!,$status:String!){
+  createEpic(id:$id,idProject:$idProject,name:$name,description:$description,status:$status){
+    id
+    idProject
+    idProject
+    name
+    status
+  }
+}

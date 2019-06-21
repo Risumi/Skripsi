@@ -57,6 +57,16 @@
             app:fab_size="mini"
             app:fab_title="Backlog"/>
 
+        <com.getbase.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:fab_icon="@drawable/ic_add_pink_24dp"
+            app:fab_colorNormal="@color/colorWhite"
+            app:fab_colorPressed="@color/colorAccent"
+            app:fab_size="mini"
+            app:fab_title="Epic"/>
+
 
     </com.getbase.floatingactionbutton.FloatingActionsMenu>
 </android.support.design.widget.CoordinatorLayout>

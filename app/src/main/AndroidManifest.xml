@@ -13,9 +13,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
+        <activity android:name=".activity.ActivityAddEpic"></activity>
         <activity
             android:name=".activity.ActivityEpic"
-            android:label="@string/title_activity_epic"></activity>
+            android:label="@string/title_activity_epic" />
         <activity android:name=".activity.ActivityAddSprint" />
         <activity android:name=".activity.ActivityAddBacklog" />
         <activity android:name=".activity.ActivityAddProject" />

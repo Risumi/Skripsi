@@ -22,43 +22,40 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import type.CustomType;
+public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutation.Data, EpicMutation.Variables> {
+  public static final String OPERATION_ID = "1db57ba8e07cab1683a2db4303adc9fd29ab642d85934ca4f18f7c7228b1ce45";
 
-public final class SprintMutation implements Mutation<SprintMutation.Data, SprintMutation.Data, SprintMutation.Variables> {
-  public static final String OPERATION_ID = "a5582084907438e11b6aed06c56fc70befd55c5def6749e834e99888dd590cae";
-
-  public static final String QUERY_DOCUMENT = "mutation Sprint($id: String!, $idProject: String!, $begindate: Date!, $enddate: Date!, $goal: String!) {\n"
-      + "  createSprint(id: $id, idProject: $idProject, begindate: $begindate, enddate: $enddate, goal: $goal) {\n"
+  public static final String QUERY_DOCUMENT = "mutation Epic($id: String!, $idProject: String!, $name: String!, $description: String!, $status: String!) {\n"
+      + "  createEpic(id: $id, idProject: $idProject, name: $name, description: $description, status: $status) {\n"
       + "    __typename\n"
       + "    id\n"
       + "    idProject\n"
-      + "    begindate\n"
-      + "    enddate\n"
-      + "    goal\n"
+      + "    idProject\n"
+      + "    name\n"
+      + "    status\n"
       + "  }\n"
       + "}";
 
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "Sprint";
+      return "Epic";
     }
   };
 
-  private final SprintMutation.Variables variables;
+  private final EpicMutation.Variables variables;
 
-  public SprintMutation(@NotNull String id, @NotNull String idProject, @NotNull Date begindate,
-      @NotNull Date enddate, @NotNull String goal) {
+  public EpicMutation(@NotNull String id, @NotNull String idProject, @NotNull String name,
+      @NotNull String description, @NotNull String status) {
     Utils.checkNotNull(id, "id == null");
     Utils.checkNotNull(idProject, "idProject == null");
-    Utils.checkNotNull(begindate, "begindate == null");
-    Utils.checkNotNull(enddate, "enddate == null");
-    Utils.checkNotNull(goal, "goal == null");
-    variables = new SprintMutation.Variables(id, idProject, begindate, enddate, goal);
+    Utils.checkNotNull(name, "name == null");
+    Utils.checkNotNull(description, "description == null");
+    Utils.checkNotNull(status, "status == null");
+    variables = new EpicMutation.Variables(id, idProject, name, description, status);
   }
 
   @Override
@@ -72,12 +69,12 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
   }
 
   @Override
-  public SprintMutation.Data wrapData(SprintMutation.Data data) {
+  public EpicMutation.Data wrapData(EpicMutation.Data data) {
     return data;
   }
 
   @Override
-  public SprintMutation.Variables variables() {
+  public EpicMutation.Variables variables() {
     return variables;
   }
 
@@ -100,11 +97,11 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     private @NotNull String idProject;
 
-    private @NotNull Date begindate;
+    private @NotNull String name;
 
-    private @NotNull Date enddate;
+    private @NotNull String description;
 
-    private @NotNull String goal;
+    private @NotNull String status;
 
     Builder() {
     }
@@ -119,28 +116,28 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return this;
     }
 
-    public Builder begindate(@NotNull Date begindate) {
-      this.begindate = begindate;
+    public Builder name(@NotNull String name) {
+      this.name = name;
       return this;
     }
 
-    public Builder enddate(@NotNull Date enddate) {
-      this.enddate = enddate;
+    public Builder description(@NotNull String description) {
+      this.description = description;
       return this;
     }
 
-    public Builder goal(@NotNull String goal) {
-      this.goal = goal;
+    public Builder status(@NotNull String status) {
+      this.status = status;
       return this;
     }
 
-    public SprintMutation build() {
+    public EpicMutation build() {
       Utils.checkNotNull(id, "id == null");
       Utils.checkNotNull(idProject, "idProject == null");
-      Utils.checkNotNull(begindate, "begindate == null");
-      Utils.checkNotNull(enddate, "enddate == null");
-      Utils.checkNotNull(goal, "goal == null");
-      return new SprintMutation(id, idProject, begindate, enddate, goal);
+      Utils.checkNotNull(name, "name == null");
+      Utils.checkNotNull(description, "description == null");
+      Utils.checkNotNull(status, "status == null");
+      return new EpicMutation(id, idProject, name, description, status);
     }
   }
 
@@ -149,26 +146,26 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     private final @NotNull String idProject;
 
-    private final @NotNull Date begindate;
+    private final @NotNull String name;
 
-    private final @NotNull Date enddate;
+    private final @NotNull String description;
 
-    private final @NotNull String goal;
+    private final @NotNull String status;
 
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
-    Variables(@NotNull String id, @NotNull String idProject, @NotNull Date begindate,
-        @NotNull Date enddate, @NotNull String goal) {
+    Variables(@NotNull String id, @NotNull String idProject, @NotNull String name,
+        @NotNull String description, @NotNull String status) {
       this.id = id;
       this.idProject = idProject;
-      this.begindate = begindate;
-      this.enddate = enddate;
-      this.goal = goal;
+      this.name = name;
+      this.description = description;
+      this.status = status;
       this.valueMap.put("id", id);
       this.valueMap.put("idProject", idProject);
-      this.valueMap.put("begindate", begindate);
-      this.valueMap.put("enddate", enddate);
-      this.valueMap.put("goal", goal);
+      this.valueMap.put("name", name);
+      this.valueMap.put("description", description);
+      this.valueMap.put("status", status);
     }
 
     public @NotNull String id() {
@@ -179,16 +176,16 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return idProject;
     }
 
-    public @NotNull Date begindate() {
-      return begindate;
+    public @NotNull String name() {
+      return name;
     }
 
-    public @NotNull Date enddate() {
-      return enddate;
+    public @NotNull String description() {
+      return description;
     }
 
-    public @NotNull String goal() {
-      return goal;
+    public @NotNull String status() {
+      return status;
     }
 
     @Override
@@ -203,9 +200,9 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         public void marshal(InputFieldWriter writer) throws IOException {
           writer.writeString("id", id);
           writer.writeString("idProject", idProject);
-          writer.writeCustom("begindate", CustomType.DATE, begindate);
-          writer.writeCustom("enddate", CustomType.DATE, enddate);
-          writer.writeString("goal", goal);
+          writer.writeString("name", name);
+          writer.writeString("description", description);
+          writer.writeString("status", status);
         }
       };
     }
@@ -213,7 +210,7 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("createSprint", "createSprint", new UnmodifiableMapBuilder<String, Object>(5)
+      ResponseField.forObject("createEpic", "createEpic", new UnmodifiableMapBuilder<String, Object>(5)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -222,22 +219,22 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         .put("kind", "Variable")
         .put("variableName", "idProject")
         .build())
-      .put("begindate", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("name", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "begindate")
+        .put("variableName", "name")
         .build())
-      .put("enddate", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("description", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "enddate")
+        .put("variableName", "description")
         .build())
-      .put("goal", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("status", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "goal")
+        .put("variableName", "status")
         .build())
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
 
-    final @Nullable CreateSprint createSprint;
+    final @Nullable CreateEpic createEpic;
 
     private transient volatile String $toString;
 
@@ -245,19 +242,19 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Data(@Nullable CreateSprint createSprint) {
-      this.createSprint = createSprint;
+    public Data(@Nullable CreateEpic createEpic) {
+      this.createEpic = createEpic;
     }
 
-    public @Nullable CreateSprint createSprint() {
-      return this.createSprint;
+    public @Nullable CreateEpic createEpic() {
+      return this.createEpic;
     }
 
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeObject($responseFields[0], createSprint != null ? createSprint.marshaller() : null);
+          writer.writeObject($responseFields[0], createEpic != null ? createEpic.marshaller() : null);
         }
       };
     }
@@ -266,7 +263,7 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
     public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "createSprint=" + createSprint
+          + "createEpic=" + createEpic
           + "}";
       }
       return $toString;
@@ -279,7 +276,7 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return ((this.createSprint == null) ? (that.createSprint == null) : this.createSprint.equals(that.createSprint));
+        return ((this.createEpic == null) ? (that.createEpic == null) : this.createEpic.equals(that.createEpic));
       }
       return false;
     }
@@ -289,7 +286,7 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= (createSprint == null) ? 0 : createSprint.hashCode();
+        h ^= (createEpic == null) ? 0 : createEpic.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -297,29 +294,28 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
     }
 
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      final CreateSprint.Mapper createSprintFieldMapper = new CreateSprint.Mapper();
+      final CreateEpic.Mapper createEpicFieldMapper = new CreateEpic.Mapper();
 
       @Override
       public Data map(ResponseReader reader) {
-        final CreateSprint createSprint = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<CreateSprint>() {
+        final CreateEpic createEpic = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<CreateEpic>() {
           @Override
-          public CreateSprint read(ResponseReader reader) {
-            return createSprintFieldMapper.map(reader);
+          public CreateEpic read(ResponseReader reader) {
+            return createEpicFieldMapper.map(reader);
           }
         });
-        return new Data(createSprint);
+        return new Data(createEpic);
       }
     }
   }
 
-  public static class CreateSprint {
+  public static class CreateEpic {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("idProject", "idProject", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
@@ -328,11 +324,9 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     final @Nullable String idProject;
 
-    final @Nullable Date begindate;
+    final @Nullable String name;
 
-    final @Nullable Date enddate;
-
-    final @Nullable String goal;
+    final @Nullable String status;
 
     private transient volatile String $toString;
 
@@ -340,14 +334,13 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public CreateSprint(@NotNull String __typename, @Nullable String id, @Nullable String idProject,
-        @Nullable Date begindate, @Nullable Date enddate, @Nullable String goal) {
+    public CreateEpic(@NotNull String __typename, @Nullable String id, @Nullable String idProject,
+        @Nullable String name, @Nullable String status) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = id;
       this.idProject = idProject;
-      this.begindate = begindate;
-      this.enddate = enddate;
-      this.goal = goal;
+      this.name = name;
+      this.status = status;
     }
 
     public @NotNull String __typename() {
@@ -362,16 +355,12 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return this.idProject;
     }
 
-    public @Nullable Date begindate() {
-      return this.begindate;
+    public @Nullable String name() {
+      return this.name;
     }
 
-    public @Nullable Date enddate() {
-      return this.enddate;
-    }
-
-    public @Nullable String goal() {
-      return this.goal;
+    public @Nullable String status() {
+      return this.status;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -381,9 +370,8 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
           writer.writeString($responseFields[2], idProject);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], enddate);
-          writer.writeString($responseFields[5], goal);
+          writer.writeString($responseFields[3], name);
+          writer.writeString($responseFields[4], status);
         }
       };
     }
@@ -391,13 +379,12 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
     @Override
     public String toString() {
       if ($toString == null) {
-        $toString = "CreateSprint{"
+        $toString = "CreateEpic{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "idProject=" + idProject + ", "
-          + "begindate=" + begindate + ", "
-          + "enddate=" + enddate + ", "
-          + "goal=" + goal
+          + "name=" + name + ", "
+          + "status=" + status
           + "}";
       }
       return $toString;
@@ -408,14 +395,13 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       if (o == this) {
         return true;
       }
-      if (o instanceof CreateSprint) {
-        CreateSprint that = (CreateSprint) o;
+      if (o instanceof CreateEpic) {
+        CreateEpic that = (CreateEpic) o;
         return this.__typename.equals(that.__typename)
          && ((this.id == null) ? (that.id == null) : this.id.equals(that.id))
          && ((this.idProject == null) ? (that.idProject == null) : this.idProject.equals(that.idProject))
-         && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
-         && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal));
+         && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
+         && ((this.status == null) ? (that.status == null) : this.status.equals(that.status));
       }
       return false;
     }
@@ -431,27 +417,24 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         h *= 1000003;
         h ^= (idProject == null) ? 0 : idProject.hashCode();
         h *= 1000003;
-        h ^= (begindate == null) ? 0 : begindate.hashCode();
+        h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
-        h ^= (enddate == null) ? 0 : enddate.hashCode();
-        h *= 1000003;
-        h ^= (goal == null) ? 0 : goal.hashCode();
+        h ^= (status == null) ? 0 : status.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
       return $hashCode;
     }
 
-    public static final class Mapper implements ResponseFieldMapper<CreateSprint> {
+    public static final class Mapper implements ResponseFieldMapper<CreateEpic> {
       @Override
-      public CreateSprint map(ResponseReader reader) {
+      public CreateEpic map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         final String idProject = reader.readString($responseFields[2]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
-        final String goal = reader.readString($responseFields[5]);
-        return new CreateSprint(__typename, id, idProject, begindate, enddate, goal);
+        final String name = reader.readString($responseFields[3]);
+        final String status = reader.readString($responseFields[4]);
+        return new CreateEpic(__typename, id, idProject, name, status);
       }
     }
   }

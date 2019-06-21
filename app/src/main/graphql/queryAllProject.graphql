@@ -1,5 +1,5 @@
 query AllProject{
-  allProject{
+  project{
     id
     name
     description

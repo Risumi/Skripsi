@@ -1,14 +1,20 @@
 package com.example.app.fragment;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.app.MainViewModel;
+import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
 import com.example.app.adapter.EpicAdapter;
 import com.example.app.R;
@@ -33,6 +39,7 @@ public class FragmentEpic extends Fragment {
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     ArrayList<Epic> listEpic;
+    private MainViewModel model;
 
     public FragmentEpic() {
         // Required empty public constructor
@@ -63,20 +70,30 @@ public class FragmentEpic extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
+        model.getListEpic().observe(this, new Observer<ArrayList<Epic>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<Epic> epics) {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_epic, container, false);
-        listEpic = new ArrayList<>();
-        for (int i = 0 ; i< 5;i++){
-            listEpic.add(new Epic(("Epic "+(Integer) (i+1)),(Integer) (i+2)+"Task ",(Integer) (i+2)+" Tasks"));
-        }
         mRecyclerView=view.findViewById(R.id.rvTop);
-        mAdapter = new EpicAdapter(this.getActivity(), listEpic);
+        mAdapter = new EpicAdapter(this.getActivity(), model.getListEpic().getValue());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
         return view;
+
+    }
+
+    public void AddDataSet(Epic epic){
+        model.getListEpic().getValue().add(epic);
+        mAdapter.notifyDataSetChanged();
+        model.mutateEpic(epic);
     }
 }

@@ -99,14 +99,26 @@ public class FragmentBurndown extends Fragment {
             daysDiff = 5;
         }
         Log.d("daysDiff", ((Integer) daysDiff).toString());
-        List<Entry> entries = new ArrayList<Entry>();
+
+        LineData lineData = new LineData();
         DateTime tempDate = dateTime;
+
+        List<Entry> entries1 = new ArrayList<Entry>();
+        for(int i = 0 ;i<daysDiff;i++){
+            dateTime = tempDate.plusDays(i);
+            entries1.add(new Entry(dateTime.getMillis(),(i)));
+        }
+        LineDataSet dataSet1 = new LineDataSet(entries1, "Actual Effort");
+        lineData.addDataSet(dataSet1);
+
+        List<Entry> entries = new ArrayList<Entry>();
         for (int i = 0 ; i<daysDiff;i++){
             dateTime = tempDate.plusDays(i);
             entries.add(new Entry(dateTime.getMillis(),(daysDiff-1)-i));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Ideal Effort");
-        LineData lineData = new LineData(dataSet);
+        lineData.addDataSet(dataSet);
+
         Description description = new Description();
         description.setText("");
         XAxis xAxis = chart.getXAxis();

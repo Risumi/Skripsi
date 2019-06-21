@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.app.model.Backlog;
@@ -23,6 +25,7 @@ import com.example.app.model.Sprint;
 import com.example.app.activity.ActivityAddBacklog;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -141,6 +144,15 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
+
+        Spinner spinner = view.findViewById(R.id.spinner2);
+        List<String> spinnerArray = new ArrayList<>();
+        for (int i=0;i<model.getListEpic().getValue().size();i++){
+            spinnerArray.add(model.getListEpic().getValue().get(i).getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,spinnerArray);
+        spinner.setAdapter(adapter);
+
         return view;
     }
 

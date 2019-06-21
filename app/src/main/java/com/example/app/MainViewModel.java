@@ -11,6 +11,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.model.Backlog;
+import com.example.app.model.Epic;
 import com.example.app.model.Sprint;
 
 import org.jetbrains.annotations.NotNull;
@@ -28,24 +29,43 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Backlog>> listBacklog;
     private MutableLiveData<ArrayList<Backlog>> listBacklogSprint;
     private MutableLiveData<Sprint> currentSprint;
+    private MutableLiveData<ArrayList<Epic>> listEpic;
     private MutableLiveData<Integer> sprintCount;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql/graphql";
+    int sCount;
 
     public MainViewModel() {
         listAllBacklog = new MutableLiveData<>();
         ArrayList<Backlog> backlog = new ArrayList<>();
         setListAllBacklog(backlog);
+
         ArrayList<Backlog> backlog2 = new ArrayList<>();
         listBacklogSprint = new MutableLiveData<>();
         listBacklogSprint.setValue(backlog2);
+
         currentSprint = new MutableLiveData<>();
         currentSprint.setValue(new Sprint());
         sprintCount = new MutableLiveData<>();
 //        sprintCount.setValue(0);
+
         ArrayList<Backlog> backlog3 = new ArrayList<>();
         listBacklog = new MutableLiveData<>();
         listBacklog.setValue(backlog3);
+
+        listEpic = new MutableLiveData<>();
+        ArrayList<Epic> epics= new ArrayList<>();
+        listEpic.setValue(epics);
     }
+
+    public void setListEpic(ArrayList<Epic> listEpic){
+        this.listEpic.setValue(listEpic);
+    }
+
+    public MutableLiveData<ArrayList<Epic>> getListEpic() {
+        return listEpic;
+    }
+
+
 
     public void fetchBacklog(String PID){
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -118,7 +138,7 @@ public class MainViewModel extends ViewModel {
         }
         );
     }
-    int sCount;
+
     public void fetchSprint(String PID){
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -180,6 +200,48 @@ public class MainViewModel extends ViewModel {
             }
 
         });
+    }
+
+    public void fetchEpic(String PID){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        EpicQuery epicQuery= EpicQuery.builder().id(PID).build();
+        apolloClient.query(epicQuery).enqueue(new ApolloCall.Callback<EpicQuery.Data>() {
+             @Override
+             public void onResponse(@NotNull Response<EpicQuery.Data> response) {
+                 Log.d("Berhasil", ((Integer) response.data().epic.size()).toString());
+                 for (int i = 0 ; i<response.data().epic.size();i++){
+                     listEpic.getValue().add(new Epic(response.data().epic.get(i).name,
+                             response.data().epic.get(i).status,
+                             response.data().epic.get(i).description,
+                             response.data().epic.get(i).id,
+                             PID));
+                     Log.d("Berhasil",response.data().epic.get(i).name);
+                 }
+                 Log.d("Berhasil","yay");
+             }
+
+             @Override
+             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                 super.onStatusEvent(event);
+                 Log.d("event",event.name());
+                 if (event.name().equalsIgnoreCase("completed")){
+//                     listAllBacklog.postValue(backlog);
+                     fetchBacklog(PID);
+                 }
+             }
+
+
+             @Override
+             public void onFailure(@NotNull ApolloException e) {
+                 Log.d("Gagal",e.getMessage());
+                 e.printStackTrace();
+             }
+         }
+        );
     }
 
     public void mutateBacklog(Backlog backlog){
@@ -251,6 +313,31 @@ public class MainViewModel extends ViewModel {
                 if (response.hasErrors()){
                     Log.d("Error",response.errors().get(0).message());
                 }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+            }
+        });
+    }
+
+    public void mutateEpic(Epic epic){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        EpicMutation epicMutation = EpicMutation.builder().id(epic.getId()).idProject(epic.getIdProject()).name(epic.getName()).status(epic.getStatus()).description(epic.getDescription()).build();
+        apolloClient.mutate(epicMutation).enqueue(new ApolloCall.Callback<EpicMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<EpicMutation.Data> response) {
+                Log.d("Berhasil","yay");
+//                Log.d("Response", response.errors().get(0).message());
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {

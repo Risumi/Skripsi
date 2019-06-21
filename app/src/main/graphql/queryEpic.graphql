@@ -1,0 +1,8 @@
+query epic($id:String!){
+  epic(id:$id){
+    id    
+    name
+    description
+    status
+  }
+}

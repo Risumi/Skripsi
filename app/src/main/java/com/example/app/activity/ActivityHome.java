@@ -101,8 +101,8 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         apolloClient.query(allProjectQuery).enqueue(new ApolloCall.Callback<AllProjectQuery.Data>() {
             @Override
             public void onResponse(@NotNull Response<AllProjectQuery.Data> response) {
-                for (int i = 0 ;i<response.data().allProject().size();i++){
-                    listProject.add(new Project(response.data().allProject().get(i).name(),response.data().allProject().get(i).id(),response.data().allProject().get(i).status(),response.data().allProject().get(i).description()));
+                for (int i = 0 ;i<response.data().project().size();i++){
+                    listProject.add(new Project(response.data().project().get(i).name(),response.data().project().get(i).id(),response.data().project().get(i).status(),response.data().project().get(i).description()));
                 }
 //                    Log.d("Berhasil","yay");
                 ActivityHome.this.runOnUiThread(new Runnable() {

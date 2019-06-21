@@ -26,6 +26,7 @@ import com.example.app.fragment.FragmentSetting;
 import com.example.app.fragment.FragmentSprint;
 import com.example.app.MainViewModel;
 import com.example.app.R;
+import com.example.app.model.Epic;
 import com.example.app.model.Sprint;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
@@ -33,7 +34,7 @@ import com.getbase.floatingactionbutton.FloatingActionsMenu;
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener{
     private Fragment fragment;
-    private FloatingActionButton fab,fab2;
+    private FloatingActionButton fab,fab2,fab3;
     FloatingActionsMenu fam;
     Intent intent;
     private MainViewModel model;
@@ -57,6 +58,9 @@ public class ActivityMain extends AppCompatActivity
         fab2 = (FloatingActionButton) findViewById(R.id.fab4);
         fab2.setOnClickListener(this);
 
+        fab3 = (FloatingActionButton) findViewById(R.id.fab5);
+        fab3.setOnClickListener(this);
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
@@ -72,12 +76,12 @@ public class ActivityMain extends AppCompatActivity
 
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
+        fragment = FragmentEpic.newInstance(intent.getStringExtra("PID"),"");
         transaction.add(R.id.fragmentContainer,fragment);
         transaction.commit();
 //        setFab();
 
-        model.fetchBacklog(PID);
+        model.fetchEpic(PID);
 
         getSupportActionBar().setTitle(intent.getStringExtra("PName"));
         Log.d("PID",PID);
@@ -124,14 +128,14 @@ public class ActivityMain extends AppCompatActivity
         if (id == R.id.nav_epic) {
             fragment = FragmentEpic.newInstance("","");
             fam.collapse();
-            fam.setVisibility(View.GONE);
+            fam.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_backlog) {
             fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
             fam.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
             fam.collapse();
-            fam.setVisibility(View.GONE);
+            fam.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_setting) {
             fragment = FragmentSetting.newInstance("","");
             fam.collapse();
@@ -159,6 +163,10 @@ public class ActivityMain extends AppCompatActivity
         if (fragmentInFrame instanceof FragmentBacklog){
 //            fab.show();
             fam.setVisibility(View.VISIBLE);
+        }else if (fragmentInFrame instanceof FragmentEpic){
+            fam.setVisibility(View.VISIBLE);
+        }else if (fragmentInFrame instanceof FragmentSprint){
+            fam.setVisibility(View.VISIBLE);
         }
         else {
 //            fab.hide();
@@ -166,8 +174,9 @@ public class ActivityMain extends AppCompatActivity
         }
     }
 
-    final int REQ_ADD_PROJECT= 1;
+    final int REQ_ADD_BACKLOG = 1;
     final int REQ_ADD_SPRINT= 3;
+    final int REQ_ADD_EPIC= 4;
     @Override
     public void onClick(View view) {
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -181,10 +190,16 @@ public class ActivityMain extends AppCompatActivity
             startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
             Intent intent = new Intent(this, ActivityAddBacklog.class);
-            intent.putExtra("req code",REQ_ADD_PROJECT);
+            intent.putExtra("req code", REQ_ADD_BACKLOG);
             intent.putExtra("PID",PID);
             intent.putExtra("blID",model.getListBacklog().getValue().size());
-            startActivityForResult(intent,REQ_ADD_PROJECT);
+            startActivityForResult(intent, REQ_ADD_BACKLOG);
+        }else if(view==fab3){
+            Intent intent = new Intent(this, ActivityAddEpic.class);
+            intent.putExtra("req code",REQ_ADD_EPIC);
+            intent.putExtra("PID",PID);
+            intent.putExtra("epID",model.getListEpic().getValue().size());
+            startActivityForResult(intent,REQ_ADD_EPIC);
         }
 
     }
@@ -192,7 +207,7 @@ public class ActivityMain extends AppCompatActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQ_ADD_PROJECT) {
+        if (requestCode == REQ_ADD_BACKLOG) {
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Log.d("isi",newBacklog.getIdProject());
@@ -211,13 +226,22 @@ public class ActivityMain extends AppCompatActivity
                 }
             }
         }
-        if (requestCode == 3) {
+        if (requestCode == REQ_ADD_SPRINT) {
             if (resultCode == RESULT_OK) {
                 Sprint newSprint = data.getParcelableExtra("sprint");
                 model.getSprintCount().setValue(model.getSprintCount().getValue()+1);
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
                     ((FragmentBacklog) fragmentInFrame).setSprint(newSprint);
+                }
+            }
+        }
+        if (requestCode == REQ_ADD_EPIC) {
+            if (resultCode == RESULT_OK) {
+                Epic newEpic = data.getParcelableExtra("result");
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentEpic){
+                    ((FragmentEpic) fragmentInFrame).AddDataSet(newEpic);
                 }
             }
         }

@@ -22,38 +22,35 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import type.CustomType;
+public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, EpicQuery.Variables> {
+  public static final String OPERATION_ID = "6cfaaa53a4d04305f612d6ba3e3e2ff843484c7a52bf60ee2b117e54d580ca60";
 
-public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, CurrentSprintQuery.Data, CurrentSprintQuery.Variables> {
-  public static final String OPERATION_ID = "c1eddc0ecaa122d7cd48a58321c67d7655bb7bef495468d198272a8aa5e17475";
-
-  public static final String QUERY_DOCUMENT = "query currentSprint($id: String!) {\n"
-      + "  sprint(id: $id) {\n"
+  public static final String QUERY_DOCUMENT = "query epic($id: String!) {\n"
+      + "  epic(id: $id) {\n"
       + "    __typename\n"
       + "    id\n"
-      + "    begindate\n"
-      + "    enddate\n"
-      + "    goal\n"
+      + "    name\n"
+      + "    description\n"
+      + "    status\n"
       + "  }\n"
       + "}";
 
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "currentSprint";
+      return "epic";
     }
   };
 
-  private final CurrentSprintQuery.Variables variables;
+  private final EpicQuery.Variables variables;
 
-  public CurrentSprintQuery(@NotNull String id) {
+  public EpicQuery(@NotNull String id) {
     Utils.checkNotNull(id, "id == null");
-    variables = new CurrentSprintQuery.Variables(id);
+    variables = new EpicQuery.Variables(id);
   }
 
   @Override
@@ -67,12 +64,12 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
   }
 
   @Override
-  public CurrentSprintQuery.Data wrapData(CurrentSprintQuery.Data data) {
+  public EpicQuery.Data wrapData(EpicQuery.Data data) {
     return data;
   }
 
   @Override
-  public CurrentSprintQuery.Variables variables() {
+  public EpicQuery.Variables variables() {
     return variables;
   }
 
@@ -101,9 +98,9 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
       return this;
     }
 
-    public CurrentSprintQuery build() {
+    public EpicQuery build() {
       Utils.checkNotNull(id, "id == null");
-      return new CurrentSprintQuery(id);
+      return new EpicQuery(id);
     }
   }
 
@@ -139,7 +136,7 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forList("sprint", "sprint", new UnmodifiableMapBuilder<String, Object>(1)
+      ResponseField.forList("epic", "epic", new UnmodifiableMapBuilder<String, Object>(1)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -147,7 +144,7 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
 
-    final @Nullable List<Sprint> sprint;
+    final @Nullable List<Epic> epic;
 
     private transient volatile String $toString;
 
@@ -155,23 +152,23 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Data(@Nullable List<Sprint> sprint) {
-      this.sprint = sprint;
+    public Data(@Nullable List<Epic> epic) {
+      this.epic = epic;
     }
 
-    public @Nullable List<Sprint> sprint() {
-      return this.sprint;
+    public @Nullable List<Epic> epic() {
+      return this.epic;
     }
 
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeList($responseFields[0], sprint, new ResponseWriter.ListWriter() {
+          writer.writeList($responseFields[0], epic, new ResponseWriter.ListWriter() {
             @Override
             public void write(List items, ResponseWriter.ListItemWriter listItemWriter) {
               for (Object item : items) {
-                listItemWriter.writeObject(((Sprint) item).marshaller());
+                listItemWriter.writeObject(((Epic) item).marshaller());
               }
             }
           });
@@ -183,7 +180,7 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
     public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "sprint=" + sprint
+          + "epic=" + epic
           + "}";
       }
       return $toString;
@@ -196,7 +193,7 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return ((this.sprint == null) ? (that.sprint == null) : this.sprint.equals(that.sprint));
+        return ((this.epic == null) ? (that.epic == null) : this.epic.equals(that.epic));
       }
       return false;
     }
@@ -206,7 +203,7 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= (sprint == null) ? 0 : sprint.hashCode();
+        h ^= (epic == null) ? 0 : epic.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -214,44 +211,44 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
     }
 
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      final Sprint.Mapper sprintFieldMapper = new Sprint.Mapper();
+      final Epic.Mapper epicFieldMapper = new Epic.Mapper();
 
       @Override
       public Data map(ResponseReader reader) {
-        final List<Sprint> sprint = reader.readList($responseFields[0], new ResponseReader.ListReader<Sprint>() {
+        final List<Epic> epic = reader.readList($responseFields[0], new ResponseReader.ListReader<Epic>() {
           @Override
-          public Sprint read(ResponseReader.ListItemReader listItemReader) {
-            return listItemReader.readObject(new ResponseReader.ObjectReader<Sprint>() {
+          public Epic read(ResponseReader.ListItemReader listItemReader) {
+            return listItemReader.readObject(new ResponseReader.ObjectReader<Epic>() {
               @Override
-              public Sprint read(ResponseReader reader) {
-                return sprintFieldMapper.map(reader);
+              public Epic read(ResponseReader reader) {
+                return epicFieldMapper.map(reader);
               }
             });
           }
         });
-        return new Data(sprint);
+        return new Data(epic);
       }
     }
   }
 
-  public static class Sprint {
+  public static class Epic {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
 
     final @NotNull String id;
 
-    final @Nullable Date begindate;
+    final @Nullable String name;
 
-    final @Nullable Date enddate;
+    final @Nullable String description;
 
-    final @Nullable String goal;
+    final @Nullable String status;
 
     private transient volatile String $toString;
 
@@ -259,13 +256,13 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Sprint(@NotNull String __typename, @NotNull String id, @Nullable Date begindate,
-        @Nullable Date enddate, @Nullable String goal) {
+    public Epic(@NotNull String __typename, @NotNull String id, @Nullable String name,
+        @Nullable String description, @Nullable String status) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
-      this.begindate = begindate;
-      this.enddate = enddate;
-      this.goal = goal;
+      this.name = name;
+      this.description = description;
+      this.status = status;
     }
 
     public @NotNull String __typename() {
@@ -276,16 +273,16 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
       return this.id;
     }
 
-    public @Nullable Date begindate() {
-      return this.begindate;
+    public @Nullable String name() {
+      return this.name;
     }
 
-    public @Nullable Date enddate() {
-      return this.enddate;
+    public @Nullable String description() {
+      return this.description;
     }
 
-    public @Nullable String goal() {
-      return this.goal;
+    public @Nullable String status() {
+      return this.status;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -294,9 +291,9 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[2], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], enddate);
-          writer.writeString($responseFields[4], goal);
+          writer.writeString($responseFields[2], name);
+          writer.writeString($responseFields[3], description);
+          writer.writeString($responseFields[4], status);
         }
       };
     }
@@ -304,12 +301,12 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
     @Override
     public String toString() {
       if ($toString == null) {
-        $toString = "Sprint{"
+        $toString = "Epic{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
-          + "begindate=" + begindate + ", "
-          + "enddate=" + enddate + ", "
-          + "goal=" + goal
+          + "name=" + name + ", "
+          + "description=" + description + ", "
+          + "status=" + status
           + "}";
       }
       return $toString;
@@ -320,13 +317,13 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
       if (o == this) {
         return true;
       }
-      if (o instanceof Sprint) {
-        Sprint that = (Sprint) o;
+      if (o instanceof Epic) {
+        Epic that = (Epic) o;
         return this.__typename.equals(that.__typename)
          && this.id.equals(that.id)
-         && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
-         && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal));
+         && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
+         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description))
+         && ((this.status == null) ? (that.status == null) : this.status.equals(that.status));
       }
       return false;
     }
@@ -340,26 +337,26 @@ public final class CurrentSprintQuery implements Query<CurrentSprintQuery.Data, 
         h *= 1000003;
         h ^= id.hashCode();
         h *= 1000003;
-        h ^= (begindate == null) ? 0 : begindate.hashCode();
+        h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
-        h ^= (enddate == null) ? 0 : enddate.hashCode();
+        h ^= (description == null) ? 0 : description.hashCode();
         h *= 1000003;
-        h ^= (goal == null) ? 0 : goal.hashCode();
+        h ^= (status == null) ? 0 : status.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
       return $hashCode;
     }
 
-    public static final class Mapper implements ResponseFieldMapper<Sprint> {
+    public static final class Mapper implements ResponseFieldMapper<Epic> {
       @Override
-      public Sprint map(ResponseReader reader) {
+      public Epic map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[2]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
-        final String goal = reader.readString($responseFields[4]);
-        return new Sprint(__typename, id, begindate, enddate, goal);
+        final String name = reader.readString($responseFields[2]);
+        final String description = reader.readString($responseFields[3]);
+        final String status = reader.readString($responseFields[4]);
+        return new Epic(__typename, id, name, description, status);
       }
     }
   }
