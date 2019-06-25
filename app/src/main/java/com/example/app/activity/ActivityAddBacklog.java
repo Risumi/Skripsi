@@ -22,9 +22,10 @@ import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.R;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
-public class ActivityAddBacklog extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener
+public class ActivityAddBacklog extends AppCompatActivity implements View.OnClickListener
 {
     Button button;
     EditText etBlName, etBlDesc, etBlAssignee;
@@ -33,9 +34,10 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
     String status, name,desc,assignee;
     TextView tvDate;
     Date begdda, endda;
-    Spinner spinner;
+    Spinner spinner,spinner2;
     Backlog newBacklog, editBacklog;
     Intent resultIntent;
+    String epicId="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,15 +49,45 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         tvDate = findViewById(R.id.tvDate);
         tvDate.setOnClickListener(this);
         etBlDesc =findViewById(R.id.etBlDesc);
-        spinner = (Spinner) findViewById(R.id.spinner);
+        spinner =  findViewById(R.id.spinner);
+        spinner2 = findViewById(R.id.spinner3);
         etBlAssignee = findViewById(R.id.etBlAssignee);
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Spinner :","1");
+                status = adapterView.getItemAtPosition(i).toString();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         resultIntent  = getIntent();
+
+        ArrayList<String> spinnerArray = resultIntent.getStringArrayListExtra("spinner");
+        ArrayList<String> epicID = resultIntent.getStringArrayListExtra("epicID");
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,spinnerArray);
+        spinner2.setAdapter(adapter2);
+        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Spinner :","2");
+                epicId = epicID.get(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         if (resultIntent.getIntExtra("req code",1)==2){
             editBacklog = resultIntent.getParcelableExtra("backlog");
             etBlName.setText(editBacklog.getName());
@@ -87,9 +119,9 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                     desc = etBlDesc.getText().toString();
                     assignee = etBlAssignee.getText().toString();
                     if (resultIntent.getIntExtra("req code",1)==2){
-                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),"","");
+                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),"","",epicId);
                     }else {
-                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"","");
+                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"","",epicId);
                     }
                     Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
                     resultIntent.putExtra("result",newBacklog);
@@ -146,16 +178,6 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
         pickerFrag.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
         pickerFrag.show(getFragmentManager(), "SUBLIME_PICKER");
-    }
-
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        status = adapterView.getItemAtPosition(i).toString();
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
     }
 
     public String formatDate(Date rawDate){

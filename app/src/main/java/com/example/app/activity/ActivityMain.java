@@ -31,6 +31,9 @@ import com.example.app.model.Sprint;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener{
     private Fragment fragment;
@@ -190,6 +193,14 @@ public class ActivityMain extends AppCompatActivity
             startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
             Intent intent = new Intent(this, ActivityAddBacklog.class);
+            ArrayList<String> spinnerArray = new ArrayList<>();
+            ArrayList<String> idEpic = new ArrayList<>();
+            for (int i=0;i<model.getListEpic().getValue().size();i++){
+                spinnerArray.add(model.getListEpic().getValue().get(i).getName());
+                idEpic.add(model.getListEpic().getValue().get(i).getId());
+            }
+            intent.putStringArrayListExtra("spinner",spinnerArray);
+            intent.putStringArrayListExtra("epicID",idEpic);
             intent.putExtra("req code", REQ_ADD_BACKLOG);
             intent.putExtra("PID",PID);
             intent.putExtra("blID",model.getListBacklog().getValue().size());
@@ -222,7 +233,7 @@ public class ActivityMain extends AppCompatActivity
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog);
+                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog,data.getStringExtra("adapter"));
                 }
             }
         }

@@ -29,7 +29,7 @@ public class FragmentTask extends Fragment implements Listener, BacklogAdapter.B
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private ArrayList<Backlog> mParam1;
     private String mParam2;
 
 
@@ -46,10 +46,10 @@ public class FragmentTask extends Fragment implements Listener, BacklogAdapter.B
      * @return A new instance of fragment FragmentTask.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentTask newInstance(String param1, String param2) {
+    public static FragmentTask newInstance(ArrayList<Backlog> param1, String param2) {
         FragmentTask fragment = new FragmentTask();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelableArrayList(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -58,15 +58,16 @@ public class FragmentTask extends Fragment implements Listener, BacklogAdapter.B
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mParam1=new ArrayList<>();
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getParcelableArrayList(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
 
     RecyclerView rvTop;
     BacklogAdapter topListAdapter;
-    ArrayList <Backlog> backlogArrayList;
+//    ArrayList <Backlog> backlogArrayList;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -75,13 +76,12 @@ public class FragmentTask extends Fragment implements Listener, BacklogAdapter.B
         View view =inflater.inflate(R.layout.fragment_task, container, false);
         rvTop = view.findViewById(R.id.rvTop);
 
-        backlogArrayList = new ArrayList<>();
-        for (int i = 1 ;i<6;i++){
-            backlogArrayList.add(new Backlog("Task "+i,"Status",new Date(),new Date(),"","Deskripsi","","","",""));
-        }
-
+//        backlogArrayList = new ArrayList<>();
+//        for (int i = 1 ;i<6;i++){
+//            backlogArrayList.add(new Backlog("Task "+i,"Status",new Date(),new Date(),"","Deskripsi","","","",""));
+//        }
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        topListAdapter = new BacklogAdapter(backlogArrayList,this,this);
+        topListAdapter = new BacklogAdapter(mParam1,this,this);
         rvTop.setAdapter(topListAdapter);
 
         return view;
@@ -93,17 +93,17 @@ public class FragmentTask extends Fragment implements Listener, BacklogAdapter.B
     }
 
     @Override
-    public void setEmptyListMiddle(boolean visibility) {
-
-    }
-
-    @Override
     public void setEmptyListBottom(boolean visibility) {
 
     }
 
     @Override
-    public void onItemClicked(int position) {
+    public void updateSprint(Backlog backlog, String todo) {
+
+    }
+
+    @Override
+    public void onItemClicked(int position,Backlog backlog,BacklogAdapter adapter) {
 
     }
 }

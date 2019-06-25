@@ -5,6 +5,7 @@ import android.view.DragEvent;
 import android.view.View;
 
 import com.example.app.Listener;
+import com.example.app.ListenerSprint;
 import com.example.app.R;
 import com.example.app.model.Backlog;
 
@@ -13,9 +14,9 @@ import java.util.ArrayList;
 public class DragListenerSprint implements View.OnDragListener {
 
     private boolean isDropped = false;
-    private Listener listener;
+    private ListenerSprint listener;
 
-    DragListenerSprint(Listener listener) {
+    DragListenerSprint(ListenerSprint listener) {
         this.listener = listener;
     }
 
@@ -88,6 +89,16 @@ public class DragListenerSprint implements View.OnDragListener {
                             }
                             adapterTarget.updateList(customListTarget);
                             adapterTarget.notifyDataSetChanged();
+
+                            if (source.getId()==target.getId()){
+
+                            }else if (target.getId()==rvTop){
+                                listener.setStatus(list,"Top");
+                            }else if (target.getId()==rvMiddle){
+                                listener.setStatus(list,"Middle");
+                            }else if (target.getId()==rvBottom){
+                                listener.setStatus(list,"Bottom");
+                            }
 
                             if(sourceId == rvTop && adapterSource.getItemCount() < 1) {
                                 listener.setEmptyListTop(true);

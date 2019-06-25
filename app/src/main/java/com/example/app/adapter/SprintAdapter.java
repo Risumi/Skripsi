@@ -12,6 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.app.Listener;
+import com.example.app.ListenerSprint;
 import com.example.app.R;
 import com.example.app.model.Backlog;
 
@@ -22,9 +23,9 @@ import java.util.Date;
 public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> implements  View.OnLongClickListener{
 
     ArrayList<Backlog> backlogList;
-    Listener listener;
+    ListenerSprint listener;
 
-    public SprintAdapter(ArrayList<Backlog> backlogList, Listener listener) {
+    public SprintAdapter(ArrayList<Backlog> backlogList, ListenerSprint listener) {
         this.backlogList = backlogList;
         this.listener = listener;
     }

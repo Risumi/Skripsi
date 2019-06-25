@@ -1,0 +1,12 @@
+mutation BacklogSprintNull($id:String!,$idProject:String!,$idEpic:String!,$name:String!,$status:String!,$begindate:Date!,$enddate:Date!,$description:String!){
+  createBacklogsprintnull(id:$id,idProject:$idProject,idEpic:$idEpic,name:$name,status:$status,begindate:$begindate,enddate:$enddate,description:$description){
+    id
+    idProject
+    idEpic  
+    name
+    status
+    begindate
+    enddate
+    description
+  }
+}

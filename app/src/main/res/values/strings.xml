@@ -12,7 +12,7 @@
     <string name="title_activity_home2">HomeActivity2</string>
     <string-array name="Status">
         <item>To Do</item>
-        <item>In Progress</item>
+        <item>On Progress</item>
         <item>Completed</item>
     </string-array>
     <string name="title_activity_epic">Epic</string>

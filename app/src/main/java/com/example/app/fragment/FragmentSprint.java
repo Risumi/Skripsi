@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.example.app.ListenerSprint;
 import com.example.app.model.Backlog;
 import com.example.app.Listener;
 import com.example.app.MainViewModel;
@@ -28,7 +29,7 @@ import java.util.Date;
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSprint extends Fragment implements Listener, View.OnClickListener {
+public class FragmentSprint extends Fragment implements ListenerSprint, View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -97,10 +98,12 @@ public class FragmentSprint extends Fragment implements Listener, View.OnClickLi
             Date date = new Date();
             Date date1 = new Date(1999,01,01);
             if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
-                btnSprint.setText("Start");
+                btnSprint.setText("Standby");
             }
             else if (date.before(model.getCurrentSprint().getValue().getEndda())){
-                btnSprint.setText("End");
+                btnSprint.setText("Running");
+            }else if (date.after(model.getCurrentSprint().getValue().getEndda())){
+                btnSprint.setText("Finished");
             }
         }else {
             btnSprint.setVisibility(View.GONE);
@@ -166,6 +169,20 @@ public class FragmentSprint extends Fragment implements Listener, View.OnClickLi
         log();
     }
 
+    @Override
+    public void setStatus(Backlog backlog, String status) {
+        if (status.equalsIgnoreCase("Top")){
+            backlog.setStatus("To Do");
+            model.mutateBacklogSprint(backlog);
+        }else if (status.equalsIgnoreCase("Middle")){
+            backlog.setStatus("On Progress");
+            model.mutateBacklogSprint(backlog);
+        }else if (status.equalsIgnoreCase("Bottom")){
+            backlog.setStatus("Completed");
+            model.mutateBacklogSprint(backlog);
+        }
+    }
+
     void log(){
         Log.d("rvTop", ((Integer) rvTop.getVisibility()).toString());
         Log.d("rvMiddle",((Integer) rvMiddle.getVisibility()).toString());
@@ -177,23 +194,23 @@ public class FragmentSprint extends Fragment implements Listener, View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if (btnSprint.getText().toString().equalsIgnoreCase("End")){
-
-            // TODO: 24-May-19 change status project to no run
+//        if (btnSprint.getText().toString().equalsIgnoreCase("End")){
+//
+//            // TODO: 24-May-19 change status project to no run
 //            Sprint sprint = model.getCurrentSprint().getValue();
 //            sprint.setBegda(new Date(1999,01,01));
-//            model.mutateSprint(sprint);
-            model.setCurrentSprint(null);
-
-            btnSprint.setVisibility(View.GONE);
-        }else {
-            Date date = new Date();
-            model.getCurrentSprint().getValue().setBegda(date);
-            model.mutateSprint(model.getCurrentSprint().getValue());
-
-            // TODO: 24-May-19 change status project to running
-
-            btnSprint.setText("End");
-        }
+////            model.mutateSprint(sprint);
+//            model.setCurrentSprint(null);
+//
+//            btnSprint.setVisibility(View.GONE);
+//        }else {
+//            Date date = new Date();
+//            model.getCurrentSprint().getValue().setBegda(date);
+//            model.mutateSprint(model.getCurrentSprint().getValue());
+//
+//            // TODO: 24-May-19 change status project to running
+//
+//            btnSprint.setText("End");
+//        }
     }
 }

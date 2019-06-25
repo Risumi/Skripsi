@@ -18,7 +18,7 @@ public class Backlog implements Parcelable {
     private String idComment;
     private String idEpic;
 
-    public Backlog(String name, String status, Date begda, Date endda, String assignee, String description, String id, String idProject, String idSprint, String idComment) {
+    public Backlog(String name, String status, Date begda, Date endda, String assignee, String description, String id, String idProject, String idSprint, String idComment,String idEpic) {
         this.name = name;
         this.status = status;
         this.begda = begda;
@@ -29,6 +29,7 @@ public class Backlog implements Parcelable {
         this.idProject = idProject;
         this.idSprint = idSprint;
         this.idComment = idComment;
+        this.idEpic= idEpic;
     }
 
     public String getName() {
@@ -111,7 +112,13 @@ public class Backlog implements Parcelable {
         this.idComment = idComment;
     }
 
+    public String getIdEpic() {
+        return idEpic;
+    }
 
+    public void setIdEpic(String idEpic) {
+        this.idEpic = idEpic;
+    }
 
     protected Backlog(Parcel in) {
         name = in.readString();
@@ -126,6 +133,7 @@ public class Backlog implements Parcelable {
         idProject = in.readString();
         idSprint = in.readString();
         idComment = in.readString();
+        idEpic = in.readString();
     }
 
     @Override
@@ -145,6 +153,7 @@ public class Backlog implements Parcelable {
         dest.writeString(idProject);
         dest.writeString(idSprint);
         dest.writeString(idComment);
+        dest.writeString(idEpic);
     }
 
     @SuppressWarnings("unused")

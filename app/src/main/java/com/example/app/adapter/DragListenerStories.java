@@ -82,6 +82,7 @@ public class DragListenerStories implements View.OnDragListener {
 
                             BacklogAdapter adapterTarget = (BacklogAdapter) target.getAdapter();
                             ArrayList<Backlog> customListTarget = adapterTarget.getList();
+
                             if (positionTarget >= 0) {
                                 customListTarget.add(positionTarget, list);
                             } else {
@@ -90,6 +91,14 @@ public class DragListenerStories implements View.OnDragListener {
                             adapterTarget.updateList(customListTarget);
                             adapterTarget.notifyDataSetChanged();
 
+                            if (source.getId()==rvTop && target.getId()==rvBottom){
+                                listener.updateSprint(list,"update");
+                            }else if (source.getId()==rvBottom && target.getId()==rvTop){
+                                listener.updateSprint(list,"remove");
+                            }else {
+
+                            }
+
                             if(sourceId == rvTop && adapterSource.getItemCount() < 1) {
                                 listener.setEmptyListTop(true);
                                 Log.d("setEmptyListTop","True");
@@ -97,14 +106,6 @@ public class DragListenerStories implements View.OnDragListener {
                             if(viewId == tvEmptyListTop) {
                                 listener.setEmptyListTop(false);
                                 Log.d("setEmptyListTop","False");
-                            }
-                            if(sourceId == rvMiddle && adapterSource.getItemCount() < 1) {
-                                listener.setEmptyListMiddle(true);
-                                Log.d("setEmptyListMiddle","True");
-                            }
-                            if(viewId == tvEmptyListMiddle) {
-                                listener.setEmptyListMiddle(false);
-                                Log.d("setEmptyListMiddle","False");
                             }
                             if (sourceId == rvBottom && adapterSource.getItemCount() < 1) {
                                 listener.setEmptyListBottom(true);

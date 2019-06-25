@@ -1,9 +1,10 @@
 package com.example.app;
-
 import com.example.app.model.Backlog;
 
-public interface Listener {
+
+public interface ListenerSprint {
     void setEmptyListTop(boolean visibility);
+    void setEmptyListMiddle(boolean visibility);
     void setEmptyListBottom(boolean visibility);
-    void updateSprint(Backlog backlog,String todo);
+    void setStatus(Backlog backlog, String status);
 }

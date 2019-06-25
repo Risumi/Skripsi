@@ -8,7 +8,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.TextView;
+import com.example.app.model.Epic;
 
+
+import com.example.app.EpicQuery;
 import com.example.app.R;
 
 /**
@@ -23,7 +26,7 @@ public class FragmentDetailEpic extends Fragment {
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private Epic mParam1;
     private String mParam2;
 
 
@@ -40,10 +43,10 @@ public class FragmentDetailEpic extends Fragment {
      * @return A new instance of fragment FragmentDetailEpic.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDetailEpic newInstance(String param1, String param2) {
+    public static FragmentDetailEpic newInstance(Epic param1, String param2) {
         FragmentDetailEpic fragment = new FragmentDetailEpic();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -53,7 +56,7 @@ public class FragmentDetailEpic extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
+            mParam1 = getArguments().getParcelable(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
     }
@@ -65,12 +68,15 @@ public class FragmentDetailEpic extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail_epic, container, false);
         editText = view.findViewById(R.id.etEpicName);
         editText.setEnabled(false);
+        editText.setText(mParam1.getName());
 
         editText3 = view.findViewById(R.id.etEpicDesc);
         editText3.setEnabled(false);
+        editText3.setText(mParam1.getDescription());
 
         editText2 = view.findViewById(R.id.eEpicStatus);
         editText2.setEnabled(false);
+        editText3.setText(mParam1.getStatus());
 
         return view;
     }

@@ -108,6 +108,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     TextView tvSprint;
     private MainViewModel model;
     BacklogAdapter topListAdapter;
+    BacklogAdapter bottomListAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -140,7 +141,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
 
         rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        BacklogAdapter bottomListAdapter = new BacklogAdapter(model.getListBacklogSprint().getValue(), this,this);
+        bottomListAdapter = new BacklogAdapter(model.getListBacklogSprint().getValue(), this,this);
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
@@ -164,7 +165,13 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     }
 
     @Override
-    public void setEmptyListMiddle(boolean visibility) {
+    public void updateSprint(Backlog backlog,String todo) {
+        if (todo.equalsIgnoreCase("update")){
+            backlog.setIdSprint(model.getCurrentSprint().getValue().getId());
+            model.mutateBacklogSprint(backlog);
+        }else if (todo.equalsIgnoreCase("remove")){
+            model.mutateBacklogSprintNull(backlog);
+        }
     }
 
     @Override
@@ -182,12 +189,30 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     }
 
     @Override
-    public void onItemClicked(int position) {
+    public void onItemClicked(int position,Backlog backlog,BacklogAdapter adapter) {
         Intent editBacklog =new Intent(getContext(), ActivityAddBacklog.class);
-        editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
+        if (adapter==topListAdapter){
+            Log.d("adapter","top");
+            editBacklog.putExtra("adapter", "top");
+            editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
+            editBacklog.putExtra("blsID",model.getListBacklog().getValue().get(position).getId());
+        }else if (adapter == bottomListAdapter){
+            Log.d("adapter","bot");
+            editBacklog.putExtra("adapter", "bot");
+            editBacklog.putExtra("backlog",model.getListBacklogSprint().getValue().get(position));
+            editBacklog.putExtra("blsID",model.getListBacklogSprint().getValue().get(position).getId());
+        }
+
         Log.d("position", ((Integer) position).toString());
+        ArrayList<String> spinnerArray = new ArrayList<>();
+        ArrayList<String> idEpic = new ArrayList<>();
+        for (int i=0;i<model.getListEpic().getValue().size();i++){
+            spinnerArray.add(model.getListEpic().getValue().get(i).getName());
+            idEpic.add(model.getListEpic().getValue().get(i).getId());
+        }
+        editBacklog.putStringArrayListExtra("spinner",spinnerArray);
+        editBacklog.putStringArrayListExtra("epicID",idEpic);
         editBacklog.putExtra("PID", PID);
-        editBacklog.putExtra("blsID",model.getListBacklog().getValue().get(position).getId());
         editBacklog.putExtra("position",position);
         editBacklog.putExtra("req code",EDIT_BACKLOG);
         getActivity().startActivityForResult(editBacklog,EDIT_BACKLOG);
@@ -199,10 +224,17 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         model.mutateBacklog(backlog);
     }
 
-    public void EditDataSet(int position,Backlog backlog){
-        model.getListBacklog().getValue().set(position,backlog);
-        topListAdapter.notifyDataSetChanged();
-        model.mutateBacklog(backlog);
+    public void EditDataSet(int position,Backlog backlog,String adapter){
+        if (adapter.equalsIgnoreCase("top")){
+            model.getListBacklog().getValue().set(position,backlog);
+            topListAdapter.notifyDataSetChanged();
+            model.mutateBacklog(backlog);
+        }else {
+            model.getListBacklogSprint().getValue().set(position,backlog);
+            bottomListAdapter.notifyDataSetChanged();
+            model.mutateBacklog(backlog);
+        }
+
     }
 
     public void setSprint(Sprint sprint){

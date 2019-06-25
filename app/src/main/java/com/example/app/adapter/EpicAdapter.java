@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -64,7 +65,10 @@ public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder
         @Override
         public void onClick(View view) {
             Intent intent = new Intent(_context, ActivityEpic.class);
-            intent.putExtra("PID",projectArrayList.get(getAdapterPosition()).getId());
+            intent.putExtra("epicID",projectArrayList.get(getAdapterPosition()).getId());
+            intent.putExtra("epic",projectArrayList.get(getAdapterPosition()));
+            Log.d("epicID",projectArrayList.get(getAdapterPosition()).toString());
+            Log.d("epicID",projectArrayList.get(getAdapterPosition()).getId());
             _context.startActivity(intent);
         }
     }

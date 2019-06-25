@@ -111,7 +111,11 @@ public class MainViewModel extends ViewModel {
                                 response.data().backlog.get(i).id,
                                 PID,
                                 aiueo,
+                                "",
                                 ""));
+                    }
+                    if (response.hasErrors()){
+                        Log.d("Error",response.errors().get(0).message());
                     }
 
                     Log.d("Berhasil",response.data().backlog.get(i).name);
@@ -128,7 +132,6 @@ public class MainViewModel extends ViewModel {
                      fetchSprint(PID);
                  }
              }
-
 
              @Override
              public void onFailure(@NotNull ApolloException e) {
@@ -265,12 +268,115 @@ public class MainViewModel extends ViewModel {
                 .okHttpClient(okHttpClient)
                 .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
                 .build();
-        BacklogMutation backlogMutation = BacklogMutation.builder().id(backlog.getId()).idProject(backlog.getIdProject()).name(backlog.getName()).status(backlog.getStatus()).begindate(backlog.getBegda()).enddate(backlog.getEndda()).description(backlog.getDescription()).build();
+        BacklogMutation backlogMutation = BacklogMutation.builder().id(backlog.getId()).idProject(backlog.getIdProject()).idEpic(backlog.getIdEpic()).name(backlog.getName()).status(backlog.getStatus()).begindate(backlog.getBegda()).enddate(backlog.getEndda()).description(backlog.getDescription()).build();
         apolloClient.mutate(backlogMutation).enqueue(new ApolloCall.Callback<BacklogMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<BacklogMutation.Data> response) {
                 Log.d("Berhasil","yay");
 //                Log.d("Response", response.errors().get(0).message());
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+            }
+        });
+    }
+
+    public void mutateBacklogSprint(Backlog backlog){
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
+            @Override public Date decode(CustomTypeValue value) {
+                try {
+                    return formatDate.parse(value.value.toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override public CustomTypeValue encode(Date value) {
+                return new CustomTypeValue.GraphQLString(formatDate.format(value));
+            }
+        };
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
+                .build();
+        BacklogSprintMutation backlogMutation = BacklogSprintMutation.builder()
+                .id(backlog.getId())
+                .idProject(backlog.getIdProject())
+                .idEpic(backlog.getIdEpic())
+                .idSprint(backlog.getIdSprint())
+                .name(backlog.getName())
+                .status(backlog.getStatus())
+                .begindate(backlog.getBegda())
+                .enddate(backlog.getEndda())
+                .description(backlog.getDescription())
+                .build();
+        apolloClient.mutate(backlogMutation).enqueue(new ApolloCall.Callback<BacklogSprintMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<BacklogSprintMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Response", response.errors().get(0).message());
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+            }
+        });
+    }
+
+    public void mutateBacklogSprintNull(Backlog backlog){
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
+            @Override public Date decode(CustomTypeValue value) {
+                try {
+                    return formatDate.parse(value.value.toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override public CustomTypeValue encode(Date value) {
+                return new CustomTypeValue.GraphQLString(formatDate.format(value));
+            }
+        };
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
+                .build();
+        BacklogSprintNullMutation backlogMutation = BacklogSprintNullMutation.builder()
+                .id(backlog.getId())
+                .idProject(backlog.getIdProject())
+                .idEpic(backlog.getIdEpic())
+                .name(backlog.getName())
+                .status(backlog.getStatus())
+                .begindate(backlog.getBegda())
+                .enddate(backlog.getEndda())
+                .description(backlog.getDescription())
+                .build();
+        apolloClient.mutate(backlogMutation).enqueue(new ApolloCall.Callback<BacklogSprintNullMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<BacklogSprintNullMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Response", response.errors().get(0).message());
+                }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
@@ -383,7 +489,7 @@ public class MainViewModel extends ViewModel {
         MutableLiveData<ArrayList<Backlog>> listOnProgress = new MutableLiveData<>();
         ArrayList<Backlog> backlog = new ArrayList<>();
         for (int i = 0; i< listBacklogSprint.getValue().size(); i++){
-            if (listBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("In Progress")){
+            if (listBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("On Progress")){
                 backlog.add(listBacklogSprint.getValue().get(i));
             }
         }

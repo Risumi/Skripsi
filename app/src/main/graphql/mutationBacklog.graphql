@@ -1,7 +1,8 @@
-mutation Backlog($id:String!,$idProject:String!,$name:String!,$status:String!,$begindate:Date!,$enddate:Date!,$description:String!){
-  createBacklog(id:$id,idProject:$idProject,name:$name,status:$status,begindate:$begindate,enddate:$enddate,description:$description){
+mutation Backlog($id:String!,$idProject:String!,$idEpic:String!,$name:String!,$status:String!,$begindate:Date!,$enddate:Date!,$description:String!){
+  createBacklog(id:$id,idProject:$idProject,idEpic:$idEpic,name:$name,status:$status,begindate:$begindate,enddate:$enddate,description:$description){
     id
     idProject
+    idEpic  
     name
     status
     begindate
