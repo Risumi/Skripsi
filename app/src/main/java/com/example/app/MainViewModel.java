@@ -33,6 +33,7 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<Integer> sprintCount;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql/graphql";
     int sCount;
+    ListenerGraphql listener;
 
     public MainViewModel() {
         listAllBacklog = new MutableLiveData<>();
@@ -65,7 +66,9 @@ public class MainViewModel extends ViewModel {
         return listEpic;
     }
 
-
+    public void instantiateListener(ListenerGraphql listener){
+        this.listener = listener;
+    }
 
     public void fetchBacklog(String PID){
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -129,6 +132,7 @@ public class MainViewModel extends ViewModel {
                  Log.d("event",event.name());
                  if (event.name().equalsIgnoreCase("completed")){
 //                     listAllBacklog.postValue(backlog);
+
                      fetchSprint(PID);
                  }
              }
@@ -137,6 +141,8 @@ public class MainViewModel extends ViewModel {
              public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal",e.getMessage());
                 e.printStackTrace();
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"fetch");
              }
         }
         );
@@ -200,12 +206,15 @@ public class MainViewModel extends ViewModel {
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal",e.getMessage());
                 e.printStackTrace();
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"fetch");
             }
 
         });
     }
 
     public void fetchEpic(String PID){
+        listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
@@ -242,12 +251,15 @@ public class MainViewModel extends ViewModel {
              public void onFailure(@NotNull ApolloException e) {
                  Log.d("Gagal",e.getMessage());
                  e.printStackTrace();
+                 listener.endProgressDialog();
+                 listener.startAlert(e.getMessage(),"fetch");
              }
          }
         );
     }
 
     public void mutateBacklog(Backlog backlog){
+        listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
@@ -278,16 +290,22 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"mutateBacklog");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
                 Log.d("event",event.name());
             }
         });
     }
 
     public void mutateBacklogSprint(Backlog backlog){
+        listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
@@ -331,15 +349,21 @@ public class MainViewModel extends ViewModel {
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 e.printStackTrace();
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"mutateSprintBacklog");
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
                 Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
             }
         });
     }
 
     public void mutateBacklogSprintNull(Backlog backlog){
+        listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
@@ -382,15 +406,21 @@ public class MainViewModel extends ViewModel {
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 e.printStackTrace();
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"mutateSprintBacklogNulll");
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
                 Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
             }
         });
     }
 
     public void mutateSprint(Sprint sprint){
+        listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
@@ -423,16 +453,22 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"mutateSprint");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
                 Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
             }
         });
     }
 
     public void mutateEpic(Epic epic){
+        listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
@@ -448,11 +484,16 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"mutateEpic");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
                 Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
             }
         });
     }
@@ -525,6 +566,7 @@ public class MainViewModel extends ViewModel {
         Log.d("Backlog count", ((Integer) listAllBacklog.getValue().size()).toString());
         if (sCount == 0){
             listBacklog = listAllBacklog;
+            listener.endProgressDialog();
             Log.d("Sprint status", "No sprint");
         }else {
             for (int i = 0; i< listAllBacklog.getValue().size(); i++){
@@ -537,10 +579,34 @@ public class MainViewModel extends ViewModel {
                     listBacklog.getValue().add(listAllBacklog.getValue().get(i));
                 }
             }
+            listener.endProgressDialog();
         }
     }
 
     public MutableLiveData<ArrayList<Backlog>> getListBacklog() {
         return listBacklog;
+    }
+
+    public void reset(){
+        listAllBacklog = new MutableLiveData<>();
+        ArrayList<Backlog> backlog = new ArrayList<>();
+        setListAllBacklog(backlog);
+
+        ArrayList<Backlog> backlog2 = new ArrayList<>();
+        listBacklogSprint = new MutableLiveData<>();
+        listBacklogSprint.setValue(backlog2);
+
+        currentSprint = new MutableLiveData<>();
+        currentSprint.setValue(new Sprint());
+        sprintCount = new MutableLiveData<>();
+//        sprintCount.setValue(0);
+
+        ArrayList<Backlog> backlog3 = new ArrayList<>();
+        listBacklog = new MutableLiveData<>();
+        listBacklog.setValue(backlog3);
+
+        listEpic = new MutableLiveData<>();
+        ArrayList<Epic> epics= new ArrayList<>();
+        listEpic.setValue(epics);
     }
 }

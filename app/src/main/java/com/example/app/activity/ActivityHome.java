@@ -1,10 +1,12 @@
 package com.example.app.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -37,6 +39,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     ArrayList<Project> listProject;
     final int ADD_PROJECT =1;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
+    AlertDialog.Builder builder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,8 +53,8 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
-//        new getData().execute();
-        getData();
+//        new fetchProject().execute();
+        fetchProject();
 //        listProject.add(new Project("Blog Project","BP",true));
 //        listProject.add(new Project("IS Project","IP",true));
 //        listProject.add(new Project("IoT Project","IoP",false));
@@ -87,7 +90,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void getData(){
+    private void fetchProject(){
         ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(ActivityHome.this);
         progressDialog.setMessage("Loading ...");
@@ -132,6 +135,15 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal",e.toString());
+                progressDialog.dismiss();
+                ActivityHome.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initializeAlertDialog(e.getMessage());
+                        AlertDialog alert11 = builder.create();
+                        alert11.show();
+                    }
+                });
             }
         });
     }
@@ -176,52 +188,29 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-//    private class setData extends AsyncTask<Void,Void,Void>{
-//        ProgressDialog progressDialog;
-//        Project project;
-//
-//        public setData(Project project) {
-//            this.project = project;
-//        }
-//
-//        @Override
-//        protected void onPreExecute() {
-//            super.onPreExecute();
-//            progressDialog = new ProgressDialog(ActivityHome.this);
-//            progressDialog.setMessage("Loading ...");
-//            progressDialog.setCancelable(false);
-//            progressDialog.show();
-//        }
-//
-//        @Override
-//        protected Void doInBackground(Void... voids) {
-//
-//            OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-//
-//            ApolloClient apolloClient = ApolloClient.builder()
-//                    .serverUrl(BASE_URL)
-//                    .okHttpClient(okHttpClient)
-//                    .build();
-//            ProjectMutation projectMutation= ProjectMutation.builder().id(project.id).name(project.name).description(project.description).status("").build();
-//            apolloClient.mutate(projectMutation).enqueue(new ApolloCall.Callback<ProjectMutation.Data>() {
-//                @Override
-//                public void onResponse(@NotNull Response<ProjectMutation.Data> response) {
-//                    Log.d("berhasil","yay");
-//                }
-//
-//                @Override
-//                public void onFailure(@NotNull ApolloException e) {
-//                    Log.d("gagal","shit");
-//                }
-//            });
-//            return null;
-//        }
-//
-//        @Override
-//        protected void onPostExecute(Void aVoid) {
-//            super.onPostExecute(aVoid);
-//            progressDialog.dismiss();
-//        }
-//    }
+    void initializeAlertDialog(String error){
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Error : "+ error+"\nRetry ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        fetchProject();
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
+    }
+
 }
 

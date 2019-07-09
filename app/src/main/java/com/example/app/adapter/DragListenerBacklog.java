@@ -11,18 +11,17 @@ import com.example.app.model.Backlog;
 
 import java.util.ArrayList;
 
-public class DragListenerStories implements View.OnDragListener {
+public class DragListenerBacklog implements View.OnDragListener {
 
     private boolean isDropped = false;
     private Listener listener;
 
-    public DragListenerStories(Listener listener) {
+    public DragListenerBacklog(Listener listener) {
         this.listener = listener;
     }
 
     @Override
     public boolean onDrag(View v, DragEvent event) {
-
         switch (event.getAction()) {
             case DragEvent.ACTION_DROP:
 
@@ -33,20 +32,16 @@ public class DragListenerStories implements View.OnDragListener {
                 int viewId = v.getId();
                 final int flItem = R.id.FM1;
                 final int tvEmptyListTop = R.id.tvEmptyListTop;
-                final int tvEmptyListMiddle = R.id.tvEmptyListMiddle;
                 final int tvEmptyListBottom = R.id.tvEmptyListBottom;
                 final int rvTop = R.id.rvTop;
-                final int rvMiddle = R.id.rvMiddle;
                 final int rvBottom = R.id.rvBottom;
 
 //                Log.d("Drop",v.toString());
                 switch (viewId) {
                     case flItem:
                     case tvEmptyListTop:
-                    case tvEmptyListMiddle:
                     case tvEmptyListBottom:
                     case rvTop:
-                    case rvMiddle:
                     case rvBottom:
 
                         RecyclerView target;
@@ -54,10 +49,6 @@ public class DragListenerStories implements View.OnDragListener {
                             case tvEmptyListTop:
                             case rvTop:
                                 target = (RecyclerView) v.getRootView().findViewById(rvTop);
-                                break;
-                            case tvEmptyListMiddle:
-                            case rvMiddle:
-                                target = (RecyclerView) v.getRootView().findViewById(rvMiddle);
                                 break;
                             case tvEmptyListBottom:
                             case rvBottom:
@@ -95,8 +86,6 @@ public class DragListenerStories implements View.OnDragListener {
                                 listener.updateSprint(list,"update");
                             }else if (source.getId()==rvBottom && target.getId()==rvTop){
                                 listener.updateSprint(list,"remove");
-                            }else {
-
                             }
 
                             if(sourceId == rvTop && adapterSource.getItemCount() < 1) {

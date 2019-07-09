@@ -96,4 +96,7 @@ public class FragmentEpic extends Fragment {
         mAdapter.notifyDataSetChanged();
         model.mutateEpic(epic);
     }
+    public void notifyAdapter(){
+        mAdapter.notifyDataSetChanged();
+    }
 }

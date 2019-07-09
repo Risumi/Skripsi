@@ -28,16 +28,17 @@ import java.util.Date;
 public class ActivityAddBacklog extends AppCompatActivity implements View.OnClickListener
 {
     Button button;
-    EditText etBlName, etBlDesc, etBlAssignee;
+    EditText etBlName, etBlDesc;
     String mDateStart;
     String mDateEnd;
     String status, name,desc,assignee;
     TextView tvDate;
     Date begdda, endda;
-    Spinner spinner,spinner2;
+    Spinner spinner,spinner2, spinner3;
     Backlog newBacklog, editBacklog;
     Intent resultIntent;
     String epicId="";
+    String sprintId="";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,7 +52,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         etBlDesc =findViewById(R.id.etBlDesc);
         spinner =  findViewById(R.id.spinner);
         spinner2 = findViewById(R.id.spinner3);
-        etBlAssignee = findViewById(R.id.etBlAssignee);
+        spinner3 = findViewById(R.id.spinner4);
+
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Status, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -79,7 +81,36 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("Spinner :","2");
-                epicId = epicID.get(i);
+                if (epicID.size()!=0){
+                    Log.d("index spinner",Integer.toString(i));
+                    if (adapterView.getAdapter().getCount()>0){
+                        if ((i-1)<0){
+
+                        }else {
+                            epicId = epicID.get(i - 1);
+                            if (epicId.equalsIgnoreCase("---")) {
+                                epicId = "";
+                            }
+                        }
+                    }
+                    Log.d("epic ID",epicId);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this, R.array.Asignee, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner3.setAdapter(adapter3);
+        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                Log.d("Spinner :","1");
+                assignee = adapterView.getItemAtPosition(i).toString();
             }
 
             @Override
@@ -93,7 +124,12 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             etBlName.setText(editBacklog.getName());
             int spinnerPos = adapter.getPosition(editBacklog.getStatus());
             spinner.setSelection(spinnerPos);
-            etBlAssignee.setText(editBacklog.getAssignee());
+//            Log.d("Loh",resultIntent.getStringExtra("epicName"));
+            int spinnerPos2 = adapter2.getPosition("Front End");
+            spinner2.setSelection(spinnerPos2);
+//            int spinnerPos3 = adapter.getPosition(editBacklog.getAssignee());
+//            spinner.setSelection(spinnerPos3);
+            sprintId = editBacklog.getIdSprint();
             etBlDesc.setText(editBacklog.getDescription());
             begdda = editBacklog.getBegda();
             endda = editBacklog.getEndda();
@@ -106,6 +142,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         Log.d("PID",resultIntent.getStringExtra("PID"));
     }
 
+
     @Override
     public void onClick(View view) {
         if (view == tvDate){
@@ -117,9 +154,9 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 //                if (resultIntent.getIntExtra("req code",1)==1){
                     name = etBlName.getText().toString();
                     desc = etBlDesc.getText().toString();
-                    assignee = etBlAssignee.getText().toString();
+//                    assignee = "";
                     if (resultIntent.getIntExtra("req code",1)==2){
-                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),"","",epicId);
+                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,"",epicId);
                     }else {
                         newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"","",epicId);
                     }

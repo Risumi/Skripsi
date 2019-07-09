@@ -4,10 +4,12 @@ package com.example.app.fragment;
 import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.app.MainViewModel;
 import com.example.app.R;
@@ -46,7 +48,7 @@ public class FragmentBurndown extends Fragment {
     private String mParam2;
     private MainViewModel model;
     LineChart chart ;
-
+    TextView txtSprint;
     public FragmentBurndown() {
         // Required empty public constructor
     }
@@ -86,49 +88,83 @@ public class FragmentBurndown extends Fragment {
         chart = view.findViewById(R.id.chart);
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
         int daysDiff;
-
+        txtSprint = view.findViewById(R.id.textView9);
+//        txtSprint.setText("Sprint "+model.getCurrentSprint().getValue().getId().substring(model.getCurrentSprint().getValue().getId().length()-1));
+//        txtSprint.setText("Sprint 2");
         DateTime dateTime = new DateTime();
         if (model.getCurrentSprint()!=null){
             try {
                 dateTime = new DateTime(model.getCurrentSprint().getValue().getBegda());
                 daysDiff= dateDiff(model.getCurrentSprint().getValue().getBegda(),model.getCurrentSprint().getValue().getEndda());
+                txtSprint.setText("Sprint "+model.getCurrentSprint().getValue().getId().substring(model.getCurrentSprint().getValue().getId().length()-1));
             }catch (Exception e){
-                daysDiff = 5;
+                daysDiff = 7;
             }
         }else {
-            daysDiff = 5;
+
+            daysDiff = 7;
         }
         Log.d("daysDiff", ((Integer) daysDiff).toString());
 
         LineData lineData = new LineData();
         DateTime tempDate = dateTime;
 
-        List<Entry> entries1 = new ArrayList<Entry>();
-        for(int i = 0 ;i<daysDiff;i++){
-            dateTime = tempDate.plusDays(i);
-            entries1.add(new Entry(dateTime.getMillis(),(i)));
-        }
-        LineDataSet dataSet1 = new LineDataSet(entries1, "Actual Effort");
-        lineData.addDataSet(dataSet1);
-
         List<Entry> entries = new ArrayList<Entry>();
         for (int i = 0 ; i<daysDiff;i++){
             dateTime = tempDate.plusDays(i);
-            entries.add(new Entry(dateTime.getMillis(),(daysDiff-1)-i));
+            entries.add(new Entry(i,(daysDiff-1)-i));
         }
         LineDataSet dataSet = new LineDataSet(entries, "Ideal Effort");
+        int color = ContextCompat.getColor(this.getContext(), R.color.line1);
+        dataSet.setColor(color);
         lineData.addDataSet(dataSet);
+
+        List<Entry> entries1 = new ArrayList<Entry>();
+        List<DateTime> exTime = new ArrayList<>();
+        for(int i = 0 ;i<daysDiff;i++) {
+            exTime.add(tempDate.plusDays(i));
+        }
+//        dateTime = tempDate.plusDays(i);
+        entries1.add(new Entry(0,(6)));
+        entries1.add(new Entry(1,(5)));
+        entries1.add(new Entry(2,(5)));
+        entries1.add(new Entry(3,(3)));
+        entries1.add(new Entry(4,(3)));
+        entries1.add(new Entry(5,(2)));
+        entries1.add(new Entry(6,(0)));
+
+
+//        }
+        LineDataSet dataSet1 = new LineDataSet(entries1, "Actual Effort");
+        color = ContextCompat.getColor(this.getContext(), R.color.line2);
+        dataSet1.setColor(color);
+        lineData.addDataSet(dataSet1);
+        ValueFormatter valueFormatter = new ValueFormatter() {
+             /**
+             * Called when drawing any label, used to change numbers into formatted strings.
+             *
+             * @param value float to be formatted
+             * @return formatted string label
+             */
+            @Override
+            public String getFormattedValue(float value) {
+                return super.getFormattedValue(Math.round(value));
+            }
+        };
+        lineData.setValueFormatter(valueFormatter);
+
 
         Description description = new Description();
         description.setText("");
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setValueFormatter(new formatter());
-        xAxis.setLabelCount(daysDiff/3);
+//        xAxis.setValueFormatter(new formatter());
+//        xAxis.setLabelCount(daysDiff/3);
         chart.setDescription(description);    // Hide the description
         chart.getAxisRight().setDrawLabels(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getXAxis().setDrawGridLines(false);
+        chart.getLegend().setEnabled(false);
         chart.setData(lineData);
         chart.invalidate();
         return view;
@@ -140,23 +176,6 @@ public class FragmentBurndown extends Fragment {
         int days = d.getDays();
         return days;
     }
-//    public class xAxisFormatter extends IAxisValueFormatter {
-//
-//        /**
-//         * Called when a value from an axis is to be formatted
-//         * before being drawn. For performance reasons, avoid excessive calculations
-//         * and memory allocations inside this method.
-//         *
-//         * @param value the value to be formatted
-//         * @param axis  the axis the value belongs to
-//         * @return
-//         * @deprecated Extend {@link ValueFormatter} and use {@link ValueFormatter#getAxisLabel(float, AxisBase)}
-//         */
-//        @Override
-//        public String getFormattedValue(float value, AxisBase axis) {
-//            return null;
-//        }
-//    }
 
     class formatter extends ValueFormatter{
         /**

@@ -148,6 +148,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
 
         Spinner spinner = view.findViewById(R.id.spinner2);
         List<String> spinnerArray = new ArrayList<>();
+        spinnerArray.add("All");
         for (int i=0;i<model.getListEpic().getValue().size();i++){
             spinnerArray.add(model.getListEpic().getValue().get(i).getName());
         }
@@ -206,6 +207,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         Log.d("position", ((Integer) position).toString());
         ArrayList<String> spinnerArray = new ArrayList<>();
         ArrayList<String> idEpic = new ArrayList<>();
+        spinnerArray.add("---");
         for (int i=0;i<model.getListEpic().getValue().size();i++){
             spinnerArray.add(model.getListEpic().getValue().get(i).getName());
             idEpic.add(model.getListEpic().getValue().get(i).getId());
@@ -232,7 +234,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         }else {
             model.getListBacklogSprint().getValue().set(position,backlog);
             bottomListAdapter.notifyDataSetChanged();
-            model.mutateBacklog(backlog);
+            model.mutateBacklogSprint(backlog);
         }
 
     }

@@ -15,6 +15,8 @@ import com.example.app.Listener;
 import com.example.app.ListenerSprint;
 import com.example.app.R;
 import com.example.app.model.Backlog;
+import com.example.app.model.Epic;
+import com.example.app.model.Sprint;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -23,11 +25,13 @@ import java.util.Date;
 public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> implements  View.OnLongClickListener{
 
     ArrayList<Backlog> backlogList;
+    ArrayList<Epic> epicList;
     ListenerSprint listener;
 
-    public SprintAdapter(ArrayList<Backlog> backlogList, ListenerSprint listener) {
+    public SprintAdapter(ArrayList<Backlog> backlogList,ArrayList<Epic> epicList, ListenerSprint listener) {
         this.backlogList = backlogList;
         this.listener = listener;
+        this.epicList = epicList;
     }
 
     @NonNull
@@ -46,8 +50,19 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
         sprintViewHolder.name.setText(backlogList.get(i).getName());
         sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
         sprintViewHolder.fl.setTag(i);
+        sprintViewHolder.epic.setText(getNameEpic(backlogList.get(i).getIdEpic()));
 //        sprintViewHolder.fl.setOnTouchListener(this);
         sprintViewHolder.fl.setOnLongClickListener(this);
+    }
+
+    String getNameEpic(String id){
+        String name = "";
+        for (int i = 0; i<epicList.size();i++){
+            if (id.equalsIgnoreCase(epicList.get(i).getId())){
+                name=epicList.get(i).getName();
+            }
+        }
+        return name;
     }
 
     @Override
@@ -102,12 +117,13 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
     }
 
     class SprintViewHolder extends RecyclerView.ViewHolder{
-        TextView name, date;
+        TextView name, date, epic;
         FrameLayout fl;
         public SprintViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.txtName);
             date = itemView.findViewById(R.id.txtDate);
+            epic = itemView.findViewById(R.id.txtEpic);
             fl = itemView.findViewById(R.id.FM1);
         }
     }

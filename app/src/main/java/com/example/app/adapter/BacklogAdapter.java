@@ -65,9 +65,9 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         return backlogList.size();
     }
 
-     public DragListenerStories getDragInstance() {
+     public DragListenerBacklog getDragInstance() {
         if (listener != null) {
-            return new DragListenerStories(listener);
+            return new DragListenerBacklog(listener);
         } else {
             Log.e("ListAdapter", "Listener wasn't initialized!");
             return null;

@@ -15,6 +15,13 @@
         <item>On Progress</item>
         <item>Completed</item>
     </string-array>
+
+    <string-array name="Asignee">
+        <item>Rizky Suhaimi</item>
+        <item>Taruna Makki</item>
+        <item>Anugerah Wijaya</item>
+        <item>Charles Sanggalangi</item>
+    </string-array>
     <string name="title_activity_epic">Epic</string>
     <string name="title_epic_detail">Detail</string>
     <string name="title_list_task">List Tasks</string>

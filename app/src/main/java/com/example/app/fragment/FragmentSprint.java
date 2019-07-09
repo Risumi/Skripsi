@@ -127,20 +127,20 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
         }
 
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter topListAdapter = new SprintAdapter(model.getToDoBacklog().getValue(),this);
+        SprintAdapter topListAdapter = new SprintAdapter(model.getToDoBacklog().getValue(),model.getListEpic().getValue(),this);
         rvTop.setAdapter(topListAdapter);
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
         tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
 
         rvMiddle.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter middleListAdapter = new SprintAdapter(model.getOnProgressBacklog().getValue(), this);
+        SprintAdapter middleListAdapter = new SprintAdapter(model.getOnProgressBacklog().getValue(),model.getListEpic().getValue(), this);
         rvMiddle.setAdapter(middleListAdapter);
         tvEmptyListMiddle.setOnDragListener(middleListAdapter.getDragInstance());
         rvMiddle.setOnDragListener(middleListAdapter.getDragInstance());
 
         rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter bottomListAdapter = new SprintAdapter(model.getCompletedBacklog().getValue(), this);
+        SprintAdapter bottomListAdapter = new SprintAdapter(model.getCompletedBacklog().getValue(),model.getListEpic().getValue(), this);
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());

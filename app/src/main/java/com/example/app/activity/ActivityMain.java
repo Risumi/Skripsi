@@ -1,12 +1,15 @@
 package com.example.app.activity;
 
 import android.annotation.SuppressLint;
+import android.app.ProgressDialog;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.View;
 import android.support.design.widget.NavigationView;
@@ -18,6 +21,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.example.app.ListenerGraphql;
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
 import com.example.app.fragment.FragmentBurndown;
@@ -32,10 +36,9 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ActivityMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener{
+        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql {
     private Fragment fragment;
     private FloatingActionButton fab,fab2,fab3;
     FloatingActionsMenu fam;
@@ -48,7 +51,7 @@ public class ActivityMain extends AppCompatActivity
         setContentView(R.layout.activity_main);
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
-
+        model.instantiateListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -195,6 +198,7 @@ public class ActivityMain extends AppCompatActivity
             Intent intent = new Intent(this, ActivityAddBacklog.class);
             ArrayList<String> spinnerArray = new ArrayList<>();
             ArrayList<String> idEpic = new ArrayList<>();
+            spinnerArray.add("---");
             for (int i=0;i<model.getListEpic().getValue().size();i++){
                 spinnerArray.add(model.getListEpic().getValue().get(i).getName());
                 idEpic.add(model.getListEpic().getValue().get(i).getId());
@@ -203,7 +207,7 @@ public class ActivityMain extends AppCompatActivity
             intent.putStringArrayListExtra("epicID",idEpic);
             intent.putExtra("req code", REQ_ADD_BACKLOG);
             intent.putExtra("PID",PID);
-            intent.putExtra("blID",model.getListBacklog().getValue().size());
+            intent.putExtra("blID",model.getListAllBacklog().getValue().size());
             startActivityForResult(intent, REQ_ADD_BACKLOG);
         }else if(view==fab3){
             Intent intent = new Intent(this, ActivityAddEpic.class);
@@ -212,8 +216,8 @@ public class ActivityMain extends AppCompatActivity
             intent.putExtra("epID",model.getListEpic().getValue().size());
             startActivityForResult(intent,REQ_ADD_EPIC);
         }
-
     }
+    final int  REQ_EDIT_BACKLOG = 2;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -228,7 +232,7 @@ public class ActivityMain extends AppCompatActivity
                 }
             }
         }
-        if (requestCode == 2) {
+        if (requestCode == REQ_EDIT_BACKLOG) {
             if (resultCode == RESULT_OK) {
                 Backlog newBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
@@ -256,5 +260,76 @@ public class ActivityMain extends AppCompatActivity
                 }
             }
         }
+    }
+    ProgressDialog progressDialog;
+    @Override
+    public void startProgressDialog() {
+
+        ActivityMain.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                progressDialog = new ProgressDialog(ActivityMain.this);
+                progressDialog.setMessage("Loading ...");
+                progressDialog.setCancelable(false);
+                progressDialog.show();
+            }
+        });
+        Log.d("start","true");
+    }
+
+    @Override
+    public void endProgressDialog() {
+        progressDialog.dismiss();
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentInFrame instanceof FragmentEpic){
+            ActivityMain.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((FragmentEpic) fragmentInFrame).notifyAdapter();
+                }
+            });
+        }
+        Log.d("end","true");
+    }
+
+    @Override
+    public void startAlert(String error,String code) {
+        ActivityMain.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeAlertDialog(error,code);
+                AlertDialog alert11 = builder.create();
+                alert11.show();
+            }
+        });
+    }
+    AlertDialog.Builder builder;
+
+    void initializeAlertDialog(String error,String code){
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Error : "+ error+"\nRetry ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        if (code=="fetch"){
+                            model.reset();
+                            model.fetchEpic(PID);
+                        }
+
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        finish();
+                    }
+                });
     }
 }
