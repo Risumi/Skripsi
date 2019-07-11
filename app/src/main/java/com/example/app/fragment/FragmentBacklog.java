@@ -12,10 +12,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.example.app.ListenerAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.adapter.BacklogAdapter;
 import com.example.app.Listener;
@@ -32,7 +34,7 @@ import java.util.List;
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentBacklog extends Fragment implements Listener, BacklogAdapter.BacklogViewHolder2.ClickListener {
+public class FragmentBacklog extends Fragment implements Listener, BacklogAdapter.BacklogViewHolder2.ClickListener , AdapterView.OnItemSelectedListener, ListenerAdapter {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -56,7 +58,9 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
      * @return A new instance of fragment FragmentSprint.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentBacklog newInstance(String param1, String param2) {
+    public static FragmentBacklog newInstance(String param1, String param2)
+
+    {
         FragmentBacklog fragment = new FragmentBacklog();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -96,7 +100,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
                 Log.d("Item Count : ", ((Integer) topListAdapter.getItemCount()).toString());
             }
         });
-        Log.d("PID", PID);
+        model.instantiateListenerAdapter(this);
 
     }
 
@@ -149,11 +153,13 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         Spinner spinner = view.findViewById(R.id.spinner2);
         List<String> spinnerArray = new ArrayList<>();
         spinnerArray.add("All");
+        spinnerArray.add("---");
         for (int i=0;i<model.getListEpic().getValue().size();i++){
             spinnerArray.add(model.getListEpic().getValue().get(i).getName());
         }
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,spinnerArray);
         spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
 
         return view;
     }
@@ -242,5 +248,27 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     public void setSprint(Sprint sprint){
         model.setCurrentSprint(sprint);
         model.mutateSprint(sprint);
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        Log.d("Index ke : ",Integer.toString(i));
+        Log.d("Key :",adapterView.getAdapter().getItem(i).toString());
+        if (adapterView.getAdapter().getItem(i).toString().equalsIgnoreCase("all")){
+            model.filterBacklog("","all");
+        }else{
+            model.filterBacklog(model.getID(adapterView.getAdapter().getItem(i).toString()),"");
+        }
+        topListAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    @Override
+    public void notifyAdapter() {
+        topListAdapter.notifyDataSetChanged();
     }
 }

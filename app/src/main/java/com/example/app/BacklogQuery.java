@@ -30,7 +30,7 @@ import java.util.Map;
 import type.CustomType;
 
 public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery.Data, BacklogQuery.Variables> {
-  public static final String OPERATION_ID = "cd662c298de2dca1fc8433825e14f9025bc4121e0ca15afc5977f2dba87a027f";
+  public static final String OPERATION_ID = "f6ac36efc13a7cce25db4c45f64021aaac6ee35dc05c4986f9c45c6a72cd676a";
 
   public static final String QUERY_DOCUMENT = "query backlog($id: String!) {\n"
       + "  backlog(id: $id) {\n"
@@ -45,6 +45,10 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       + "    begindate\n"
       + "    enddate\n"
       + "    description\n"
+      + "    idEpic {\n"
+      + "      __typename\n"
+      + "      id\n"
+      + "    }\n"
       + "  }\n"
       + "}";
 
@@ -249,7 +253,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("idEpic", "idEpic", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
@@ -268,6 +273,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     final @Nullable String description;
 
+    final @Nullable IdEpic idEpic;
+
     private transient volatile String $toString;
 
     private transient volatile int $hashCode;
@@ -276,7 +283,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     public Backlog(@NotNull String __typename, @NotNull String id, @Nullable IdSprint idSprint,
         @Nullable String name, @Nullable String status, @Nullable Date begindate,
-        @Nullable Date enddate, @Nullable String description) {
+        @Nullable Date enddate, @Nullable String description, @Nullable IdEpic idEpic) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
       this.idSprint = idSprint;
@@ -285,6 +292,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       this.begindate = begindate;
       this.enddate = enddate;
       this.description = description;
+      this.idEpic = idEpic;
     }
 
     public @NotNull String __typename() {
@@ -319,6 +327,10 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       return this.description;
     }
 
+    public @Nullable IdEpic idEpic() {
+      return this.idEpic;
+    }
+
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
@@ -331,6 +343,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], begindate);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], enddate);
           writer.writeString($responseFields[7], description);
+          writer.writeObject($responseFields[8], idEpic != null ? idEpic.marshaller() : null);
         }
       };
     }
@@ -346,7 +359,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
           + "status=" + status + ", "
           + "begindate=" + begindate + ", "
           + "enddate=" + enddate + ", "
-          + "description=" + description
+          + "description=" + description + ", "
+          + "idEpic=" + idEpic
           + "}";
       }
       return $toString;
@@ -366,7 +380,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
          && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
          && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
          && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description));
+         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description))
+         && ((this.idEpic == null) ? (that.idEpic == null) : this.idEpic.equals(that.idEpic));
       }
       return false;
     }
@@ -391,6 +406,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         h ^= (enddate == null) ? 0 : enddate.hashCode();
         h *= 1000003;
         h ^= (description == null) ? 0 : description.hashCode();
+        h *= 1000003;
+        h ^= (idEpic == null) ? 0 : idEpic.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -399,6 +416,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     public static final class Mapper implements ResponseFieldMapper<Backlog> {
       final IdSprint.Mapper idSprintFieldMapper = new IdSprint.Mapper();
+
+      final IdEpic.Mapper idEpicFieldMapper = new IdEpic.Mapper();
 
       @Override
       public Backlog map(ResponseReader reader) {
@@ -415,7 +434,13 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
         final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
         final String description = reader.readString($responseFields[7]);
-        return new Backlog(__typename, id, idSprint, name, status, begindate, enddate, description);
+        final IdEpic idEpic = reader.readObject($responseFields[8], new ResponseReader.ObjectReader<IdEpic>() {
+          @Override
+          public IdEpic read(ResponseReader reader) {
+            return idEpicFieldMapper.map(reader);
+          }
+        });
+        return new Backlog(__typename, id, idSprint, name, status, begindate, enddate, description, idEpic);
       }
     }
   }
@@ -503,6 +528,93 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         return new IdSprint(__typename, id);
+      }
+    }
+  }
+
+  public static class IdEpic {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @NotNull String id;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public IdEpic(@NotNull String __typename, @NotNull String id) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.id = Utils.checkNotNull(id, "id == null");
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @NotNull String id() {
+      return this.id;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], id);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "IdEpic{"
+          + "__typename=" + __typename + ", "
+          + "id=" + id
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof IdEpic) {
+        IdEpic that = (IdEpic) o;
+        return this.__typename.equals(that.__typename)
+         && this.id.equals(that.id);
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= id.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<IdEpic> {
+      @Override
+      public IdEpic map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String id = reader.readString($responseFields[1]);
+        return new IdEpic(__typename, id);
       }
     }
   }

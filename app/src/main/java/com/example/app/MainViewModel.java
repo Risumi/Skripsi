@@ -26,6 +26,7 @@ import type.CustomType;
 
 public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Backlog>> listAllBacklog;
+    private MutableLiveData<ArrayList<Backlog>> listFilterBacklog;
     private MutableLiveData<ArrayList<Backlog>> listBacklog;
     private MutableLiveData<ArrayList<Backlog>> listBacklogSprint;
     private MutableLiveData<Sprint> currentSprint;
@@ -34,6 +35,7 @@ public class MainViewModel extends ViewModel {
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql/graphql";
     int sCount;
     ListenerGraphql listener;
+    ListenerAdapter listenerAdapter;
 
     public MainViewModel() {
         listAllBacklog = new MutableLiveData<>();
@@ -56,6 +58,10 @@ public class MainViewModel extends ViewModel {
         listEpic = new MutableLiveData<>();
         ArrayList<Epic> epics= new ArrayList<>();
         listEpic.setValue(epics);
+
+        listFilterBacklog = new MutableLiveData<>();
+        ArrayList<Backlog> backlog4 = new ArrayList<>();
+        listFilterBacklog.setValue(backlog4);
     }
 
     public void setListEpic(ArrayList<Epic> listEpic){
@@ -68,6 +74,10 @@ public class MainViewModel extends ViewModel {
 
     public void instantiateListener(ListenerGraphql listener){
         this.listener = listener;
+    }
+
+    public void instantiateListenerAdapter(ListenerAdapter listener){
+        listenerAdapter = listener;
     }
 
     public void fetchBacklog(String PID){
@@ -97,10 +107,22 @@ public class MainViewModel extends ViewModel {
             public void onResponse(@NotNull Response<BacklogQuery.Data> response) {
                 for (int i = 0 ; i<response.data().backlog.size();i++){
 
-                    String aiueo="";
+                    String idSprint="";
+                    String idEpic="";
+//                    Log.d("idEpic",response.data().backlog.get(i).idEpic().id);
                     try {
+                        if (response.data().backlog.get(i).idEpic().id!=null){
+                            idEpic=response.data().backlog.get(i).idEpic().id;
+                            Log.d("idEpic", idEpic);
+                        }
+
+
+                    }catch (NullPointerException e){
+
+                    }
+                    try{
                         if (response.data().backlog.get(i).idSprint().id!=null){
-                            aiueo=response.data().backlog.get(i).idSprint().id;
+                            idSprint=response.data().backlog.get(i).idSprint().id;
                         }
                     }catch (NullPointerException e){
 
@@ -113,9 +135,9 @@ public class MainViewModel extends ViewModel {
                                 response.data().backlog.get(i).description,
                                 response.data().backlog.get(i).id,
                                 PID,
-                                aiueo,
+                                idSprint,
                                 "",
-                                ""));
+                                idEpic));
                     }
                     if (response.hasErrors()){
                         Log.d("Error",response.errors().get(0).message());
@@ -566,6 +588,7 @@ public class MainViewModel extends ViewModel {
         Log.d("Backlog count", ((Integer) listAllBacklog.getValue().size()).toString());
         if (sCount == 0){
             listBacklog = listAllBacklog;
+            listFilterBacklog.getValue().addAll(listBacklog.getValue());
             listener.endProgressDialog();
             Log.d("Sprint status", "No sprint");
         }else {
@@ -579,6 +602,7 @@ public class MainViewModel extends ViewModel {
                     listBacklog.getValue().add(listAllBacklog.getValue().get(i));
                 }
             }
+            listFilterBacklog.getValue().addAll(listBacklog.getValue());
             listener.endProgressDialog();
         }
     }
@@ -608,5 +632,52 @@ public class MainViewModel extends ViewModel {
         listEpic = new MutableLiveData<>();
         ArrayList<Epic> epics= new ArrayList<>();
         listEpic.setValue(epics);
+
+        listFilterBacklog = new MutableLiveData<>();
+        ArrayList<Backlog> backlog4 = new ArrayList<>();
+        listFilterBacklog.setValue(backlog4);
+    }
+
+    public void filterBacklog(String id,String code){
+//        listFilterBacklog.getValue().clear();
+//        listBacklog.getValue().addAll(listFilterBacklog.getValue());
+        if (code.equalsIgnoreCase("all")){
+            listBacklog.getValue().clear();
+            listBacklog.getValue().addAll(listFilterBacklog.getValue());
+            Log.d("ID Epic",listFilterBacklog.getValue().get(0).getId());
+        }else if (code.equalsIgnoreCase("---")){
+            ArrayList <Backlog> backlogArrayList = new ArrayList<>();
+            backlogArrayList.clear();
+            backlogArrayList.addAll(listFilterBacklog.getValue());
+            listBacklog.getValue().clear();
+            for (int i=0;i<backlogArrayList.size();i++){
+                if (backlogArrayList.get(i).getIdEpic().equalsIgnoreCase("")){
+                    listBacklog.getValue().add(backlogArrayList.get(i));
+                }
+            }
+        }
+        else {
+            ArrayList <Backlog> backlogArrayList = new ArrayList<>();
+            backlogArrayList.clear();
+            backlogArrayList.addAll(listFilterBacklog.getValue());
+//        ArrayList<Backlog> backlog = new ArrayList<>();
+            listBacklog.getValue().clear();
+            for (int i=0;i<backlogArrayList.size();i++){
+                if (backlogArrayList.get(i).getIdEpic().equalsIgnoreCase(id)){
+                    listBacklog.getValue().add(backlogArrayList.get(i));
+                    Log.d("ID Epic",backlogArrayList.get(i).getIdEpic());
+                }
+            }
+        }
+    }
+
+    public String getID(String name){
+        String id="";
+        for (int i=0;i<listEpic.getValue().size();i++){
+            if (listEpic.getValue().get(i).getName().equalsIgnoreCase(name)){
+                id = listEpic.getValue().get(i).getId();
+            }
+        }
+        return id;
     }
 }

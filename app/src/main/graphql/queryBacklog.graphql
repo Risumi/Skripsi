@@ -9,5 +9,8 @@ query backlog($id: String!){
     begindate
     enddate
     description
+    idEpic{
+      id
+    }
   }
 }
