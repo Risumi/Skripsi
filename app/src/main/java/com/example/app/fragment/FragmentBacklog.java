@@ -176,10 +176,13 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         if (todo.equalsIgnoreCase("update")){
             backlog.setIdSprint(model.getCurrentSprint().getValue().getId());
             model.mutateBacklogSprint(backlog);
+            model.updateList(backlog,"remove");
         }else if (todo.equalsIgnoreCase("remove")){
             model.mutateBacklogSprintNull(backlog);
+            model.updateList(backlog,"add");
         }
     }
+
 
     @Override
     public void setEmptyListBottom(boolean visibility) {
@@ -228,6 +231,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
 
     public void AddDataSet(Backlog backlog){
         model.getListBacklog().getValue().add(backlog);
+        model.getListFilterBacklog().getValue().add(backlog);
         topListAdapter.notifyDataSetChanged();
         model.mutateBacklog(backlog);
     }
@@ -235,6 +239,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     public void EditDataSet(int position,Backlog backlog,String adapter){
         if (adapter.equalsIgnoreCase("top")){
             model.getListBacklog().getValue().set(position,backlog);
+            model.getListFilterBacklog().getValue().set(position,backlog);
             topListAdapter.notifyDataSetChanged();
             model.mutateBacklog(backlog);
         }else {
@@ -246,6 +251,9 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     }
 
     public void setSprint(Sprint sprint){
+        model.getListBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
+        model.getListFilterBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
+        model.getListBacklogSprint().getValue().clear();
         model.setCurrentSprint(sprint);
         model.mutateSprint(sprint);
     }

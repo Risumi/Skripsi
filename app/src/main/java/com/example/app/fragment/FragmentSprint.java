@@ -96,11 +96,11 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
             btnSprint.setVisibility(View.VISIBLE);
             tvSprint.setText("Sprint "+model.getSprintCount().getValue());
             Date date = new Date();
-            Date date1 = new Date(1999,01,01);
-            if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
-                btnSprint.setText("Standby");
-            }
-            else if (date.before(model.getCurrentSprint().getValue().getEndda())){
+//            Date date1 = new Date(1999,01,01);
+//            if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
+//                btnSprint.setText("Standby");
+//            }
+            if (date.before(model.getCurrentSprint().getValue().getEndda())){
                 btnSprint.setText("Running");
             }else if (date.after(model.getCurrentSprint().getValue().getEndda())){
                 btnSprint.setText("Finished");

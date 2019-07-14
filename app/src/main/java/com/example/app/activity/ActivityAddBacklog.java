@@ -1,7 +1,9 @@
 package com.example.app.activity;
 
 import android.app.DialogFragment;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -27,7 +29,7 @@ import java.util.Date;
 
 public class ActivityAddBacklog extends AppCompatActivity implements View.OnClickListener
 {
-    Button button;
+    Button button, button2;
     EditText etBlName, etBlDesc;
     String mDateStart;
     String mDateEnd;
@@ -47,11 +49,14 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         etBlName = findViewById(R.id.etBlName);
         button = findViewById(R.id.button);
         button.setOnClickListener(this);
+        button2 = findViewById(R.id.button5);
+        button2.setOnClickListener(this);
         tvDate = findViewById(R.id.tvDate);
         tvDate.setOnClickListener(this);
         etBlDesc =findViewById(R.id.etBlDesc);
         spinner =  findViewById(R.id.spinner);
         spinner2 = findViewById(R.id.spinner3);
+        spinner3 = findViewById(R.id.spinner4);
         spinner3 = findViewById(R.id.spinner4);
 
 
@@ -120,6 +125,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         });
 
         if (resultIntent.getIntExtra("req code",1)==2){
+            button2.setVisibility(View.VISIBLE);
             editBacklog = resultIntent.getParcelableExtra("backlog");
             etBlName.setText(editBacklog.getName());
             int spinnerPos = adapter.getPosition(editBacklog.getStatus());
@@ -167,6 +173,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                         Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
                     }
                     setResult(RESULT_OK, resultIntent);
+
                     finish();
 //                }else if (resultIntent.getIntExtra("req code",1)==2){
 //                    name = etBlName.getText().toString();
@@ -178,6 +185,10 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 //                    finish();
 //                }
             }
+        }else if (view == button2){
+            initializeAlertDialog();
+            AlertDialog alert11 = builder.create();
+            alert11.show();
         }
     }
 
@@ -221,5 +232,31 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
         String formattedDate = formatDate.format(rawDate);
         return formattedDate;
+    }
+
+    AlertDialog.Builder builder;
+
+    void initializeAlertDialog(){
+        builder = new AlertDialog.Builder(this);
+        builder.setMessage("Are you sure  ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        setResult(2, resultIntent);
+                        finish();
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
     }
 }

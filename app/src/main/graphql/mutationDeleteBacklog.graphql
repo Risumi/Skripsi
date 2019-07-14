@@ -1,0 +1,5 @@
+mutation deleteBacklog($id:String!){
+  deleteBacklog(id:$id){
+    id
+  }
+}

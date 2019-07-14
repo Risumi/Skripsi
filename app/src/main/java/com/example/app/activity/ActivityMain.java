@@ -20,6 +20,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.example.app.ListenerGraphql;
 import com.example.app.model.Backlog;
@@ -36,6 +37,7 @@ import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql {
@@ -57,13 +59,15 @@ public class ActivityMain extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         fam = findViewById(R.id.fab2);
-
+        //Sprint
         fab = (FloatingActionButton) findViewById(R.id.fab3);
         fab.setOnClickListener(this);
-
+        fab.setVisibility(View.GONE);
+        //Backlog
         fab2 = (FloatingActionButton) findViewById(R.id.fab4);
         fab2.setOnClickListener(this);
-
+        fab2.setVisibility(View.GONE);
+        //Epic
         fab3 = (FloatingActionButton) findViewById(R.id.fab5);
         fab3.setOnClickListener(this);
 
@@ -135,13 +139,19 @@ public class ActivityMain extends AppCompatActivity
             fragment = FragmentEpic.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
+            fab2.setVisibility(View.GONE);
+            fab3.setVisibility(View.VISIBLE);
         } else if (id == R.id.nav_backlog) {
             fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
             fam.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+            fab2.setVisibility(View.VISIBLE);
+            fab3.setVisibility(View.GONE);
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
             fam.collapse();
-            fam.setVisibility(View.VISIBLE);
+            fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_setting) {
             fragment = FragmentSetting.newInstance("","");
             fam.collapse();
@@ -169,10 +179,16 @@ public class ActivityMain extends AppCompatActivity
         if (fragmentInFrame instanceof FragmentBacklog){
 //            fab.show();
             fam.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.VISIBLE);
+            fab2.setVisibility(View.VISIBLE);
+            fab3.setVisibility(View.GONE);
         }else if (fragmentInFrame instanceof FragmentEpic){
             fam.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
+            fab2.setVisibility(View.GONE);
+            fab3.setVisibility(View.VISIBLE);
         }else if (fragmentInFrame instanceof FragmentSprint){
-            fam.setVisibility(View.VISIBLE);
+            fam.setVisibility(View.GONE);
         }
         else {
 //            fab.hide();
@@ -188,12 +204,28 @@ public class ActivityMain extends AppCompatActivity
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
         if (view==fab){
-            Intent intent = new Intent(this, ActivityAddSprint.class);
-            intent.putExtra("req code",REQ_ADD_SPRINT);
-            intent.putExtra("PID",PID);
-            intent.putExtra("SCount",model.getSprintCount().getValue());
+            if (model.getCurrentSprint().getValue()!=null){
+                Date date = new Date();
+                if (!date.after(model.getCurrentSprint().getValue().getEndda())){
+                    Log.d("Endda",model.getCurrentSprint().getValue().getEndda().toString());
+                    Log.d("Now",new Date().toString());
+                    Toast.makeText(this,"Can't create a sprint. There is a running sprint",Toast.LENGTH_LONG).show();
+                }else {
+                    Intent intent = new Intent(this, ActivityAddSprint.class);
+                    intent.putExtra("req code",REQ_ADD_SPRINT);
+                    intent.putExtra("PID",PID);
+                    intent.putExtra("SCount",model.getSprintCount().getValue());
+                    startActivityForResult(intent,REQ_ADD_SPRINT);
+                }
+            }
+            else {
+                Intent intent = new Intent(this, ActivityAddSprint.class);
+                intent.putExtra("req code",REQ_ADD_SPRINT);
+                intent.putExtra("PID",PID);
+                intent.putExtra("SCount",model.getSprintCount().getValue());
+                startActivityForResult(intent,REQ_ADD_SPRINT);
+            }
 //            Log.d("PID",this.intent.getStringExtra("PID"));
-            startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
             Intent intent = new Intent(this, ActivityAddBacklog.class);
             ArrayList<String> spinnerArray = new ArrayList<>();
@@ -239,6 +271,9 @@ public class ActivityMain extends AppCompatActivity
                 if (fragmentInFrame instanceof FragmentBacklog){
                     ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog,data.getStringExtra("adapter"));
                 }
+            }
+            else if (resultCode == 2){
+                Toast.makeText(this,"Deleted",Toast.LENGTH_LONG).show();
             }
         }
         if (requestCode == REQ_ADD_SPRINT) {

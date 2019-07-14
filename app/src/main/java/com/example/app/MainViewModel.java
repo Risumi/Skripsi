@@ -280,6 +280,10 @@ public class MainViewModel extends ViewModel {
         );
     }
 
+    public MutableLiveData<ArrayList<Backlog>> getListFilterBacklog() {
+        return listFilterBacklog;
+    }
+
     public void mutateBacklog(Backlog backlog){
         listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -644,7 +648,6 @@ public class MainViewModel extends ViewModel {
         if (code.equalsIgnoreCase("all")){
             listBacklog.getValue().clear();
             listBacklog.getValue().addAll(listFilterBacklog.getValue());
-            Log.d("ID Epic",listFilterBacklog.getValue().get(0).getId());
         }else if (code.equalsIgnoreCase("---")){
             ArrayList <Backlog> backlogArrayList = new ArrayList<>();
             backlogArrayList.clear();
@@ -679,5 +682,17 @@ public class MainViewModel extends ViewModel {
             }
         }
         return id;
+    }
+
+    public void updateList(Backlog backlog, String todo){
+        if (todo.equalsIgnoreCase("add")){
+            listFilterBacklog.getValue().add(backlog);
+        }else if (todo.equalsIgnoreCase("remove")){
+            for (int i = 0;i<listFilterBacklog.getValue().size();i++){
+                if (listFilterBacklog.getValue().get(i)==backlog){
+                    listFilterBacklog.getValue().remove(i);
+                }
+            }
+        }
     }
 }

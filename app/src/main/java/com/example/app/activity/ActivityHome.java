@@ -21,9 +21,11 @@ import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.example.app.AllProjectQuery;
+import com.example.app.ProgressQuery;
 import com.example.app.ProjectMutation;
 import com.example.app.R;
 import com.example.app.adapter.ProjectAdapter;
+import com.example.app.model.Progress;
 import com.example.app.model.Project;
 
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +39,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Project> listProject;
+    ArrayList<Progress> listProgress;
     final int ADD_PROJECT =1;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
     AlertDialog.Builder builder;
@@ -53,12 +56,13 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
+        listProgress = new ArrayList<>();
 //        new fetchProject().execute();
         fetchProject();
 //        listProject.add(new Project("Blog Project","BP",true));
 //        listProject.add(new Project("IS Project","IP",true));
 //        listProject.add(new Project("IoT Project","IoP",false));
-        mAdapter = new ProjectAdapter(this, listProject);
+        mAdapter = new ProjectAdapter(this, listProject,listProgress);
         Log.d("fool", ((Integer) mAdapter.getItemCount()).toString());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -89,12 +93,12 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-
+    ProgressDialog progressDialog;
     private void fetchProject(){
-        ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(ActivityHome.this);
         progressDialog.setMessage("Loading ...");
         progressDialog.setCancelable(false);
+        progressDialog.show();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
@@ -107,34 +111,68 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 for (int i = 0 ;i<response.data().project().size();i++){
                     listProject.add(new Project(response.data().project().get(i).name(),response.data().project().get(i).id(),response.data().project().get(i).status(),response.data().project().get(i).description()));
                 }
-//                    Log.d("Berhasil","yay");
-                ActivityHome.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.notifyDataSetChanged();
-                        Log.d("foo", ((Integer) mAdapter.getItemCount()).toString());
-                        Log.d("Berhasil","yay");
-                    }
-                });
             }
-            /**
-             * Gets called whenever any action happen to this {@link ApolloCall}.
-             *
-             * @param event status that corresponds to a {@link ApolloCall} action
-             */
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
                 Log.d("event",event.name());
                 if (!event.name().equalsIgnoreCase("COMPLETED")){
-                    progressDialog.show();
+
+                }else {
+                    fetchProgress();
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal",e.toString());
+                progressDialog.dismiss();
+                ActivityHome.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        initializeAlertDialog(e.getMessage());
+                        AlertDialog alert11 = builder.create();
+                        alert11.show();
+                    }
+                });
+            }
+        });
+    }
+
+    private void fetchProgress(){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        ProgressQuery progressQuery = ProgressQuery.builder().build();
+        apolloClient.query(progressQuery ).enqueue(new ApolloCall.Callback<ProgressQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<ProgressQuery.Data> response) {
+                for (int i = 0 ;i<response.data().progress().size();i++){
+                    listProgress.add(new Progress(
+                            response.data().progress().get(i).id(),
+                            response.data().progress().get(i).count(),
+                            response.data().progress().get(i).complete()
+                    ));
+                }
+                ActivityHome.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
+            }
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                if (!event.name().equalsIgnoreCase("COMPLETED")){
+
                 }else {
                     progressDialog.dismiss();
                 }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
-                Log.d("Gagal",e.toString());
                 progressDialog.dismiss();
                 ActivityHome.this.runOnUiThread(new Runnable() {
                     @Override

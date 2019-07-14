@@ -54,7 +54,7 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         } else if (view == endDate) {
             openDateRangePicker(endDate, 2);
         } else if (view == button) {
-            begda = new Date(1999,01,01);
+            begda = new Date();
             if (endda == null) {
                 Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
             } else {
