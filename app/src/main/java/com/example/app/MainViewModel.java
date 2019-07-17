@@ -115,8 +115,6 @@ public class MainViewModel extends ViewModel {
                             idEpic=response.data().backlog.get(i).idEpic().id;
                             Log.d("idEpic", idEpic);
                         }
-
-
                     }catch (NullPointerException e){
 
                     }
@@ -445,6 +443,42 @@ public class MainViewModel extends ViewModel {
         });
     }
 
+    public void deleteBacklog(Backlog backlog){
+        listener.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        DeleteBacklogMutation deleteBacklogMutation  = DeleteBacklogMutation.builder().id(backlog.getId()).build();
+        apolloClient.mutate(deleteBacklogMutation).enqueue(new ApolloCall.Callback<DeleteBacklogMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<DeleteBacklogMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }
+            }
+
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"mutateSprint");
+                e.printStackTrace();
+            }
+        });
+    }
+
     public void mutateSprint(Sprint sprint){
         listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
@@ -674,7 +708,7 @@ public class MainViewModel extends ViewModel {
         }
     }
 
-    public String getID(String name){
+    public String getIDEpic(String name){
         String id="";
         for (int i=0;i<listEpic.getValue().size();i++){
             if (listEpic.getValue().get(i).getName().equalsIgnoreCase(name)){
@@ -682,6 +716,18 @@ public class MainViewModel extends ViewModel {
             }
         }
         return id;
+    }
+
+    public String getEpicName(String id){
+        String name="";
+        for (int i=0;i<listEpic.getValue().size();i++){
+            if (listEpic.getValue().get(i).getId().equalsIgnoreCase(id)){
+                name = listEpic.getValue().get(i).getName();
+            }
+            Log.d("Epic ID",id);
+            Log.d("Epic Name",name);
+        }
+        return name;
     }
 
     public void updateList(Backlog backlog, String todo){

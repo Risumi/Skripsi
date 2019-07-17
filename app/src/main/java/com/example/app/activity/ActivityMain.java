@@ -273,6 +273,11 @@ public class ActivityMain extends AppCompatActivity
                 }
             }
             else if (resultCode == 2){
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                Backlog delBacklog = data.getParcelableExtra("backlog");
+                if (fragmentInFrame instanceof FragmentBacklog){
+                    ((FragmentBacklog) fragmentInFrame).RemoveDataSet(data.getIntExtra("position",0),delBacklog,data.getStringExtra("adapter"));
+                }
                 Toast.makeText(this,"Deleted",Toast.LENGTH_LONG).show();
             }
         }
@@ -338,6 +343,17 @@ public class ActivityMain extends AppCompatActivity
             }
         });
     }
+
+    @Override
+    public void setCurrentSprint(Sprint sprint) {
+        model.getListBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
+        model.getListFilterBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
+        model.getListBacklogSprint().getValue().clear();
+        model.setCurrentSprint(sprint);
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        ((FragmentBacklog) fragmentInFrame).notifyAdapter();
+    }
+
     AlertDialog.Builder builder;
 
     void initializeAlertDialog(String error,String code){

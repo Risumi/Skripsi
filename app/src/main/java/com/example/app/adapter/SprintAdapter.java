@@ -50,7 +50,14 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
         sprintViewHolder.name.setText(backlogList.get(i).getName());
         sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
         sprintViewHolder.fl.setTag(i);
-        sprintViewHolder.epic.setText(getNameEpic(backlogList.get(i).getIdEpic()));
+        if (backlogList.get(i).getIdEpic()==null){
+            sprintViewHolder.epic.setText("---");
+        }else if (backlogList.get(i).getIdEpic().equals("")){
+            sprintViewHolder.epic.setText("---");
+        }else{
+            sprintViewHolder.epic.setText(getNameEpic(backlogList.get(i).getIdEpic()));
+        }
+
 //        sprintViewHolder.fl.setOnTouchListener(this);
         sprintViewHolder.fl.setOnLongClickListener(this);
     }

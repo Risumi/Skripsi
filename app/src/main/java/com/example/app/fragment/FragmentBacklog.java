@@ -206,11 +206,15 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
             editBacklog.putExtra("adapter", "top");
             editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
             editBacklog.putExtra("blsID",model.getListBacklog().getValue().get(position).getId());
+            editBacklog.putExtra("epicName",model.getEpicName(model.getListBacklog().getValue().get(position).getIdEpic()));
+            Log.d("Epic Name ",model.getEpicName(model.getListBacklog().getValue().get(position).getId()));
         }else if (adapter == bottomListAdapter){
             Log.d("adapter","bot");
             editBacklog.putExtra("adapter", "bot");
             editBacklog.putExtra("backlog",model.getListBacklogSprint().getValue().get(position));
             editBacklog.putExtra("blsID",model.getListBacklogSprint().getValue().get(position).getId());
+            editBacklog.putExtra("epicName",model.getEpicName(model.getListBacklogSprint().getValue().get(position).getIdEpic()));
+//            Log.d("Epic Name ",model.getEpicName(model.getListBacklog().getValue().get(position).getId()));
         }
 
         Log.d("position", ((Integer) position).toString());
@@ -247,16 +251,27 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
             bottomListAdapter.notifyDataSetChanged();
             model.mutateBacklogSprint(backlog);
         }
+    }
 
+    public void RemoveDataSet(int position,Backlog backlog,String adapter){
+        if (adapter.equalsIgnoreCase("top")){
+            model.getListBacklog().getValue().remove(position);
+            model.getListFilterBacklog().getValue().remove(position);
+            topListAdapter.notifyDataSetChanged();
+            model.deleteBacklog(backlog);
+        }else {
+            model.getListBacklogSprint().getValue().remove(position);
+            bottomListAdapter.notifyDataSetChanged();
+            model.deleteBacklog(backlog);
+        }
     }
 
     public void setSprint(Sprint sprint){
-        model.getListBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
-        model.getListFilterBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
-        model.getListBacklogSprint().getValue().clear();
-        model.setCurrentSprint(sprint);
         model.mutateSprint(sprint);
     }
+
+
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -265,7 +280,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         if (adapterView.getAdapter().getItem(i).toString().equalsIgnoreCase("all")){
             model.filterBacklog("","all");
         }else{
-            model.filterBacklog(model.getID(adapterView.getAdapter().getItem(i).toString()),"");
+            model.filterBacklog(model.getIDEpic(adapterView.getAdapter().getItem(i).toString()),"");
         }
         topListAdapter.notifyDataSetChanged();
     }
@@ -278,5 +293,6 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     @Override
     public void notifyAdapter() {
         topListAdapter.notifyDataSetChanged();
+        bottomListAdapter.notifyDataSetChanged();
     }
 }

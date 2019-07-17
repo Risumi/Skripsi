@@ -131,7 +131,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             int spinnerPos = adapter.getPosition(editBacklog.getStatus());
             spinner.setSelection(spinnerPos);
 //            Log.d("Loh",resultIntent.getStringExtra("epicName"));
-            int spinnerPos2 = adapter2.getPosition("Front End");
+            int spinnerPos2 = adapter2.getPosition(resultIntent.getStringExtra("epicName"));
+            Log.d("Epic Namee",resultIntent.getStringExtra("epicName"));
             spinner2.setSelection(spinnerPos2);
 //            int spinnerPos3 = adapter.getPosition(editBacklog.getAssignee());
 //            spinner.setSelection(spinnerPos3);
