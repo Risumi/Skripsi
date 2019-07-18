@@ -3,11 +3,14 @@ package com.example.app.activity;
 import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -27,6 +30,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 public class ActivityAddBacklog extends AppCompatActivity implements View.OnClickListener
 {
     Button button, button2;
@@ -45,6 +51,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_backlog);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         etBlName = findViewById(R.id.etBlName);
         button = findViewById(R.id.button);
@@ -80,7 +88,34 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
         ArrayList<String> spinnerArray = resultIntent.getStringArrayListExtra("spinner");
         ArrayList<String> epicID = resultIntent.getStringArrayListExtra("epicID");
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,spinnerArray);
+        spinnerArray.add(0,"Select Epic");
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,spinnerArray){
+            @Override
+            public boolean isEnabled(int position) {
+                if(position == 0)
+                {
+
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable @android.support.annotation.Nullable View convertView, @NonNull @android.support.annotation.NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -89,10 +124,10 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                 if (epicID.size()!=0){
                     Log.d("index spinner",Integer.toString(i));
                     if (adapterView.getAdapter().getCount()>0){
-                        if ((i-1)<0){
+                        if ((i-2)<0){
 
                         }else {
-                            epicId = epicID.get(i - 1);
+                            epicId = epicID.get(i - 2);
                             if (epicId.equalsIgnoreCase("---")) {
                                 epicId = "";
                             }
@@ -107,8 +142,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
             }
         });
-
-        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this, R.array.Asignee, android.R.layout.simple_spinner_item);
+        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this, R.array.Asignee, android.R.layout.simple_spinner_dropdown_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner3.setAdapter(adapter3);
         spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -158,14 +192,15 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             if (begdda == null || endda == null){
                 Toast.makeText(this,"Date cannot be empty",Toast.LENGTH_LONG).show();
             }else {
-//                if (resultIntent.getIntExtra("req code",1)==1){
+                if (validateFields(etBlName)){
                     name = etBlName.getText().toString();
                     desc = etBlDesc.getText().toString();
 //                    assignee = "";
                     if (resultIntent.getIntExtra("req code",1)==2){
                         newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,"",epicId);
                     }else {
-                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"","",epicId);
+                        int lastNum = Integer.parseInt(resultIntent.getStringExtra("blID").substring(resultIntent.getStringExtra("blID").length() - 1))+1;
+                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+lastNum,resultIntent.getStringExtra("PID"),"","",epicId);
                     }
                     Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
                     resultIntent.putExtra("result",newBacklog);
@@ -174,17 +209,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                         Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
                     }
                     setResult(RESULT_OK, resultIntent);
-
                     finish();
-//                }else if (resultIntent.getIntExtra("req code",1)==2){
-//                    name = etBlName.getText().toString();
-//                    desc = etBlDesc.getText().toString();
-//                    assignee = etBlAssignee.getText().toString();
-//                    newBacklog = new Backlog(name,status,begda,endda,assignee,desc);
-//                    resultIntent.putExtra("result",newBacklog);
-//                    setResult(RESULT_OK, resultIntent);
-//                    finish();
-//                }
+                }
             }
         }else if (view == button2){
             initializeAlertDialog();
@@ -259,5 +285,28 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                         dialog.cancel();
                     }
                 });
+    }
+
+    private boolean validateFields(EditText editText) {
+        if (editText.getText().toString() == "") {
+            editText.setError("Field cannot be blank");
+            return false;
+        }else if (editText.getText().length() < 3) {
+            editText.setError("Field must be at least 3 characters");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return true;
     }
 }

@@ -82,7 +82,7 @@ public class ActivityMain extends AppCompatActivity
 
 
         intent = getIntent();
-        PID= intent.getStringExtra("PID");
+        PID = intent.getStringExtra("PID");
 
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -239,7 +239,7 @@ public class ActivityMain extends AppCompatActivity
             intent.putStringArrayListExtra("epicID",idEpic);
             intent.putExtra("req code", REQ_ADD_BACKLOG);
             intent.putExtra("PID",PID);
-            intent.putExtra("blID",model.getListAllBacklog().getValue().size());
+            intent.putExtra("blID",model.getListAllBacklog().getValue().get(model.getListAllBacklog().getValue().size()-1).getId());
             startActivityForResult(intent, REQ_ADD_BACKLOG);
         }else if(view==fab3){
             Intent intent = new Intent(this, ActivityAddEpic.class);
@@ -383,4 +383,5 @@ public class ActivityMain extends AppCompatActivity
                     }
                 });
     }
+
 }

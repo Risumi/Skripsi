@@ -3,6 +3,7 @@ package com.example.app.activity;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -19,6 +20,9 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_project);
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         etPName = findViewById(R.id.etBlName);
         etPKey = findViewById(R.id.etBlStatus);
         etDesc = findViewById(R.id.etPDesc);
@@ -29,11 +33,38 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
     @Override
     public void onClick(View view) {
         if (view == btn){
-            Intent resultIntent = getIntent();
-            Project newProject = new Project(etPName.getText().toString(),etPKey.getText().toString(),"",etDesc.getText().toString());
-            resultIntent.putExtra("result",newProject);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+            validateFields(etPKey);
+            validateFields(etPName);
+            if (validateFields(etPName) && validateFields(etPKey)){
+                Intent resultIntent = getIntent();
+                Project newProject = new Project(etPName.getText().toString(),etPKey.getText().toString(),"",etDesc.getText().toString());
+                resultIntent.putExtra("result",newProject);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
         }
+    }
+
+    private boolean validateFields(EditText editText) {
+        if (editText.getText().toString() == "") {
+            editText.setError("Field cannot be blank");
+            return false;
+        }else if (editText.getText().length() < 3) {
+            editText.setError("Field must be at least 3 characters");
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return true;
     }
 }

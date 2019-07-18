@@ -625,7 +625,7 @@ public class MainViewModel extends ViewModel {
     void splitData(){
         Log.d("Backlog count", ((Integer) listAllBacklog.getValue().size()).toString());
         if (sCount == 0){
-            listBacklog = listAllBacklog;
+            listBacklog.getValue().addAll(listAllBacklog.getValue()) ;
             listFilterBacklog.getValue().addAll(listBacklog.getValue());
             listener.endProgressDialog();
             Log.d("Sprint status", "No sprint");

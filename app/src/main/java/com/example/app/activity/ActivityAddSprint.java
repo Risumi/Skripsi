@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +23,7 @@ import java.util.Date;
 
 public class ActivityAddSprint extends AppCompatActivity implements View.OnClickListener {
 
-    TextView startDate, endDate;
+    TextView startDate, endDate, txtSprint;
     EditText sprintGoal;
     Button button;
     Intent resultIntent;
@@ -33,8 +34,14 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_sprint);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        startDate = findViewById(R.id.tvBegda);
 //        startDate.setOnClickListener(this);
+
+        resultIntent = getIntent();
+
+        txtSprint = findViewById(R.id.tvSprint);
+        txtSprint.setText("Sprint "+(resultIntent.getIntExtra("SCount",0)+1));
 
         endDate = findViewById(R.id.tvEndda);
         endDate.setOnClickListener(this);
@@ -44,7 +51,6 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         button = findViewById(R.id.button);
         button.setOnClickListener(this);
 
-        resultIntent = getIntent();
     }
 
     @Override
@@ -108,5 +114,13 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         return formattedDate;
     }
 
-
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return true;
+    }
 }

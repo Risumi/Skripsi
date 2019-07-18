@@ -73,6 +73,8 @@ public class ActivityEpic extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_epic);
 
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         Intent intent = getIntent();
         String epicID = intent.getStringExtra("epicID");
         epic =intent.getParcelableExtra("epic");
@@ -170,5 +172,15 @@ public class ActivityEpic extends AppCompatActivity {
                 Log.d("Gagal",e.toString());
             }
         });
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return true;
     }
 }

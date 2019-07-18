@@ -17,6 +17,7 @@
     </string-array>
 
     <string-array name="Asignee">
+        <item>Select Asignee</item>
         <item>Rizky Suhaimi</item>
         <item>Taruna Makki</item>
         <item>Anugerah Wijaya</item>
