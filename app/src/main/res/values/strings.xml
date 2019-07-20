@@ -23,6 +23,15 @@
         <item>Anugerah Wijaya</item>
         <item>Charles Sanggalangi</item>
     </string-array>
+
+    <string-array name="Duration">
+        <item>Duration</item>
+        <item>1 week</item>
+        <item>2 week</item>
+        <item>3 week</item>
+        <item>Custom</item>
+    </string-array>
+
     <string name="title_activity_epic">Epic</string>
     <string name="title_epic_detail">Detail</string>
     <string name="title_list_task">List Tasks</string>

@@ -43,8 +43,8 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         txtSprint = findViewById(R.id.tvSprint);
         txtSprint.setText("Sprint "+(resultIntent.getIntExtra("SCount",0)+1));
 
-        endDate = findViewById(R.id.tvEndda);
-        endDate.setOnClickListener(this);
+//        endDate = findViewById(R.id.tvEndda);
+//        endDate.setOnClickListener(this);
 
         sprintGoal = findViewById(R.id.etGoal);
 
@@ -60,15 +60,15 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         } else if (view == endDate) {
             openDateRangePicker(endDate, 2);
         } else if (view == button) {
-            begda = new Date();
-            if (endda == null) {
-                Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
-            } else {
-                Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), begda, endda, sprintGoal.getText().toString());
-                resultIntent.putExtra("sprint", newSprint);
-                setResult(RESULT_OK, resultIntent);
-                finish();
-            }
+//            begda = new Date();
+//            if (endda == null) {
+//                Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
+//            } else {
+            Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), null, null, sprintGoal.getText().toString());
+            resultIntent.putExtra("sprint", newSprint);
+            setResult(RESULT_OK, resultIntent);
+            finish();
+//            }
         }
     }
 

@@ -14,10 +14,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.app.ListenerAdapter;
+import com.example.app.activity.ActivityStartSprint;
 import com.example.app.model.Backlog;
 import com.example.app.adapter.BacklogAdapter;
 import com.example.app.Listener;
@@ -34,7 +36,7 @@ import java.util.List;
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentBacklog extends Fragment implements Listener, BacklogAdapter.BacklogViewHolder2.ClickListener , AdapterView.OnItemSelectedListener, ListenerAdapter {
+public class FragmentBacklog extends Fragment implements Listener, BacklogAdapter.BacklogViewHolder2.ClickListener , AdapterView.OnItemSelectedListener, ListenerAdapter,View.OnClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -113,6 +115,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     private MainViewModel model;
     BacklogAdapter topListAdapter;
     BacklogAdapter bottomListAdapter;
+    Button btnStartSprint;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -122,6 +125,8 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         tvEmptyListTop = view.findViewById(R.id.tvEmptyListTop);
         tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
         tvSprint= view.findViewById(R.id.textView8);
+        btnStartSprint = view.findViewById(R.id.button6);
+        btnStartSprint.setOnClickListener(this);
 
         if (model.getListBacklog().getValue().size()==0){
             tvEmptyListTop.setVisibility(View.VISIBLE);
@@ -294,5 +299,13 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     public void notifyAdapter() {
         topListAdapter.notifyDataSetChanged();
         bottomListAdapter.notifyDataSetChanged();
+    }
+    final int REQ_START_SPRINT = 5;
+    @Override
+    public void onClick(View view) {
+        if (view == btnStartSprint){
+            Intent intent = new Intent(getActivity(),ActivityStartSprint.class);
+            getActivity().startActivityForResult(intent,REQ_START_SPRINT);
+        }
     }
 }

@@ -13,33 +13,30 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.ActivityLogin"></activity>
+        <activity android:name=".activity.ActivityStartSprint"></activity>
+        <activity android:name=".activity.ActivityLogin" />
         <activity
             android:name=".activity.ActivityAddEpic"
-            android:parentActivityName=".activity.ActivityMain">
-        </activity>
+            android:parentActivityName=".activity.ActivityMain"></activity>
         <activity
             android:name=".activity.ActivityEpic"
             android:label="@string/title_activity_epic"
-            android:parentActivityName=".activity.ActivityMain">
-        </activity>
+            android:parentActivityName=".activity.ActivityMain"></activity>
         <activity
             android:name=".activity.ActivityAddSprint"
-            android:parentActivityName=".activity.ActivityMain">
-        </activity>
+            android:parentActivityName=".activity.ActivityMain"></activity>
         <activity
             android:name=".activity.ActivityAddBacklog"
-            android:parentActivityName=".activity.ActivityMain">
-        </activity>
+            android:parentActivityName=".activity.ActivityMain"></activity>
         <activity
             android:name=".activity.ActivityAddProject"
-            android:parentActivityName=".activity.ActivityHome">
-        </activity>
+            android:parentActivityName=".activity.ActivityHome"></activity>
         <activity
             android:name=".activity.ActivityHome"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

@@ -1,0 +1,7 @@
+mutation SprintDN($id:String!,$idProject:String!,$goal:String!){
+  createSprint(id:$id,idProject:$idProject,goal:$goal){
+    id
+    idProject
+    goal
+  }
+}

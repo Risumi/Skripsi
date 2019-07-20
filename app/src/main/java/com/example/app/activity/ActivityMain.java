@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.app.ListenerGraphql;
+import com.example.app.fragment.FragmentSprintReports;
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
 import com.example.app.fragment.FragmentBurndown;
@@ -160,6 +161,10 @@ public class ActivityMain extends AppCompatActivity
             fragment = FragmentBurndown.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
+        }else if (id == R.id.nav_sprint_report){
+            fragment = FragmentSprintReports.newInstance("","");
+            fam.collapse();
+            fam.setVisibility(View.GONE);
         }
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -205,18 +210,11 @@ public class ActivityMain extends AppCompatActivity
 //                .setAction("Action", null).show();
         if (view==fab){
             if (model.getCurrentSprint().getValue()!=null){
-                Date date = new Date();
-                if (!date.after(model.getCurrentSprint().getValue().getEndda())){
-                    Log.d("Endda",model.getCurrentSprint().getValue().getEndda().toString());
-                    Log.d("Now",new Date().toString());
-                    Toast.makeText(this,"Can't create a sprint. There is a running sprint",Toast.LENGTH_LONG).show();
-                }else {
-                    Intent intent = new Intent(this, ActivityAddSprint.class);
-                    intent.putExtra("req code",REQ_ADD_SPRINT);
-                    intent.putExtra("PID",PID);
-                    intent.putExtra("SCount",model.getSprintCount().getValue());
-                    startActivityForResult(intent,REQ_ADD_SPRINT);
-                }
+                Intent intent = new Intent(this, ActivityAddSprint.class);
+                intent.putExtra("req code",REQ_ADD_SPRINT);
+                intent.putExtra("PID",PID);
+                intent.putExtra("SCount",model.getSprintCount().getValue());
+                startActivityForResult(intent,REQ_ADD_SPRINT);
             }
             else {
                 Intent intent = new Intent(this, ActivityAddSprint.class);
