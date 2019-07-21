@@ -29,16 +29,17 @@ import java.util.Map;
 import type.CustomType;
 
 public final class SprintMutation implements Mutation<SprintMutation.Data, SprintMutation.Data, SprintMutation.Variables> {
-  public static final String OPERATION_ID = "a5582084907438e11b6aed06c56fc70befd55c5def6749e834e99888dd590cae";
+  public static final String OPERATION_ID = "c1b371ec2e4c4890315d2953bf2e9b30aca8f4a8caf7f66caa8f84e3dcc5e230";
 
-  public static final String QUERY_DOCUMENT = "mutation Sprint($id: String!, $idProject: String!, $begindate: Date!, $enddate: Date!, $goal: String!) {\n"
-      + "  createSprint(id: $id, idProject: $idProject, begindate: $begindate, enddate: $enddate, goal: $goal) {\n"
+  public static final String QUERY_DOCUMENT = "mutation Sprint($id: String!, $idProject: String!, $name: String!, $goal: String!, $createddate: Date!, $createdby: String!) {\n"
+      + "  createSprint(id: $id, idProject: $idProject, name: $name, goal: $goal, createddate: $createddate, createdby: $createdby) {\n"
       + "    __typename\n"
       + "    id\n"
       + "    idProject\n"
-      + "    begindate\n"
-      + "    enddate\n"
+      + "    name\n"
       + "    goal\n"
+      + "    createddate\n"
+      + "    createdby\n"
       + "  }\n"
       + "}";
 
@@ -51,14 +52,15 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
   private final SprintMutation.Variables variables;
 
-  public SprintMutation(@NotNull String id, @NotNull String idProject, @NotNull Date begindate,
-      @NotNull Date enddate, @NotNull String goal) {
+  public SprintMutation(@NotNull String id, @NotNull String idProject, @NotNull String name,
+      @NotNull String goal, @NotNull Date createddate, @NotNull String createdby) {
     Utils.checkNotNull(id, "id == null");
     Utils.checkNotNull(idProject, "idProject == null");
-    Utils.checkNotNull(begindate, "begindate == null");
-    Utils.checkNotNull(enddate, "enddate == null");
+    Utils.checkNotNull(name, "name == null");
     Utils.checkNotNull(goal, "goal == null");
-    variables = new SprintMutation.Variables(id, idProject, begindate, enddate, goal);
+    Utils.checkNotNull(createddate, "createddate == null");
+    Utils.checkNotNull(createdby, "createdby == null");
+    variables = new SprintMutation.Variables(id, idProject, name, goal, createddate, createdby);
   }
 
   @Override
@@ -100,11 +102,13 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     private @NotNull String idProject;
 
-    private @NotNull Date begindate;
-
-    private @NotNull Date enddate;
+    private @NotNull String name;
 
     private @NotNull String goal;
+
+    private @NotNull Date createddate;
+
+    private @NotNull String createdby;
 
     Builder() {
     }
@@ -119,13 +123,8 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return this;
     }
 
-    public Builder begindate(@NotNull Date begindate) {
-      this.begindate = begindate;
-      return this;
-    }
-
-    public Builder enddate(@NotNull Date enddate) {
-      this.enddate = enddate;
+    public Builder name(@NotNull String name) {
+      this.name = name;
       return this;
     }
 
@@ -134,13 +133,24 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return this;
     }
 
+    public Builder createddate(@NotNull Date createddate) {
+      this.createddate = createddate;
+      return this;
+    }
+
+    public Builder createdby(@NotNull String createdby) {
+      this.createdby = createdby;
+      return this;
+    }
+
     public SprintMutation build() {
       Utils.checkNotNull(id, "id == null");
       Utils.checkNotNull(idProject, "idProject == null");
-      Utils.checkNotNull(begindate, "begindate == null");
-      Utils.checkNotNull(enddate, "enddate == null");
+      Utils.checkNotNull(name, "name == null");
       Utils.checkNotNull(goal, "goal == null");
-      return new SprintMutation(id, idProject, begindate, enddate, goal);
+      Utils.checkNotNull(createddate, "createddate == null");
+      Utils.checkNotNull(createdby, "createdby == null");
+      return new SprintMutation(id, idProject, name, goal, createddate, createdby);
     }
   }
 
@@ -149,26 +159,30 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     private final @NotNull String idProject;
 
-    private final @NotNull Date begindate;
-
-    private final @NotNull Date enddate;
+    private final @NotNull String name;
 
     private final @NotNull String goal;
 
+    private final @NotNull Date createddate;
+
+    private final @NotNull String createdby;
+
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
-    Variables(@NotNull String id, @NotNull String idProject, @NotNull Date begindate,
-        @NotNull Date enddate, @NotNull String goal) {
+    Variables(@NotNull String id, @NotNull String idProject, @NotNull String name,
+        @NotNull String goal, @NotNull Date createddate, @NotNull String createdby) {
       this.id = id;
       this.idProject = idProject;
-      this.begindate = begindate;
-      this.enddate = enddate;
+      this.name = name;
       this.goal = goal;
+      this.createddate = createddate;
+      this.createdby = createdby;
       this.valueMap.put("id", id);
       this.valueMap.put("idProject", idProject);
-      this.valueMap.put("begindate", begindate);
-      this.valueMap.put("enddate", enddate);
+      this.valueMap.put("name", name);
       this.valueMap.put("goal", goal);
+      this.valueMap.put("createddate", createddate);
+      this.valueMap.put("createdby", createdby);
     }
 
     public @NotNull String id() {
@@ -179,16 +193,20 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return idProject;
     }
 
-    public @NotNull Date begindate() {
-      return begindate;
-    }
-
-    public @NotNull Date enddate() {
-      return enddate;
+    public @NotNull String name() {
+      return name;
     }
 
     public @NotNull String goal() {
       return goal;
+    }
+
+    public @NotNull Date createddate() {
+      return createddate;
+    }
+
+    public @NotNull String createdby() {
+      return createdby;
     }
 
     @Override
@@ -203,9 +221,10 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         public void marshal(InputFieldWriter writer) throws IOException {
           writer.writeString("id", id);
           writer.writeString("idProject", idProject);
-          writer.writeCustom("begindate", CustomType.DATE, begindate);
-          writer.writeCustom("enddate", CustomType.DATE, enddate);
+          writer.writeString("name", name);
           writer.writeString("goal", goal);
+          writer.writeCustom("createddate", CustomType.DATE, createddate);
+          writer.writeString("createdby", createdby);
         }
       };
     }
@@ -213,7 +232,7 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("createSprint", "createSprint", new UnmodifiableMapBuilder<String, Object>(5)
+      ResponseField.forObject("createSprint", "createSprint", new UnmodifiableMapBuilder<String, Object>(6)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -222,17 +241,21 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         .put("kind", "Variable")
         .put("variableName", "idProject")
         .build())
-      .put("begindate", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("name", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "begindate")
-        .build())
-      .put("enddate", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "enddate")
+        .put("variableName", "name")
         .build())
       .put("goal", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "goal")
+        .build())
+      .put("createddate", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "createddate")
+        .build())
+      .put("createdby", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "createdby")
         .build())
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
@@ -317,9 +340,10 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("idProject", "idProject", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("createddate", "createddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("createdby", "createdby", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
@@ -328,11 +352,13 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
 
     final @Nullable String idProject;
 
-    final @Nullable Date begindate;
-
-    final @Nullable Date enddate;
+    final @Nullable String name;
 
     final @Nullable String goal;
+
+    final @Nullable Date createddate;
+
+    final @Nullable String createdby;
 
     private transient volatile String $toString;
 
@@ -341,13 +367,15 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
     private transient volatile boolean $hashCodeMemoized;
 
     public CreateSprint(@NotNull String __typename, @Nullable String id, @Nullable String idProject,
-        @Nullable Date begindate, @Nullable Date enddate, @Nullable String goal) {
+        @Nullable String name, @Nullable String goal, @Nullable Date createddate,
+        @Nullable String createdby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = id;
       this.idProject = idProject;
-      this.begindate = begindate;
-      this.enddate = enddate;
+      this.name = name;
       this.goal = goal;
+      this.createddate = createddate;
+      this.createdby = createdby;
     }
 
     public @NotNull String __typename() {
@@ -362,16 +390,20 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
       return this.idProject;
     }
 
-    public @Nullable Date begindate() {
-      return this.begindate;
-    }
-
-    public @Nullable Date enddate() {
-      return this.enddate;
+    public @Nullable String name() {
+      return this.name;
     }
 
     public @Nullable String goal() {
       return this.goal;
+    }
+
+    public @Nullable Date createddate() {
+      return this.createddate;
+    }
+
+    public @Nullable String createdby() {
+      return this.createdby;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -381,9 +413,10 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
           writer.writeString($responseFields[2], idProject);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], enddate);
-          writer.writeString($responseFields[5], goal);
+          writer.writeString($responseFields[3], name);
+          writer.writeString($responseFields[4], goal);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], createddate);
+          writer.writeString($responseFields[6], createdby);
         }
       };
     }
@@ -395,9 +428,10 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "idProject=" + idProject + ", "
-          + "begindate=" + begindate + ", "
-          + "enddate=" + enddate + ", "
-          + "goal=" + goal
+          + "name=" + name + ", "
+          + "goal=" + goal + ", "
+          + "createddate=" + createddate + ", "
+          + "createdby=" + createdby
           + "}";
       }
       return $toString;
@@ -413,9 +447,10 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         return this.__typename.equals(that.__typename)
          && ((this.id == null) ? (that.id == null) : this.id.equals(that.id))
          && ((this.idProject == null) ? (that.idProject == null) : this.idProject.equals(that.idProject))
-         && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
-         && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal));
+         && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
+         && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal))
+         && ((this.createddate == null) ? (that.createddate == null) : this.createddate.equals(that.createddate))
+         && ((this.createdby == null) ? (that.createdby == null) : this.createdby.equals(that.createdby));
       }
       return false;
     }
@@ -431,11 +466,13 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         h *= 1000003;
         h ^= (idProject == null) ? 0 : idProject.hashCode();
         h *= 1000003;
-        h ^= (begindate == null) ? 0 : begindate.hashCode();
-        h *= 1000003;
-        h ^= (enddate == null) ? 0 : enddate.hashCode();
+        h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
         h ^= (goal == null) ? 0 : goal.hashCode();
+        h *= 1000003;
+        h ^= (createddate == null) ? 0 : createddate.hashCode();
+        h *= 1000003;
+        h ^= (createdby == null) ? 0 : createdby.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -448,10 +485,11 @@ public final class SprintMutation implements Mutation<SprintMutation.Data, Sprin
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         final String idProject = reader.readString($responseFields[2]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
-        final String goal = reader.readString($responseFields[5]);
-        return new CreateSprint(__typename, id, idProject, begindate, enddate, goal);
+        final String name = reader.readString($responseFields[3]);
+        final String goal = reader.readString($responseFields[4]);
+        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
+        final String createdby = reader.readString($responseFields[6]);
+        return new CreateSprint(__typename, id, idProject, name, goal, createddate, createdby);
       }
     }
   }

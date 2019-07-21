@@ -1,0 +1,10 @@
+mutation EpicEdit($id:String!,$idProject:String!,$name:String!,$summary:String!,$modifieddate:Date!,$modifiedby:String!){
+  editEpic(id:$id,idProject:$idProject,name:$name,summary:$summary,modifieddate:$modifieddate,modifiedby:$modifiedby){
+    id    
+    idProject
+    name    
+    summary  
+    modifieddate
+    modifiedby
+  }
+}

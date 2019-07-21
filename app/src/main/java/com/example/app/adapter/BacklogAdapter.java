@@ -47,12 +47,12 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     public void onBindViewHolder(@NonNull BacklogAdapter.BacklogViewHolder2 backlogViewHolder2, int i) {
         backlogViewHolder2.BacklogName.setText(backlogList.get(i).getName());
         backlogViewHolder2.BacklogStatus.setText(backlogList.get(i).getStatus());
-        backlogViewHolder2.BacklogDate.setText(formatDate(backlogList.get(i).getEndda()));
+//        backlogViewHolder2.BacklogDate.setText(formatDate(backlogList.get(i).getEndda()));
         String desc = backlogList.get(i).getDescription();
         if (desc.length()>40){
             desc = desc.substring(0,40)+"...";
         }
-        backlogViewHolder2.BacklogDescription.setText(desc);
+//        backlogViewHolder2.BacklogDescription.setText(desc);
         backlogViewHolder2.fl.setTag(i);
         backlogViewHolder2.fl.setOnLongClickListener(this);
         backlogViewHolder2.backlog = backlogList.get(i);
@@ -93,8 +93,8 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     public static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView BacklogName;
         TextView BacklogStatus;
-        TextView BacklogDescription;
-        TextView BacklogDate;
+//        TextView BacklogDescription;
+//        TextView BacklogDate;
         FrameLayout fl;
         private ClickListener listener;
         Backlog backlog;
@@ -104,8 +104,8 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
             super(itemView);
             BacklogName = itemView.findViewById(R.id.txtName);
             BacklogStatus = itemView.findViewById(R.id.txtStatus);
-            BacklogDescription = itemView.findViewById(R.id.txtDescription);
-            BacklogDate = itemView.findViewById(R.id.txtDate);
+//            BacklogDescription = itemView.findViewById(R.id.txtDescription);
+//            BacklogDate = itemView.findViewById(R.id.txtDate);
             fl = itemView.findViewById(R.id.FM1);
             this.listener = listener;
             itemView.setOnClickListener(this);

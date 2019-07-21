@@ -8,13 +8,11 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.app.MainViewModel;
-import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
 import com.example.app.adapter.EpicAdapter;
 import com.example.app.R;
@@ -94,7 +92,7 @@ public class FragmentEpic extends Fragment {
     public void AddDataSet(Epic epic){
         model.getListEpic().getValue().add(epic);
         mAdapter.notifyDataSetChanged();
-        model.mutateEpic(epic);
+        model.createEpic(epic);
     }
     public void notifyAdapter(){
         mAdapter.notifyDataSetChanged();

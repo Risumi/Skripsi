@@ -173,13 +173,13 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
     public void setStatus(Backlog backlog, String status) {
         if (status.equalsIgnoreCase("Top")){
             backlog.setStatus("To Do");
-            model.mutateBacklogSprint(backlog);
+            model.editBacklog(backlog);
         }else if (status.equalsIgnoreCase("Middle")){
             backlog.setStatus("On Progress");
-            model.mutateBacklogSprint(backlog);
+            model.editBacklog(backlog);
         }else if (status.equalsIgnoreCase("Bottom")){
             backlog.setStatus("Completed");
-            model.mutateBacklogSprint(backlog);
+            model.editBacklog(backlog);
         }
     }
 
@@ -199,14 +199,14 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
 //            // TODO: 24-May-19 change status project to no run
 //            Sprint sprint = model.getCurrentSprint().getValue();
 //            sprint.setBegda(new Date(1999,01,01));
-////            model.mutateSprint(sprint);
+////            model.createSprint(sprint);
 //            model.setCurrentSprint(null);
 //
 //            btnSprint.setVisibility(View.GONE);
 //        }else {
 //            Date date = new Date();
 //            model.getCurrentSprint().getValue().setBegda(date);
-//            model.mutateSprint(model.getCurrentSprint().getValue());
+//            model.createSprint(model.getCurrentSprint().getValue());
 //
 //            // TODO: 24-May-19 change status project to running
 //

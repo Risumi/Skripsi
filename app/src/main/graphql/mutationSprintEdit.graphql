@@ -1,0 +1,11 @@
+mutation SprintEdit($id:String!,$name:String!,$begindate:Date!,$enddate:Date!,$goal:String!,$modifieddate:Date!,$modifiedby:String!){
+  editSprint(id:$id,name:$name,begindate:$begindate,enddate:$enddate,goal:$goal,modifieddate:$modifieddate,modifiedby:$modifiedby){
+    id    
+    name
+    begindate
+    enddate
+    goal       
+    modifieddate
+    modifiedby    
+  }
+}

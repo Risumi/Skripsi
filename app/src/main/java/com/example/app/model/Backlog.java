@@ -6,78 +6,32 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Backlog implements Parcelable {
-    private String name;
-    private String status;
-    private Date begda;
-    private Date endda;
-    private String assignee;
-    private String description;
     private String id;
     private String idProject;
     private String idSprint;
-    private String idComment;
-    private String idEpic;
+    private String epicName;
+    private String name;
+    private String status;
+    private String assignee;
+    private String description;
+    private Date createddate;
+    private String createdby;
+    private Date modifieddate;
+    private String modifiedby;
 
-    public Backlog(String name, String status, Date begda, Date endda, String assignee, String description, String id, String idProject, String idSprint, String idComment,String idEpic) {
-        this.name = name;
-        this.status = status;
-        this.begda = begda;
-        this.endda = endda;
-        this.assignee = assignee;
-        this.description = description;
+    public Backlog(String id, String idProject, String idSprint, String epicName, String name, String status, String assignee, String description, Date createddate, String createdby, Date modifieddate, String modifiedby) {
         this.id = id;
         this.idProject = idProject;
         this.idSprint = idSprint;
-        this.idComment = idComment;
-        this.idEpic= idEpic;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
+        this.epicName = epicName;
         this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
         this.status = status;
-    }
-
-    public Date getBegda() {
-        return begda;
-    }
-
-    public void setBegda(Date begda) {
-        this.begda = begda;
-    }
-
-    public Date getEndda() {
-        return endda;
-    }
-
-    public void setEndda(Date endda) {
-        this.endda = endda;
-    }
-
-    public String getAssignee() {
-        return assignee;
-    }
-
-    public void setAssignee(String assignee) {
         this.assignee = assignee;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
         this.description = description;
+        this.createddate = createddate;
+        this.createdby = createdby;
+        this.modifieddate = modifieddate;
+        this.modifiedby = modifiedby;
     }
 
     public String getId() {
@@ -104,36 +58,93 @@ public class Backlog implements Parcelable {
         this.idSprint = idSprint;
     }
 
-    public String getIdComment() {
-        return idComment;
+    public String getEpicName() {
+        return epicName;
     }
 
-    public void setIdComment(String idComment) {
-        this.idComment = idComment;
+    public void setEpicName(String epicName) {
+        this.epicName = epicName;
     }
 
-    public String getIdEpic() {
-        return idEpic;
+    public String getName() {
+        return name;
     }
 
-    public void setIdEpic(String idEpic) {
-        this.idEpic = idEpic;
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAssignee() {
+        return assignee;
+    }
+
+    public void setAssignee(String assignee) {
+        this.assignee = assignee;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getCreateddate() {
+        return createddate;
+    }
+
+    public void setCreateddate(Date createddate) {
+        this.createddate = createddate;
+    }
+
+    public String getCreatedby() {
+        return createdby;
+    }
+
+    public void setCreatedby(String createdby) {
+        this.createdby = createdby;
+    }
+
+    public Date getModifieddate() {
+        return modifieddate;
+    }
+
+    public void setModifieddate(Date modifieddate) {
+        this.modifieddate = modifieddate;
+    }
+
+    public String getModifiedby() {
+        return modifiedby;
+    }
+
+    public void setModifiedby(String modifiedby) {
+        this.modifiedby = modifiedby;
     }
 
     protected Backlog(Parcel in) {
-        name = in.readString();
-        status = in.readString();
-        long tmpBegda = in.readLong();
-        begda = tmpBegda != -1 ? new Date(tmpBegda) : null;
-        long tmpEndda = in.readLong();
-        endda = tmpEndda != -1 ? new Date(tmpEndda) : null;
-        assignee = in.readString();
-        description = in.readString();
         id = in.readString();
         idProject = in.readString();
         idSprint = in.readString();
-        idComment = in.readString();
-        idEpic = in.readString();
+        epicName = in.readString();
+        name = in.readString();
+        status = in.readString();
+        assignee = in.readString();
+        description = in.readString();
+        long tmpCreateddate = in.readLong();
+        createddate = tmpCreateddate != -1 ? new Date(tmpCreateddate) : null;
+        createdby = in.readString();
+        long tmpModifieddate = in.readLong();
+        modifieddate = tmpModifieddate != -1 ? new Date(tmpModifieddate) : null;
+        modifiedby = in.readString();
     }
 
     @Override
@@ -143,17 +154,18 @@ public class Backlog implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(status);
-        dest.writeLong(begda != null ? begda.getTime() : -1L);
-        dest.writeLong(endda != null ? endda.getTime() : -1L);
-        dest.writeString(assignee);
-        dest.writeString(description);
         dest.writeString(id);
         dest.writeString(idProject);
         dest.writeString(idSprint);
-        dest.writeString(idComment);
-        dest.writeString(idEpic);
+        dest.writeString(epicName);
+        dest.writeString(name);
+        dest.writeString(status);
+        dest.writeString(assignee);
+        dest.writeString(description);
+        dest.writeLong(createddate != null ? createddate.getTime() : -1L);
+        dest.writeString(createdby);
+        dest.writeLong(modifieddate != null ? modifieddate.getTime() : -1L);
+        dest.writeString(modifiedby);
     }
 
     @SuppressWarnings("unused")

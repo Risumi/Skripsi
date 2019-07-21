@@ -9,42 +9,24 @@ import java.util.Date;
 import java.util.List;
 
 public class Epic implements Parcelable {
-    private String name;
-    private String status;
-    private String description;
     private String id;
     private String idProject;
+    private String name;
+    private String summary;
+    private Date createddate;
+    private String createdby;
+    private Date modifieddate;
+    private String modifiedby;
 
-    public Epic(String name, String status, String description, String id, String idProject) {
-        this.name = name;
-        this.status = status;
-        this.description = description;
+    public Epic(String id, String idProject, String name, String summary, Date createddate, String createdby, Date modifieddate, String modifiedby) {
         this.id = id;
         this.idProject = idProject;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
         this.name = name;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
+        this.summary = summary;
+        this.createddate = createddate;
+        this.createdby = createdby;
+        this.modifieddate = modifieddate;
+        this.modifiedby = modifiedby;
     }
 
     public String getId() {
@@ -63,12 +45,65 @@ public class Epic implements Parcelable {
         this.idProject = idProject;
     }
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getSummary() {
+        return summary;
+    }
+
+    public void setSummary(String summary) {
+        this.summary = summary;
+    }
+
+    public Date getCreateddate() {
+        return createddate;
+    }
+
+    public void setCreateddate(Date createddate) {
+        this.createddate = createddate;
+    }
+
+    public String getCreatedby() {
+        return createdby;
+    }
+
+    public void setCreatedby(String createdby) {
+        this.createdby = createdby;
+    }
+
+    public Date getModifieddate() {
+        return modifieddate;
+    }
+
+    public void setModifieddate(Date modifieddate) {
+        this.modifieddate = modifieddate;
+    }
+
+    public String getModifiedby() {
+        return modifiedby;
+    }
+
+    public void setModifiedby(String modifiedby) {
+        this.modifiedby = modifiedby;
+    }
+
     protected Epic(Parcel in) {
-        name = in.readString();
-        status = in.readString();
-        description = in.readString();
         id = in.readString();
         idProject = in.readString();
+        name = in.readString();
+        summary = in.readString();
+        long tmpCreateddate = in.readLong();
+        createddate = tmpCreateddate != -1 ? new Date(tmpCreateddate) : null;
+        createdby = in.readString();
+        long tmpModifieddate = in.readLong();
+        modifieddate = tmpModifieddate != -1 ? new Date(tmpModifieddate) : null;
+        modifiedby = in.readString();
     }
 
     @Override
@@ -78,11 +113,14 @@ public class Epic implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(name);
-        dest.writeString(status);
-        dest.writeString(description);
         dest.writeString(id);
         dest.writeString(idProject);
+        dest.writeString(name);
+        dest.writeString(summary);
+        dest.writeLong(createddate != null ? createddate.getTime() : -1L);
+        dest.writeString(createdby);
+        dest.writeLong(modifieddate != null ? modifieddate.getTime() : -1L);
+        dest.writeString(modifiedby);
     }
 
     @SuppressWarnings("unused")

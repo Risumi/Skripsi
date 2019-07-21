@@ -1,8 +1,0 @@
-query currentSprint($id: String!){
-  sprint(id:$id){
-    id        
-    begindate
-    enddate
-    goal    
-  }
-}

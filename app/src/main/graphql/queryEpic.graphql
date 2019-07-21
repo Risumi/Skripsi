@@ -1,8 +1,15 @@
-query epic($id:String!){
+query Epic($id:String!){
   epic(id:$id){
-    id    
+    id
     name
-    description
-    status
+    summary
+    createddate
+    createdby{
+      nama
+    }
+    modifieddate
+    modifiedby{
+      nama
+    }
   }
 }

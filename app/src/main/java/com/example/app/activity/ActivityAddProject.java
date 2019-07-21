@@ -20,9 +20,7 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_project);
-
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
         etPName = findViewById(R.id.etBlName);
         etPKey = findViewById(R.id.etBlStatus);
         etDesc = findViewById(R.id.etPDesc);

@@ -29,15 +29,17 @@ import java.util.Map;
 
 import type.CustomType;
 
-public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, EpicQuery.Variables> {
-  public static final String OPERATION_ID = "eb9bf123eb8a0714d56246ce58345bb75b92198140f62051537599aee30142f0";
+public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQuery.Data, SprinterQuery.Variables> {
+  public static final String OPERATION_ID = "a96ce67af50714a337f3fba3bf1debe50279a19cae14b90132499d34f029b2c4";
 
-  public static final String QUERY_DOCUMENT = "query Epic($id: String!) {\n"
-      + "  epic(id: $id) {\n"
+  public static final String QUERY_DOCUMENT = "query Sprinter($id: String!) {\n"
+      + "  sprint(id: $id) {\n"
       + "    __typename\n"
       + "    id\n"
       + "    name\n"
-      + "    summary\n"
+      + "    begindate\n"
+      + "    enddate\n"
+      + "    goal\n"
       + "    createddate\n"
       + "    createdby {\n"
       + "      __typename\n"
@@ -54,15 +56,15 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "Epic";
+      return "Sprinter";
     }
   };
 
-  private final EpicQuery.Variables variables;
+  private final SprinterQuery.Variables variables;
 
-  public EpicQuery(@NotNull String id) {
+  public SprinterQuery(@NotNull String id) {
     Utils.checkNotNull(id, "id == null");
-    variables = new EpicQuery.Variables(id);
+    variables = new SprinterQuery.Variables(id);
   }
 
   @Override
@@ -76,12 +78,12 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
   }
 
   @Override
-  public EpicQuery.Data wrapData(EpicQuery.Data data) {
+  public SprinterQuery.Data wrapData(SprinterQuery.Data data) {
     return data;
   }
 
   @Override
-  public EpicQuery.Variables variables() {
+  public SprinterQuery.Variables variables() {
     return variables;
   }
 
@@ -110,9 +112,9 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       return this;
     }
 
-    public EpicQuery build() {
+    public SprinterQuery build() {
       Utils.checkNotNull(id, "id == null");
-      return new EpicQuery(id);
+      return new SprinterQuery(id);
     }
   }
 
@@ -148,7 +150,7 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forList("epic", "epic", new UnmodifiableMapBuilder<String, Object>(1)
+      ResponseField.forList("sprint", "sprint", new UnmodifiableMapBuilder<String, Object>(1)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -156,7 +158,7 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
 
-    final @Nullable List<Epic> epic;
+    final @Nullable List<Sprint> sprint;
 
     private transient volatile String $toString;
 
@@ -164,23 +166,23 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Data(@Nullable List<Epic> epic) {
-      this.epic = epic;
+    public Data(@Nullable List<Sprint> sprint) {
+      this.sprint = sprint;
     }
 
-    public @Nullable List<Epic> epic() {
-      return this.epic;
+    public @Nullable List<Sprint> sprint() {
+      return this.sprint;
     }
 
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeList($responseFields[0], epic, new ResponseWriter.ListWriter() {
+          writer.writeList($responseFields[0], sprint, new ResponseWriter.ListWriter() {
             @Override
             public void write(List items, ResponseWriter.ListItemWriter listItemWriter) {
               for (Object item : items) {
-                listItemWriter.writeObject(((Epic) item).marshaller());
+                listItemWriter.writeObject(((Sprint) item).marshaller());
               }
             }
           });
@@ -192,7 +194,7 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
     public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "epic=" + epic
+          + "sprint=" + sprint
           + "}";
       }
       return $toString;
@@ -205,7 +207,7 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return ((this.epic == null) ? (that.epic == null) : this.epic.equals(that.epic));
+        return ((this.sprint == null) ? (that.sprint == null) : this.sprint.equals(that.sprint));
       }
       return false;
     }
@@ -215,7 +217,7 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= (epic == null) ? 0 : epic.hashCode();
+        h ^= (sprint == null) ? 0 : sprint.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -223,32 +225,34 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
     }
 
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      final Epic.Mapper epicFieldMapper = new Epic.Mapper();
+      final Sprint.Mapper sprintFieldMapper = new Sprint.Mapper();
 
       @Override
       public Data map(ResponseReader reader) {
-        final List<Epic> epic = reader.readList($responseFields[0], new ResponseReader.ListReader<Epic>() {
+        final List<Sprint> sprint = reader.readList($responseFields[0], new ResponseReader.ListReader<Sprint>() {
           @Override
-          public Epic read(ResponseReader.ListItemReader listItemReader) {
-            return listItemReader.readObject(new ResponseReader.ObjectReader<Epic>() {
+          public Sprint read(ResponseReader.ListItemReader listItemReader) {
+            return listItemReader.readObject(new ResponseReader.ObjectReader<Sprint>() {
               @Override
-              public Epic read(ResponseReader reader) {
-                return epicFieldMapper.map(reader);
+              public Sprint read(ResponseReader reader) {
+                return sprintFieldMapper.map(reader);
               }
             });
           }
         });
-        return new Data(epic);
+        return new Data(sprint);
       }
     }
   }
 
-  public static class Epic {
+  public static class Sprint {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("summary", "summary", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("createddate", "createddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forObject("createdby", "createdby", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("modifieddate", "modifieddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
@@ -261,7 +265,11 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
 
     final @Nullable String name;
 
-    final @Nullable String summary;
+    final @Nullable Date begindate;
+
+    final @Nullable Date enddate;
+
+    final @Nullable String goal;
 
     final @Nullable Date createddate;
 
@@ -277,13 +285,16 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Epic(@NotNull String __typename, @NotNull String id, @Nullable String name,
-        @Nullable String summary, @Nullable Date createddate, @Nullable Createdby createdby,
-        @Nullable Date modifieddate, @Nullable Modifiedby modifiedby) {
+    public Sprint(@NotNull String __typename, @NotNull String id, @Nullable String name,
+        @Nullable Date begindate, @Nullable Date enddate, @Nullable String goal,
+        @Nullable Date createddate, @Nullable Createdby createdby, @Nullable Date modifieddate,
+        @Nullable Modifiedby modifiedby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
       this.name = name;
-      this.summary = summary;
+      this.begindate = begindate;
+      this.enddate = enddate;
+      this.goal = goal;
       this.createddate = createddate;
       this.createdby = createdby;
       this.modifieddate = modifieddate;
@@ -302,8 +313,16 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       return this.name;
     }
 
-    public @Nullable String summary() {
-      return this.summary;
+    public @Nullable Date begindate() {
+      return this.begindate;
+    }
+
+    public @Nullable Date enddate() {
+      return this.enddate;
+    }
+
+    public @Nullable String goal() {
+      return this.goal;
     }
 
     public @Nullable Date createddate() {
@@ -329,11 +348,13 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
           writer.writeString($responseFields[2], name);
-          writer.writeString($responseFields[3], summary);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], createddate);
-          writer.writeObject($responseFields[5], createdby != null ? createdby.marshaller() : null);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], modifieddate);
-          writer.writeObject($responseFields[7], modifiedby != null ? modifiedby.marshaller() : null);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], begindate);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], enddate);
+          writer.writeString($responseFields[5], goal);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], createddate);
+          writer.writeObject($responseFields[7], createdby != null ? createdby.marshaller() : null);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[8], modifieddate);
+          writer.writeObject($responseFields[9], modifiedby != null ? modifiedby.marshaller() : null);
         }
       };
     }
@@ -341,11 +362,13 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
     @Override
     public String toString() {
       if ($toString == null) {
-        $toString = "Epic{"
+        $toString = "Sprint{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "name=" + name + ", "
-          + "summary=" + summary + ", "
+          + "begindate=" + begindate + ", "
+          + "enddate=" + enddate + ", "
+          + "goal=" + goal + ", "
           + "createddate=" + createddate + ", "
           + "createdby=" + createdby + ", "
           + "modifieddate=" + modifieddate + ", "
@@ -360,12 +383,14 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       if (o == this) {
         return true;
       }
-      if (o instanceof Epic) {
-        Epic that = (Epic) o;
+      if (o instanceof Sprint) {
+        Sprint that = (Sprint) o;
         return this.__typename.equals(that.__typename)
          && this.id.equals(that.id)
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
-         && ((this.summary == null) ? (that.summary == null) : this.summary.equals(that.summary))
+         && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
+         && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
+         && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal))
          && ((this.createddate == null) ? (that.createddate == null) : this.createddate.equals(that.createddate))
          && ((this.createdby == null) ? (that.createdby == null) : this.createdby.equals(that.createdby))
          && ((this.modifieddate == null) ? (that.modifieddate == null) : this.modifieddate.equals(that.modifieddate))
@@ -385,7 +410,11 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
         h *= 1000003;
         h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
-        h ^= (summary == null) ? 0 : summary.hashCode();
+        h ^= (begindate == null) ? 0 : begindate.hashCode();
+        h *= 1000003;
+        h ^= (enddate == null) ? 0 : enddate.hashCode();
+        h *= 1000003;
+        h ^= (goal == null) ? 0 : goal.hashCode();
         h *= 1000003;
         h ^= (createddate == null) ? 0 : createddate.hashCode();
         h *= 1000003;
@@ -400,32 +429,34 @@ public final class EpicQuery implements Query<EpicQuery.Data, EpicQuery.Data, Ep
       return $hashCode;
     }
 
-    public static final class Mapper implements ResponseFieldMapper<Epic> {
+    public static final class Mapper implements ResponseFieldMapper<Sprint> {
       final Createdby.Mapper createdbyFieldMapper = new Createdby.Mapper();
 
       final Modifiedby.Mapper modifiedbyFieldMapper = new Modifiedby.Mapper();
 
       @Override
-      public Epic map(ResponseReader reader) {
+      public Sprint map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         final String name = reader.readString($responseFields[2]);
-        final String summary = reader.readString($responseFields[3]);
-        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
-        final Createdby createdby = reader.readObject($responseFields[5], new ResponseReader.ObjectReader<Createdby>() {
+        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
+        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
+        final String goal = reader.readString($responseFields[5]);
+        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
+        final Createdby createdby = reader.readObject($responseFields[7], new ResponseReader.ObjectReader<Createdby>() {
           @Override
           public Createdby read(ResponseReader reader) {
             return createdbyFieldMapper.map(reader);
           }
         });
-        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
-        final Modifiedby modifiedby = reader.readObject($responseFields[7], new ResponseReader.ObjectReader<Modifiedby>() {
+        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[8]);
+        final Modifiedby modifiedby = reader.readObject($responseFields[9], new ResponseReader.ObjectReader<Modifiedby>() {
           @Override
           public Modifiedby read(ResponseReader reader) {
             return modifiedbyFieldMapper.map(reader);
           }
         });
-        return new Epic(__typename, id, name, summary, createddate, createdby, modifieddate, modifiedby);
+        return new Sprint(__typename, id, name, begindate, enddate, goal, createddate, createdby, modifieddate, modifiedby);
       }
     }
   }

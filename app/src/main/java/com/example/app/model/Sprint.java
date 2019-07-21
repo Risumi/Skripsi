@@ -6,21 +6,31 @@ import android.os.Parcelable;
 import java.util.Date;
 
 public class Sprint implements Parcelable {
-    String id;
-    String idProject;
-    Date begda;
-    Date endda;
-    String sprintGoal;
+    private String id;
+    private String idProject;
+    private String name;
+    private Date begda;
+    private Date endda;
+    private String sprintGoal;
+    private Date createddate;
+    private String createdby;
+    private Date modifieddate;
+    private String modifiedby;
 
-    public Sprint(String id, String idProject, Date begda, Date endda, String sprintGoal) {
+    public Sprint() {
+    }
+
+    public Sprint(String id, String idProject, String name, Date begda, Date endda, String sprintGoal, Date createddate, String createdby, Date modifieddate, String modifiedby) {
         this.id = id;
         this.idProject = idProject;
+        this.name = name;
         this.begda = begda;
         this.endda = endda;
         this.sprintGoal = sprintGoal;
-    }
-
-    public Sprint() {
+        this.createddate = createddate;
+        this.createdby = createdby;
+        this.modifieddate = modifieddate;
+        this.modifiedby = modifiedby;
     }
 
     public String getId() {
@@ -37,6 +47,14 @@ public class Sprint implements Parcelable {
 
     public void setIdProject(String idProject) {
         this.idProject = idProject;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public Date getBegda() {
@@ -63,15 +81,53 @@ public class Sprint implements Parcelable {
         this.sprintGoal = sprintGoal;
     }
 
+    public Date getCreateddate() {
+        return createddate;
+    }
+
+    public void setCreateddate(Date createddate) {
+        this.createddate = createddate;
+    }
+
+    public String getCreatedby() {
+        return createdby;
+    }
+
+    public void setCreatedby(String createdby) {
+        this.createdby = createdby;
+    }
+
+    public Date getModifieddate() {
+        return modifieddate;
+    }
+
+    public void setModifieddate(Date modifieddate) {
+        this.modifieddate = modifieddate;
+    }
+
+    public String getModifiedby() {
+        return modifiedby;
+    }
+
+    public void setModifiedby(String modifiedby) {
+        this.modifiedby = modifiedby;
+    }
 
     protected Sprint(Parcel in) {
         id = in.readString();
         idProject = in.readString();
-        long tmpBegdda = in.readLong();
-        begda = tmpBegdda != -1 ? new Date(tmpBegdda) : null;
+        name = in.readString();
+        long tmpBegda = in.readLong();
+        begda = tmpBegda != -1 ? new Date(tmpBegda) : null;
         long tmpEndda = in.readLong();
         endda = tmpEndda != -1 ? new Date(tmpEndda) : null;
         sprintGoal = in.readString();
+        long tmpCreateddate = in.readLong();
+        createddate = tmpCreateddate != -1 ? new Date(tmpCreateddate) : null;
+        createdby = in.readString();
+        long tmpModifieddate = in.readLong();
+        modifieddate = tmpModifieddate != -1 ? new Date(tmpModifieddate) : null;
+        modifiedby = in.readString();
     }
 
     @Override
@@ -83,9 +139,14 @@ public class Sprint implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(id);
         dest.writeString(idProject);
+        dest.writeString(name);
         dest.writeLong(begda != null ? begda.getTime() : -1L);
         dest.writeLong(endda != null ? endda.getTime() : -1L);
         dest.writeString(sprintGoal);
+        dest.writeLong(createddate != null ? createddate.getTime() : -1L);
+        dest.writeString(createdby);
+        dest.writeLong(modifieddate != null ? modifieddate.getTime() : -1L);
+        dest.writeString(modifiedby);
     }
 
     @SuppressWarnings("unused")

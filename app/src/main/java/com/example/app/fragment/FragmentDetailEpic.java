@@ -72,11 +72,11 @@ public class FragmentDetailEpic extends Fragment {
 
         editText3 = view.findViewById(R.id.etEpicDesc);
         editText3.setEnabled(false);
-        editText3.setText(mParam1.getDescription());
+//        editText3.setText(mParam1.getDescription());
 
         editText2 = view.findViewById(R.id.eEpicStatus);
         editText2.setEnabled(false);
-        editText3.setText(mParam1.getStatus());
+//        editText3.setText(mParam1.getStatus());
 
         return view;
     }

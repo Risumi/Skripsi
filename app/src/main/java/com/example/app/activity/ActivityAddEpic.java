@@ -12,6 +12,8 @@ import com.example.app.R;
 import com.example.app.model.Epic;
 import com.example.app.model.Project;
 
+import java.util.Date;
+
 public class ActivityAddEpic extends AppCompatActivity implements View.OnClickListener {
 
     EditText etEName, etEStatus, etEDesc;
@@ -35,7 +37,7 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
         if (view == btn){
             if (validateFields(etEName)){
                 Intent resultIntent = getIntent();
-                Epic newEpic = new Epic(etEName.getText().toString(),etEStatus.getText().toString(),etEDesc.getText().toString(),resultIntent.getStringExtra("PID")+"-E "+(resultIntent.getIntExtra("epID",0)+1),resultIntent.getStringExtra("PID"));
+                Epic newEpic = new Epic(resultIntent.getStringExtra("PID")+"-E "+(resultIntent.getIntExtra("epID",0)+1),resultIntent.getStringExtra("PID"),etEName.getText().toString(),etEDesc.getText().toString(),new Date(),"admin@admin.com",null,null);
                 resultIntent.putExtra("result",newEpic);
                 setResult(RESULT_OK, resultIntent);
                 finish();

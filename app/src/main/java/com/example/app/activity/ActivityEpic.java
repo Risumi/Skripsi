@@ -134,16 +134,18 @@ public class ActivityEpic extends AppCompatActivity {
                     Log.d("BL Epic count ", ((Integer) response.data().backlogE().size()).toString());
                     Log.d("Backlog :",response.data().backlogE().get(0).toString());
                     for (int i = 0 ;i<response.data().backlogE().size();i++){
-                        listBacklogEpic.add(new Backlog(response.data().backlogE().get(i).name(),
+                        listBacklogEpic.add(new Backlog(
+                                response.data().backlogE().get(i).name(),
                                 response.data().backlogE().get(i).status(),
-                                response.data().backlogE().get(i).begindate(),
-                                response.data().backlogE().get(i).enddate(),
+                                "",
+                                "",
                                 "",
                                 response.data().backlogE().get(i).description(),
                                 response.data().backlogE().get(i).id(),
                                 "",
+                                null,
                                 "",
-                                "",
+                                null,
                                 ""));
                         Log.d("Backlog :",response.data().backlogE().get(i).name());
                     }

@@ -28,44 +28,42 @@ import java.util.Map;
 
 import type.CustomType;
 
-public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNullMutation.Data, BacklogSprintNullMutation.Data, BacklogSprintNullMutation.Variables> {
-  public static final String OPERATION_ID = "6d6ecd4ace316b213596bf9b0473d779d61b6d40c7bee76bc425a54a1900ee45";
+public final class SprintEditMutation implements Mutation<SprintEditMutation.Data, SprintEditMutation.Data, SprintEditMutation.Variables> {
+  public static final String OPERATION_ID = "eab6ca6fd5de712abcee6c5bb888b64b3094320c963837c8f4751ccd7c311ce0";
 
-  public static final String QUERY_DOCUMENT = "mutation BacklogSprintNull($id: String!, $idProject: String!, $idEpic: String!, $name: String!, $status: String!, $begindate: Date!, $enddate: Date!, $description: String!) {\n"
-      + "  createBacklogsprintnull(id: $id, idProject: $idProject, idEpic: $idEpic, name: $name, status: $status, begindate: $begindate, enddate: $enddate, description: $description) {\n"
+  public static final String QUERY_DOCUMENT = "mutation SprintEdit($id: String!, $name: String!, $begindate: Date!, $enddate: Date!, $goal: String!, $modifieddate: Date!, $modifiedby: String!) {\n"
+      + "  editSprint(id: $id, name: $name, begindate: $begindate, enddate: $enddate, goal: $goal, modifieddate: $modifieddate, modifiedby: $modifiedby) {\n"
       + "    __typename\n"
       + "    id\n"
-      + "    idProject\n"
-      + "    idEpic\n"
       + "    name\n"
-      + "    status\n"
       + "    begindate\n"
       + "    enddate\n"
-      + "    description\n"
+      + "    goal\n"
+      + "    modifieddate\n"
+      + "    modifiedby\n"
       + "  }\n"
       + "}";
 
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "BacklogSprintNull";
+      return "SprintEdit";
     }
   };
 
-  private final BacklogSprintNullMutation.Variables variables;
+  private final SprintEditMutation.Variables variables;
 
-  public BacklogSprintNullMutation(@NotNull String id, @NotNull String idProject,
-                                   @NotNull String idEpic, @NotNull String name, @NotNull String status, @NotNull Date begindate,
-                                   @NotNull Date enddate, @NotNull String description) {
+  public SprintEditMutation(@NotNull String id, @NotNull String name, @NotNull Date begindate,
+      @NotNull Date enddate, @NotNull String goal, @NotNull Date modifieddate,
+      @NotNull String modifiedby) {
     Utils.checkNotNull(id, "id == null");
-    Utils.checkNotNull(idProject, "idProject == null");
-    Utils.checkNotNull(idEpic, "idEpic == null");
     Utils.checkNotNull(name, "name == null");
-    Utils.checkNotNull(status, "status == null");
     Utils.checkNotNull(begindate, "begindate == null");
     Utils.checkNotNull(enddate, "enddate == null");
-    Utils.checkNotNull(description, "description == null");
-    variables = new BacklogSprintNullMutation.Variables(id, idProject, idEpic, name, status, begindate, enddate, description);
+    Utils.checkNotNull(goal, "goal == null");
+    Utils.checkNotNull(modifieddate, "modifieddate == null");
+    Utils.checkNotNull(modifiedby, "modifiedby == null");
+    variables = new SprintEditMutation.Variables(id, name, begindate, enddate, goal, modifieddate, modifiedby);
   }
 
   @Override
@@ -79,12 +77,12 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
   }
 
   @Override
-  public BacklogSprintNullMutation.Data wrapData(BacklogSprintNullMutation.Data data) {
+  public SprintEditMutation.Data wrapData(SprintEditMutation.Data data) {
     return data;
   }
 
   @Override
-  public BacklogSprintNullMutation.Variables variables() {
+  public SprintEditMutation.Variables variables() {
     return variables;
   }
 
@@ -105,19 +103,17 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
   public static final class Builder {
     private @NotNull String id;
 
-    private @NotNull String idProject;
-
-    private @NotNull String idEpic;
-
     private @NotNull String name;
-
-    private @NotNull String status;
 
     private @NotNull Date begindate;
 
     private @NotNull Date enddate;
 
-    private @NotNull String description;
+    private @NotNull String goal;
+
+    private @NotNull Date modifieddate;
+
+    private @NotNull String modifiedby;
 
     Builder() {
     }
@@ -127,23 +123,8 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       return this;
     }
 
-    public Builder idProject(@NotNull String idProject) {
-      this.idProject = idProject;
-      return this;
-    }
-
-    public Builder idEpic(@NotNull String idEpic) {
-      this.idEpic = idEpic;
-      return this;
-    }
-
     public Builder name(@NotNull String name) {
       this.name = name;
-      return this;
-    }
-
-    public Builder status(@NotNull String status) {
-      this.status = status;
       return this;
     }
 
@@ -157,82 +138,75 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       return this;
     }
 
-    public Builder description(@NotNull String description) {
-      this.description = description;
+    public Builder goal(@NotNull String goal) {
+      this.goal = goal;
       return this;
     }
 
-    public BacklogSprintNullMutation build() {
+    public Builder modifieddate(@NotNull Date modifieddate) {
+      this.modifieddate = modifieddate;
+      return this;
+    }
+
+    public Builder modifiedby(@NotNull String modifiedby) {
+      this.modifiedby = modifiedby;
+      return this;
+    }
+
+    public SprintEditMutation build() {
       Utils.checkNotNull(id, "id == null");
-      Utils.checkNotNull(idProject, "idProject == null");
-      Utils.checkNotNull(idEpic, "idEpic == null");
       Utils.checkNotNull(name, "name == null");
-      Utils.checkNotNull(status, "status == null");
       Utils.checkNotNull(begindate, "begindate == null");
       Utils.checkNotNull(enddate, "enddate == null");
-      Utils.checkNotNull(description, "description == null");
-      return new BacklogSprintNullMutation(id, idProject, idEpic, name, status, begindate, enddate, description);
+      Utils.checkNotNull(goal, "goal == null");
+      Utils.checkNotNull(modifieddate, "modifieddate == null");
+      Utils.checkNotNull(modifiedby, "modifiedby == null");
+      return new SprintEditMutation(id, name, begindate, enddate, goal, modifieddate, modifiedby);
     }
   }
 
   public static final class Variables extends Operation.Variables {
     private final @NotNull String id;
 
-    private final @NotNull String idProject;
-
-    private final @NotNull String idEpic;
-
     private final @NotNull String name;
-
-    private final @NotNull String status;
 
     private final @NotNull Date begindate;
 
     private final @NotNull Date enddate;
 
-    private final @NotNull String description;
+    private final @NotNull String goal;
+
+    private final @NotNull Date modifieddate;
+
+    private final @NotNull String modifiedby;
 
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
-    Variables(@NotNull String id, @NotNull String idProject, @NotNull String idEpic,
-        @NotNull String name, @NotNull String status, @NotNull Date begindate,
-        @NotNull Date enddate, @NotNull String description) {
+    Variables(@NotNull String id, @NotNull String name, @NotNull Date begindate,
+        @NotNull Date enddate, @NotNull String goal, @NotNull Date modifieddate,
+        @NotNull String modifiedby) {
       this.id = id;
-      this.idProject = idProject;
-      this.idEpic = idEpic;
       this.name = name;
-      this.status = status;
       this.begindate = begindate;
       this.enddate = enddate;
-      this.description = description;
+      this.goal = goal;
+      this.modifieddate = modifieddate;
+      this.modifiedby = modifiedby;
       this.valueMap.put("id", id);
-      this.valueMap.put("idProject", idProject);
-      this.valueMap.put("idEpic", idEpic);
       this.valueMap.put("name", name);
-      this.valueMap.put("status", status);
       this.valueMap.put("begindate", begindate);
       this.valueMap.put("enddate", enddate);
-      this.valueMap.put("description", description);
+      this.valueMap.put("goal", goal);
+      this.valueMap.put("modifieddate", modifieddate);
+      this.valueMap.put("modifiedby", modifiedby);
     }
 
     public @NotNull String id() {
       return id;
     }
 
-    public @NotNull String idProject() {
-      return idProject;
-    }
-
-    public @NotNull String idEpic() {
-      return idEpic;
-    }
-
     public @NotNull String name() {
       return name;
-    }
-
-    public @NotNull String status() {
-      return status;
     }
 
     public @NotNull Date begindate() {
@@ -243,8 +217,16 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       return enddate;
     }
 
-    public @NotNull String description() {
-      return description;
+    public @NotNull String goal() {
+      return goal;
+    }
+
+    public @NotNull Date modifieddate() {
+      return modifieddate;
+    }
+
+    public @NotNull String modifiedby() {
+      return modifiedby;
     }
 
     @Override
@@ -258,13 +240,12 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
           writer.writeString("id", id);
-          writer.writeString("idProject", idProject);
-          writer.writeString("idEpic", idEpic);
           writer.writeString("name", name);
-          writer.writeString("status", status);
           writer.writeCustom("begindate", CustomType.DATE, begindate);
           writer.writeCustom("enddate", CustomType.DATE, enddate);
-          writer.writeString("description", description);
+          writer.writeString("goal", goal);
+          writer.writeCustom("modifieddate", CustomType.DATE, modifieddate);
+          writer.writeString("modifiedby", modifiedby);
         }
       };
     }
@@ -272,26 +253,14 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("createBacklogsprintnull", "createBacklogsprintnull", new UnmodifiableMapBuilder<String, Object>(8)
+      ResponseField.forObject("editSprint", "editSprint", new UnmodifiableMapBuilder<String, Object>(7)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
         .build())
-      .put("idProject", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "idProject")
-        .build())
-      .put("idEpic", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "idEpic")
-        .build())
       .put("name", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "name")
-        .build())
-      .put("status", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "status")
         .build())
       .put("begindate", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
@@ -301,14 +270,22 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
         .put("kind", "Variable")
         .put("variableName", "enddate")
         .build())
-      .put("description", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("goal", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "description")
+        .put("variableName", "goal")
+        .build())
+      .put("modifieddate", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "modifieddate")
+        .build())
+      .put("modifiedby", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "modifiedby")
         .build())
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
 
-    final @Nullable CreateBacklogsprintnull createBacklogsprintnull;
+    final @Nullable EditSprint editSprint;
 
     private transient volatile String $toString;
 
@@ -316,19 +293,19 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Data(@Nullable CreateBacklogsprintnull createBacklogsprintnull) {
-      this.createBacklogsprintnull = createBacklogsprintnull;
+    public Data(@Nullable EditSprint editSprint) {
+      this.editSprint = editSprint;
     }
 
-    public @Nullable CreateBacklogsprintnull createBacklogsprintnull() {
-      return this.createBacklogsprintnull;
+    public @Nullable EditSprint editSprint() {
+      return this.editSprint;
     }
 
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeObject($responseFields[0], createBacklogsprintnull != null ? createBacklogsprintnull.marshaller() : null);
+          writer.writeObject($responseFields[0], editSprint != null ? editSprint.marshaller() : null);
         }
       };
     }
@@ -337,7 +314,7 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
     public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "createBacklogsprintnull=" + createBacklogsprintnull
+          + "editSprint=" + editSprint
           + "}";
       }
       return $toString;
@@ -350,7 +327,7 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return ((this.createBacklogsprintnull == null) ? (that.createBacklogsprintnull == null) : this.createBacklogsprintnull.equals(that.createBacklogsprintnull));
+        return ((this.editSprint == null) ? (that.editSprint == null) : this.editSprint.equals(that.editSprint));
       }
       return false;
     }
@@ -360,7 +337,7 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= (createBacklogsprintnull == null) ? 0 : createBacklogsprintnull.hashCode();
+        h ^= (editSprint == null) ? 0 : editSprint.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -368,51 +345,48 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
     }
 
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      final CreateBacklogsprintnull.Mapper createBacklogsprintnullFieldMapper = new CreateBacklogsprintnull.Mapper();
+      final EditSprint.Mapper editSprintFieldMapper = new EditSprint.Mapper();
 
       @Override
       public Data map(ResponseReader reader) {
-        final CreateBacklogsprintnull createBacklogsprintnull = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<CreateBacklogsprintnull>() {
+        final EditSprint editSprint = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<EditSprint>() {
           @Override
-          public CreateBacklogsprintnull read(ResponseReader reader) {
-            return createBacklogsprintnullFieldMapper.map(reader);
+          public EditSprint read(ResponseReader reader) {
+            return editSprintFieldMapper.map(reader);
           }
         });
-        return new Data(createBacklogsprintnull);
+        return new Data(editSprint);
       }
     }
   }
 
-  public static class CreateBacklogsprintnull {
+  public static class EditSprint {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("idProject", "idProject", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("idEpic", "idEpic", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("modifieddate", "modifieddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("modifiedby", "modifiedby", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
 
     final @Nullable String id;
 
-    final @Nullable String idProject;
-
-    final @Nullable String idEpic;
-
     final @Nullable String name;
-
-    final @Nullable String status;
 
     final @Nullable Date begindate;
 
     final @Nullable Date enddate;
 
-    final @Nullable String description;
+    final @Nullable String goal;
+
+    final @Nullable Date modifieddate;
+
+    final @Nullable String modifiedby;
 
     private transient volatile String $toString;
 
@@ -420,19 +394,17 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public CreateBacklogsprintnull(@NotNull String __typename, @Nullable String id,
-        @Nullable String idProject, @Nullable String idEpic, @Nullable String name,
-        @Nullable String status, @Nullable Date begindate, @Nullable Date enddate,
-        @Nullable String description) {
+    public EditSprint(@NotNull String __typename, @Nullable String id, @Nullable String name,
+        @Nullable Date begindate, @Nullable Date enddate, @Nullable String goal,
+        @Nullable Date modifieddate, @Nullable String modifiedby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = id;
-      this.idProject = idProject;
-      this.idEpic = idEpic;
       this.name = name;
-      this.status = status;
       this.begindate = begindate;
       this.enddate = enddate;
-      this.description = description;
+      this.goal = goal;
+      this.modifieddate = modifieddate;
+      this.modifiedby = modifiedby;
     }
 
     public @NotNull String __typename() {
@@ -443,20 +415,8 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       return this.id;
     }
 
-    public @Nullable String idProject() {
-      return this.idProject;
-    }
-
-    public @Nullable String idEpic() {
-      return this.idEpic;
-    }
-
     public @Nullable String name() {
       return this.name;
-    }
-
-    public @Nullable String status() {
-      return this.status;
     }
 
     public @Nullable Date begindate() {
@@ -467,8 +427,16 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       return this.enddate;
     }
 
-    public @Nullable String description() {
-      return this.description;
+    public @Nullable String goal() {
+      return this.goal;
+    }
+
+    public @Nullable Date modifieddate() {
+      return this.modifieddate;
+    }
+
+    public @Nullable String modifiedby() {
+      return this.modifiedby;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -477,13 +445,12 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
-          writer.writeString($responseFields[2], idProject);
-          writer.writeString($responseFields[3], idEpic);
-          writer.writeString($responseFields[4], name);
-          writer.writeString($responseFields[5], status);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[7], enddate);
-          writer.writeString($responseFields[8], description);
+          writer.writeString($responseFields[2], name);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], begindate);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], enddate);
+          writer.writeString($responseFields[5], goal);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], modifieddate);
+          writer.writeString($responseFields[7], modifiedby);
         }
       };
     }
@@ -491,16 +458,15 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
     @Override
     public String toString() {
       if ($toString == null) {
-        $toString = "CreateBacklogsprintnull{"
+        $toString = "EditSprint{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
-          + "idProject=" + idProject + ", "
-          + "idEpic=" + idEpic + ", "
           + "name=" + name + ", "
-          + "status=" + status + ", "
           + "begindate=" + begindate + ", "
           + "enddate=" + enddate + ", "
-          + "description=" + description
+          + "goal=" + goal + ", "
+          + "modifieddate=" + modifieddate + ", "
+          + "modifiedby=" + modifiedby
           + "}";
       }
       return $toString;
@@ -511,17 +477,16 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
       if (o == this) {
         return true;
       }
-      if (o instanceof CreateBacklogsprintnull) {
-        CreateBacklogsprintnull that = (CreateBacklogsprintnull) o;
+      if (o instanceof EditSprint) {
+        EditSprint that = (EditSprint) o;
         return this.__typename.equals(that.__typename)
          && ((this.id == null) ? (that.id == null) : this.id.equals(that.id))
-         && ((this.idProject == null) ? (that.idProject == null) : this.idProject.equals(that.idProject))
-         && ((this.idEpic == null) ? (that.idEpic == null) : this.idEpic.equals(that.idEpic))
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
-         && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
          && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
          && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description));
+         && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal))
+         && ((this.modifieddate == null) ? (that.modifieddate == null) : this.modifieddate.equals(that.modifieddate))
+         && ((this.modifiedby == null) ? (that.modifiedby == null) : this.modifiedby.equals(that.modifiedby));
       }
       return false;
     }
@@ -535,38 +500,35 @@ public final class BacklogSprintNullMutation implements Mutation<BacklogSprintNu
         h *= 1000003;
         h ^= (id == null) ? 0 : id.hashCode();
         h *= 1000003;
-        h ^= (idProject == null) ? 0 : idProject.hashCode();
-        h *= 1000003;
-        h ^= (idEpic == null) ? 0 : idEpic.hashCode();
-        h *= 1000003;
         h ^= (name == null) ? 0 : name.hashCode();
-        h *= 1000003;
-        h ^= (status == null) ? 0 : status.hashCode();
         h *= 1000003;
         h ^= (begindate == null) ? 0 : begindate.hashCode();
         h *= 1000003;
         h ^= (enddate == null) ? 0 : enddate.hashCode();
         h *= 1000003;
-        h ^= (description == null) ? 0 : description.hashCode();
+        h ^= (goal == null) ? 0 : goal.hashCode();
+        h *= 1000003;
+        h ^= (modifieddate == null) ? 0 : modifieddate.hashCode();
+        h *= 1000003;
+        h ^= (modifiedby == null) ? 0 : modifiedby.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
       return $hashCode;
     }
 
-    public static final class Mapper implements ResponseFieldMapper<CreateBacklogsprintnull> {
+    public static final class Mapper implements ResponseFieldMapper<EditSprint> {
       @Override
-      public CreateBacklogsprintnull map(ResponseReader reader) {
+      public EditSprint map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
-        final String idProject = reader.readString($responseFields[2]);
-        final String idEpic = reader.readString($responseFields[3]);
-        final String name = reader.readString($responseFields[4]);
-        final String status = reader.readString($responseFields[5]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[7]);
-        final String description = reader.readString($responseFields[8]);
-        return new CreateBacklogsprintnull(__typename, id, idProject, idEpic, name, status, begindate, enddate, description);
+        final String name = reader.readString($responseFields[2]);
+        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
+        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
+        final String goal = reader.readString($responseFields[5]);
+        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
+        final String modifiedby = reader.readString($responseFields[7]);
+        return new EditSprint(__typename, id, name, begindate, enddate, goal, modifieddate, modifiedby);
       }
     }
   }

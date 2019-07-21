@@ -11,12 +11,10 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.app.Listener;
 import com.example.app.ListenerSprint;
 import com.example.app.R;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
-import com.example.app.model.Sprint;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -48,14 +46,14 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
     @Override
     public void onBindViewHolder(@NonNull SprintViewHolder sprintViewHolder, int i) {
         sprintViewHolder.name.setText(backlogList.get(i).getName());
-        sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
+//        sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
         sprintViewHolder.fl.setTag(i);
-        if (backlogList.get(i).getIdEpic()==null){
+        if (backlogList.get(i).getEpicName()==null){
             sprintViewHolder.epic.setText("---");
-        }else if (backlogList.get(i).getIdEpic().equals("")){
+        }else if (backlogList.get(i).getEpicName().equals("")){
             sprintViewHolder.epic.setText("---");
         }else{
-            sprintViewHolder.epic.setText(getNameEpic(backlogList.get(i).getIdEpic()));
+            sprintViewHolder.epic.setText(getNameEpic(backlogList.get(i).getEpicName()));
         }
 
 //        sprintViewHolder.fl.setOnTouchListener(this);

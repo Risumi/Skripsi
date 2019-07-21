@@ -23,7 +23,8 @@ import java.util.Date;
 
 public class ActivityAddSprint extends AppCompatActivity implements View.OnClickListener {
 
-    TextView startDate, endDate, txtSprint;
+    TextView startDate, endDate;
+    EditText txtSprint;
     EditText sprintGoal;
     Button button;
     Intent resultIntent;
@@ -64,7 +65,7 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
 //            if (endda == null) {
 //                Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
 //            } else {
-            Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), null, null, sprintGoal.getText().toString());
+            Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), txtSprint.getText().toString(), new Date(),new Date(), sprintGoal.getText().toString(),new Date(),"admin@admin.com",null,null);
             resultIntent.putExtra("sprint", newSprint);
             setResult(RESULT_OK, resultIntent);
             finish();

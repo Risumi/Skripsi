@@ -30,7 +30,7 @@ import java.util.Map;
 import type.CustomType;
 
 public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, BacklogEpicQuery.Data, BacklogEpicQuery.Variables> {
-  public static final String OPERATION_ID = "16c9a590420b28e0f41d305076a75a6b6fb840a6c1e985c4e32d548536f41302";
+  public static final String OPERATION_ID = "106d91c22248eb0dd979a9817258aef3362fd42e0000ed94c174da22c999ef21";
 
   public static final String QUERY_DOCUMENT = "query backlogEpic($idEpic: String!) {\n"
       + "  backlogE(idEpic: $idEpic) {\n"
@@ -40,11 +40,27 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
       + "      __typename\n"
       + "      id\n"
       + "    }\n"
+      + "    idEpic {\n"
+      + "      __typename\n"
+      + "      name\n"
+      + "    }\n"
       + "    name\n"
       + "    status\n"
-      + "    begindate\n"
-      + "    enddate\n"
       + "    description\n"
+      + "    assignee {\n"
+      + "      __typename\n"
+      + "      nama\n"
+      + "    }\n"
+      + "    createddate\n"
+      + "    createdby {\n"
+      + "      __typename\n"
+      + "      nama\n"
+      + "    }\n"
+      + "    modifieddate\n"
+      + "    modifiedby {\n"
+      + "      __typename\n"
+      + "      nama\n"
+      + "    }\n"
       + "  }\n"
       + "}";
 
@@ -245,11 +261,15 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forObject("idSprint", "idSprint", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("idEpic", "idEpic", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("assignee", "assignee", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("createddate", "createddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("createdby", "createdby", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("modifieddate", "modifieddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("modifiedby", "modifiedby", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
@@ -258,15 +278,23 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
 
     final @Nullable IdSprint idSprint;
 
+    final @Nullable IdEpic idEpic;
+
     final @Nullable String name;
 
     final @Nullable String status;
 
-    final @Nullable Date begindate;
-
-    final @Nullable Date enddate;
-
     final @Nullable String description;
+
+    final @Nullable Assignee assignee;
+
+    final @Nullable Date createddate;
+
+    final @Nullable Createdby createdby;
+
+    final @Nullable Date modifieddate;
+
+    final @Nullable Modifiedby modifiedby;
 
     private transient volatile String $toString;
 
@@ -275,16 +303,22 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
     private transient volatile boolean $hashCodeMemoized;
 
     public BacklogE(@NotNull String __typename, @NotNull String id, @Nullable IdSprint idSprint,
-        @Nullable String name, @Nullable String status, @Nullable Date begindate,
-        @Nullable Date enddate, @Nullable String description) {
+        @Nullable IdEpic idEpic, @Nullable String name, @Nullable String status,
+        @Nullable String description, @Nullable Assignee assignee, @Nullable Date createddate,
+        @Nullable Createdby createdby, @Nullable Date modifieddate,
+        @Nullable Modifiedby modifiedby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
       this.idSprint = idSprint;
+      this.idEpic = idEpic;
       this.name = name;
       this.status = status;
-      this.begindate = begindate;
-      this.enddate = enddate;
       this.description = description;
+      this.assignee = assignee;
+      this.createddate = createddate;
+      this.createdby = createdby;
+      this.modifieddate = modifieddate;
+      this.modifiedby = modifiedby;
     }
 
     public @NotNull String __typename() {
@@ -299,6 +333,10 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
       return this.idSprint;
     }
 
+    public @Nullable IdEpic idEpic() {
+      return this.idEpic;
+    }
+
     public @Nullable String name() {
       return this.name;
     }
@@ -307,16 +345,28 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
       return this.status;
     }
 
-    public @Nullable Date begindate() {
-      return this.begindate;
-    }
-
-    public @Nullable Date enddate() {
-      return this.enddate;
-    }
-
     public @Nullable String description() {
       return this.description;
+    }
+
+    public @Nullable Assignee assignee() {
+      return this.assignee;
+    }
+
+    public @Nullable Date createddate() {
+      return this.createddate;
+    }
+
+    public @Nullable Createdby createdby() {
+      return this.createdby;
+    }
+
+    public @Nullable Date modifieddate() {
+      return this.modifieddate;
+    }
+
+    public @Nullable Modifiedby modifiedby() {
+      return this.modifiedby;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -326,11 +376,15 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
           writer.writeString($responseFields[0], __typename);
           writer.writeString($responseFields[1], id);
           writer.writeObject($responseFields[2], idSprint != null ? idSprint.marshaller() : null);
-          writer.writeString($responseFields[3], name);
-          writer.writeString($responseFields[4], status);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], enddate);
-          writer.writeString($responseFields[7], description);
+          writer.writeObject($responseFields[3], idEpic != null ? idEpic.marshaller() : null);
+          writer.writeString($responseFields[4], name);
+          writer.writeString($responseFields[5], status);
+          writer.writeString($responseFields[6], description);
+          writer.writeObject($responseFields[7], assignee != null ? assignee.marshaller() : null);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[8], createddate);
+          writer.writeObject($responseFields[9], createdby != null ? createdby.marshaller() : null);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[10], modifieddate);
+          writer.writeObject($responseFields[11], modifiedby != null ? modifiedby.marshaller() : null);
         }
       };
     }
@@ -342,11 +396,15 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "idSprint=" + idSprint + ", "
+          + "idEpic=" + idEpic + ", "
           + "name=" + name + ", "
           + "status=" + status + ", "
-          + "begindate=" + begindate + ", "
-          + "enddate=" + enddate + ", "
-          + "description=" + description
+          + "description=" + description + ", "
+          + "assignee=" + assignee + ", "
+          + "createddate=" + createddate + ", "
+          + "createdby=" + createdby + ", "
+          + "modifieddate=" + modifieddate + ", "
+          + "modifiedby=" + modifiedby
           + "}";
       }
       return $toString;
@@ -362,11 +420,15 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
         return this.__typename.equals(that.__typename)
          && this.id.equals(that.id)
          && ((this.idSprint == null) ? (that.idSprint == null) : this.idSprint.equals(that.idSprint))
+         && ((this.idEpic == null) ? (that.idEpic == null) : this.idEpic.equals(that.idEpic))
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
          && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
-         && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
-         && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description));
+         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description))
+         && ((this.assignee == null) ? (that.assignee == null) : this.assignee.equals(that.assignee))
+         && ((this.createddate == null) ? (that.createddate == null) : this.createddate.equals(that.createddate))
+         && ((this.createdby == null) ? (that.createdby == null) : this.createdby.equals(that.createdby))
+         && ((this.modifieddate == null) ? (that.modifieddate == null) : this.modifieddate.equals(that.modifieddate))
+         && ((this.modifiedby == null) ? (that.modifiedby == null) : this.modifiedby.equals(that.modifiedby));
       }
       return false;
     }
@@ -382,15 +444,23 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
         h *= 1000003;
         h ^= (idSprint == null) ? 0 : idSprint.hashCode();
         h *= 1000003;
+        h ^= (idEpic == null) ? 0 : idEpic.hashCode();
+        h *= 1000003;
         h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
         h ^= (status == null) ? 0 : status.hashCode();
         h *= 1000003;
-        h ^= (begindate == null) ? 0 : begindate.hashCode();
-        h *= 1000003;
-        h ^= (enddate == null) ? 0 : enddate.hashCode();
-        h *= 1000003;
         h ^= (description == null) ? 0 : description.hashCode();
+        h *= 1000003;
+        h ^= (assignee == null) ? 0 : assignee.hashCode();
+        h *= 1000003;
+        h ^= (createddate == null) ? 0 : createddate.hashCode();
+        h *= 1000003;
+        h ^= (createdby == null) ? 0 : createdby.hashCode();
+        h *= 1000003;
+        h ^= (modifieddate == null) ? 0 : modifieddate.hashCode();
+        h *= 1000003;
+        h ^= (modifiedby == null) ? 0 : modifiedby.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -399,6 +469,14 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
 
     public static final class Mapper implements ResponseFieldMapper<BacklogE> {
       final IdSprint.Mapper idSprintFieldMapper = new IdSprint.Mapper();
+
+      final IdEpic.Mapper idEpicFieldMapper = new IdEpic.Mapper();
+
+      final Assignee.Mapper assigneeFieldMapper = new Assignee.Mapper();
+
+      final Createdby.Mapper createdbyFieldMapper = new Createdby.Mapper();
+
+      final Modifiedby.Mapper modifiedbyFieldMapper = new Modifiedby.Mapper();
 
       @Override
       public BacklogE map(ResponseReader reader) {
@@ -410,12 +488,36 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
             return idSprintFieldMapper.map(reader);
           }
         });
-        final String name = reader.readString($responseFields[3]);
-        final String status = reader.readString($responseFields[4]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
-        final String description = reader.readString($responseFields[7]);
-        return new BacklogE(__typename, id, idSprint, name, status, begindate, enddate, description);
+        final IdEpic idEpic = reader.readObject($responseFields[3], new ResponseReader.ObjectReader<IdEpic>() {
+          @Override
+          public IdEpic read(ResponseReader reader) {
+            return idEpicFieldMapper.map(reader);
+          }
+        });
+        final String name = reader.readString($responseFields[4]);
+        final String status = reader.readString($responseFields[5]);
+        final String description = reader.readString($responseFields[6]);
+        final Assignee assignee = reader.readObject($responseFields[7], new ResponseReader.ObjectReader<Assignee>() {
+          @Override
+          public Assignee read(ResponseReader reader) {
+            return assigneeFieldMapper.map(reader);
+          }
+        });
+        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[8]);
+        final Createdby createdby = reader.readObject($responseFields[9], new ResponseReader.ObjectReader<Createdby>() {
+          @Override
+          public Createdby read(ResponseReader reader) {
+            return createdbyFieldMapper.map(reader);
+          }
+        });
+        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[10]);
+        final Modifiedby modifiedby = reader.readObject($responseFields[11], new ResponseReader.ObjectReader<Modifiedby>() {
+          @Override
+          public Modifiedby read(ResponseReader reader) {
+            return modifiedbyFieldMapper.map(reader);
+          }
+        });
+        return new BacklogE(__typename, id, idSprint, idEpic, name, status, description, assignee, createddate, createdby, modifieddate, modifiedby);
       }
     }
   }
@@ -503,6 +605,354 @@ public final class BacklogEpicQuery implements Query<BacklogEpicQuery.Data, Back
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         return new IdSprint(__typename, id);
+      }
+    }
+  }
+
+  public static class IdEpic {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @Nullable String name;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public IdEpic(@NotNull String __typename, @Nullable String name) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.name = name;
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @Nullable String name() {
+      return this.name;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], name);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "IdEpic{"
+          + "__typename=" + __typename + ", "
+          + "name=" + name
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof IdEpic) {
+        IdEpic that = (IdEpic) o;
+        return this.__typename.equals(that.__typename)
+         && ((this.name == null) ? (that.name == null) : this.name.equals(that.name));
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= (name == null) ? 0 : name.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<IdEpic> {
+      @Override
+      public IdEpic map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String name = reader.readString($responseFields[1]);
+        return new IdEpic(__typename, name);
+      }
+    }
+  }
+
+  public static class Assignee {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("nama", "nama", null, true, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @Nullable String nama;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public Assignee(@NotNull String __typename, @Nullable String nama) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.nama = nama;
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @Nullable String nama() {
+      return this.nama;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], nama);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "Assignee{"
+          + "__typename=" + __typename + ", "
+          + "nama=" + nama
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof Assignee) {
+        Assignee that = (Assignee) o;
+        return this.__typename.equals(that.__typename)
+         && ((this.nama == null) ? (that.nama == null) : this.nama.equals(that.nama));
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= (nama == null) ? 0 : nama.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<Assignee> {
+      @Override
+      public Assignee map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String nama = reader.readString($responseFields[1]);
+        return new Assignee(__typename, nama);
+      }
+    }
+  }
+
+  public static class Createdby {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("nama", "nama", null, true, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @Nullable String nama;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public Createdby(@NotNull String __typename, @Nullable String nama) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.nama = nama;
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @Nullable String nama() {
+      return this.nama;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], nama);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "Createdby{"
+          + "__typename=" + __typename + ", "
+          + "nama=" + nama
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof Createdby) {
+        Createdby that = (Createdby) o;
+        return this.__typename.equals(that.__typename)
+         && ((this.nama == null) ? (that.nama == null) : this.nama.equals(that.nama));
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= (nama == null) ? 0 : nama.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<Createdby> {
+      @Override
+      public Createdby map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String nama = reader.readString($responseFields[1]);
+        return new Createdby(__typename, nama);
+      }
+    }
+  }
+
+  public static class Modifiedby {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("nama", "nama", null, true, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @Nullable String nama;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public Modifiedby(@NotNull String __typename, @Nullable String nama) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.nama = nama;
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @Nullable String nama() {
+      return this.nama;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeString($responseFields[1], nama);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "Modifiedby{"
+          + "__typename=" + __typename + ", "
+          + "nama=" + nama
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof Modifiedby) {
+        Modifiedby that = (Modifiedby) o;
+        return this.__typename.equals(that.__typename)
+         && ((this.nama == null) ? (that.nama == null) : this.nama.equals(that.nama));
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= (nama == null) ? 0 : nama.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<Modifiedby> {
+      @Override
+      public Modifiedby map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final String nama = reader.readString($responseFields[1]);
+        return new Modifiedby(__typename, nama);
       }
     }
   }

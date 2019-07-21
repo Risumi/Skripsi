@@ -1,16 +1,25 @@
-query backlog($id: String!){
+query backlog($id:String!){
   backlog(id:$id){
     id
     idSprint{
       id
     }
+    idEpic{
+      name
+    }
     name
     status
-    begindate
-    enddate
     description
-    idEpic{
-      id
+    assignee{
+      nama      
     }
+    createddate
+    createdby{
+      nama
+    }
+    modifieddate
+    modifiedby{
+      nama
+    }     
   }
 }

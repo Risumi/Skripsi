@@ -59,8 +59,6 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         button.setOnClickListener(this);
         button2 = findViewById(R.id.button5);
         button2.setOnClickListener(this);
-        tvDate = findViewById(R.id.tvDate);
-        tvDate.setOnClickListener(this);
         etBlDesc =findViewById(R.id.etBlDesc);
         spinner =  findViewById(R.id.spinner);
         spinner2 = findViewById(R.id.spinner3);
@@ -94,7 +92,6 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             public boolean isEnabled(int position) {
                 if(position == 0)
                 {
-
                     return false;
                 }
                 else
@@ -172,11 +169,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 //            spinner.setSelection(spinnerPos3);
             sprintId = editBacklog.getIdSprint();
             etBlDesc.setText(editBacklog.getDescription());
-            begdda = editBacklog.getBegda();
-            endda = editBacklog.getEndda();
-            mDateStart = formatDate(begdda);
-            mDateEnd = formatDate(endda);
-            tvDate.setText(mDateStart+" - "+mDateEnd);
+//            tvDate.setText(mDateStart+" - "+mDateEnd);
             Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
 
         }
@@ -186,79 +179,31 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
     @Override
     public void onClick(View view) {
-        if (view == tvDate){
-            openDateRangePicker();
-        }else if (view == button){
-            if (begdda == null || endda == null){
-                Toast.makeText(this,"Date cannot be empty",Toast.LENGTH_LONG).show();
-            }else {
-                if (validateFields(etBlName)){
-                    name = etBlName.getText().toString();
-                    desc = etBlDesc.getText().toString();
+         if (view == button){
+            if (validateFields(etBlName)){
+                name = etBlName.getText().toString();
+                desc = etBlDesc.getText().toString();
 //                    assignee = "";
-                    if (resultIntent.getIntExtra("req code",1)==2){
-                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,"",epicId);
-                    }else {
-                        int lastNum = Integer.parseInt(resultIntent.getStringExtra("blID").substring(resultIntent.getStringExtra("blID").length() - 1))+1;
-                        newBacklog = new Backlog(name,status,begdda,endda,assignee,desc,resultIntent.getStringExtra("PID")+"-"+lastNum,resultIntent.getStringExtra("PID"),"","",epicId);
-                    }
-                    Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
-                    resultIntent.putExtra("result",newBacklog);
-                    if (resultIntent.getIntExtra("req code",1)==2){
-                        resultIntent.putExtra("position",resultIntent.getIntExtra("position",0));
-                        Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
-                    }
-                    setResult(RESULT_OK, resultIntent);
-                    finish();
+                if (resultIntent.getIntExtra("req code",1)==2){
+                    newBacklog = new Backlog(resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,epicId,name,status,"admin@admin.com",desc,new Date(),"admin@admin.com",new Date(),"admin@admin.com");
+                }else {
+                    int lastNum = Integer.parseInt(resultIntent.getStringExtra("blID").substring(resultIntent.getStringExtra("blID").length() - 1))+1;
+                    newBacklog = new Backlog(resultIntent.getStringExtra("PID")+"-"+lastNum,resultIntent.getStringExtra("PID"),"",epicId,name,status,"admin@admin.com",desc,new Date(),"admin@admin.com",null,null);
                 }
+                Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
+                resultIntent.putExtra("result",newBacklog);
+                if (resultIntent.getIntExtra("req code",1)==2){
+                    resultIntent.putExtra("position",resultIntent.getIntExtra("position",0));
+                    Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
+                }
+                setResult(RESULT_OK, resultIntent);
+                finish();
             }
         }else if (view == button2){
             initializeAlertDialog();
             AlertDialog alert11 = builder.create();
             alert11.show();
         }
-    }
-
-    private void openDateRangePicker(){
-        FragmentDatePicker pickerFrag = new FragmentDatePicker();
-        pickerFrag.setCallback(new FragmentDatePicker.Callback() {
-            @Override
-            public void onCancelled() {
-                Toast.makeText(ActivityAddBacklog.this, "User cancel",
-                        Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onDateTimeRecurrenceSet(final SelectedDate selectedDate, int hourOfDay, int minute,
-                                                SublimeRecurrencePicker.RecurrenceOption recurrenceOption,
-                                                String recurrenceRule) {
-
-//                @SuppressLint("SimpleDateFormat")
-//                SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
-                begdda = selectedDate.getStartDate().getTime();
-                endda = selectedDate.getEndDate().getTime();
-                mDateStart = formatDate(begdda);
-                mDateEnd = formatDate(endda);
-                tvDate.setText(mDateStart+" - "+mDateEnd);
-            }
-        });
-
-        SublimeOptions options = new SublimeOptions();
-        options.setCanPickDateRange(true);
-        options.setPickerToShow(SublimeOptions.Picker.DATE_PICKER);
-
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("SUBLIME_OPTIONS", options);
-        pickerFrag.setArguments(bundle);
-
-        pickerFrag.setStyle(DialogFragment.STYLE_NO_TITLE, 0);
-        pickerFrag.show(getFragmentManager(), "SUBLIME_PICKER");
-    }
-
-    public String formatDate(Date rawDate){
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
-        String formattedDate = formatDate.format(rawDate);
-        return formattedDate;
     }
 
     AlertDialog.Builder builder;

@@ -28,39 +28,39 @@ import java.util.Map;
 
 import type.CustomType;
 
-public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutation.Data, EpicMutation.Variables> {
-  public static final String OPERATION_ID = "fc2c44cc4451046259091699f20b7946422de6d05e761c8324ac6fa05643ac77";
+public final class EpicEditMutation implements Mutation<EpicEditMutation.Data, EpicEditMutation.Data, EpicEditMutation.Variables> {
+  public static final String OPERATION_ID = "15e2684585cf9b4c9dde4465087f4c9a9b700b29d2e73923e4347c6c7b81e3d8";
 
-  public static final String QUERY_DOCUMENT = "mutation epic($id: String!, $idProject: String!, $name: String!, $summary: String!, $createddate: Date!, $createdby: String!) {\n"
-      + "  createEpic(id: $id, idProject: $idProject, name: $name, summary: $summary, createddate: $createddate, createdby: $createdby) {\n"
+  public static final String QUERY_DOCUMENT = "mutation EpicEdit($id: String!, $idProject: String!, $name: String!, $summary: String!, $modifieddate: Date!, $modifiedby: String!) {\n"
+      + "  editEpic(id: $id, idProject: $idProject, name: $name, summary: $summary, modifieddate: $modifieddate, modifiedby: $modifiedby) {\n"
       + "    __typename\n"
       + "    id\n"
       + "    idProject\n"
       + "    name\n"
       + "    summary\n"
-      + "    createddate\n"
-      + "    createdby\n"
+      + "    modifieddate\n"
+      + "    modifiedby\n"
       + "  }\n"
       + "}";
 
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "epic";
+      return "EpicEdit";
     }
   };
 
-  private final EpicMutation.Variables variables;
+  private final EpicEditMutation.Variables variables;
 
-  public EpicMutation(@NotNull String id, @NotNull String idProject, @NotNull String name,
-      @NotNull String summary, @NotNull Date createddate, @NotNull String createdby) {
+  public EpicEditMutation(@NotNull String id, @NotNull String idProject, @NotNull String name,
+      @NotNull String summary, @NotNull Date modifieddate, @NotNull String modifiedby) {
     Utils.checkNotNull(id, "id == null");
     Utils.checkNotNull(idProject, "idProject == null");
     Utils.checkNotNull(name, "name == null");
     Utils.checkNotNull(summary, "summary == null");
-    Utils.checkNotNull(createddate, "createddate == null");
-    Utils.checkNotNull(createdby, "createdby == null");
-    variables = new EpicMutation.Variables(id, idProject, name, summary, createddate, createdby);
+    Utils.checkNotNull(modifieddate, "modifieddate == null");
+    Utils.checkNotNull(modifiedby, "modifiedby == null");
+    variables = new EpicEditMutation.Variables(id, idProject, name, summary, modifieddate, modifiedby);
   }
 
   @Override
@@ -74,12 +74,12 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
   }
 
   @Override
-  public EpicMutation.Data wrapData(EpicMutation.Data data) {
+  public EpicEditMutation.Data wrapData(EpicEditMutation.Data data) {
     return data;
   }
 
   @Override
-  public EpicMutation.Variables variables() {
+  public EpicEditMutation.Variables variables() {
     return variables;
   }
 
@@ -106,9 +106,9 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
 
     private @NotNull String summary;
 
-    private @NotNull Date createddate;
+    private @NotNull Date modifieddate;
 
-    private @NotNull String createdby;
+    private @NotNull String modifiedby;
 
     Builder() {
     }
@@ -133,24 +133,24 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
       return this;
     }
 
-    public Builder createddate(@NotNull Date createddate) {
-      this.createddate = createddate;
+    public Builder modifieddate(@NotNull Date modifieddate) {
+      this.modifieddate = modifieddate;
       return this;
     }
 
-    public Builder createdby(@NotNull String createdby) {
-      this.createdby = createdby;
+    public Builder modifiedby(@NotNull String modifiedby) {
+      this.modifiedby = modifiedby;
       return this;
     }
 
-    public EpicMutation build() {
+    public EpicEditMutation build() {
       Utils.checkNotNull(id, "id == null");
       Utils.checkNotNull(idProject, "idProject == null");
       Utils.checkNotNull(name, "name == null");
       Utils.checkNotNull(summary, "summary == null");
-      Utils.checkNotNull(createddate, "createddate == null");
-      Utils.checkNotNull(createdby, "createdby == null");
-      return new EpicMutation(id, idProject, name, summary, createddate, createdby);
+      Utils.checkNotNull(modifieddate, "modifieddate == null");
+      Utils.checkNotNull(modifiedby, "modifiedby == null");
+      return new EpicEditMutation(id, idProject, name, summary, modifieddate, modifiedby);
     }
   }
 
@@ -163,26 +163,26 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
 
     private final @NotNull String summary;
 
-    private final @NotNull Date createddate;
+    private final @NotNull Date modifieddate;
 
-    private final @NotNull String createdby;
+    private final @NotNull String modifiedby;
 
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
     Variables(@NotNull String id, @NotNull String idProject, @NotNull String name,
-        @NotNull String summary, @NotNull Date createddate, @NotNull String createdby) {
+        @NotNull String summary, @NotNull Date modifieddate, @NotNull String modifiedby) {
       this.id = id;
       this.idProject = idProject;
       this.name = name;
       this.summary = summary;
-      this.createddate = createddate;
-      this.createdby = createdby;
+      this.modifieddate = modifieddate;
+      this.modifiedby = modifiedby;
       this.valueMap.put("id", id);
       this.valueMap.put("idProject", idProject);
       this.valueMap.put("name", name);
       this.valueMap.put("summary", summary);
-      this.valueMap.put("createddate", createddate);
-      this.valueMap.put("createdby", createdby);
+      this.valueMap.put("modifieddate", modifieddate);
+      this.valueMap.put("modifiedby", modifiedby);
     }
 
     public @NotNull String id() {
@@ -201,12 +201,12 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
       return summary;
     }
 
-    public @NotNull Date createddate() {
-      return createddate;
+    public @NotNull Date modifieddate() {
+      return modifieddate;
     }
 
-    public @NotNull String createdby() {
-      return createdby;
+    public @NotNull String modifiedby() {
+      return modifiedby;
     }
 
     @Override
@@ -223,8 +223,8 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
           writer.writeString("idProject", idProject);
           writer.writeString("name", name);
           writer.writeString("summary", summary);
-          writer.writeCustom("createddate", CustomType.DATE, createddate);
-          writer.writeString("createdby", createdby);
+          writer.writeCustom("modifieddate", CustomType.DATE, modifieddate);
+          writer.writeString("modifiedby", modifiedby);
         }
       };
     }
@@ -232,7 +232,7 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("createEpic", "createEpic", new UnmodifiableMapBuilder<String, Object>(6)
+      ResponseField.forObject("editEpic", "editEpic", new UnmodifiableMapBuilder<String, Object>(6)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -249,18 +249,18 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
         .put("kind", "Variable")
         .put("variableName", "summary")
         .build())
-      .put("createddate", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("modifieddate", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "createddate")
+        .put("variableName", "modifieddate")
         .build())
-      .put("createdby", new UnmodifiableMapBuilder<String, Object>(2)
+      .put("modifiedby", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
-        .put("variableName", "createdby")
+        .put("variableName", "modifiedby")
         .build())
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
 
-    final @Nullable CreateEpic createEpic;
+    final @Nullable EditEpic editEpic;
 
     private transient volatile String $toString;
 
@@ -268,19 +268,19 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Data(@Nullable CreateEpic createEpic) {
-      this.createEpic = createEpic;
+    public Data(@Nullable EditEpic editEpic) {
+      this.editEpic = editEpic;
     }
 
-    public @Nullable CreateEpic createEpic() {
-      return this.createEpic;
+    public @Nullable EditEpic editEpic() {
+      return this.editEpic;
     }
 
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeObject($responseFields[0], createEpic != null ? createEpic.marshaller() : null);
+          writer.writeObject($responseFields[0], editEpic != null ? editEpic.marshaller() : null);
         }
       };
     }
@@ -289,7 +289,7 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
     public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "createEpic=" + createEpic
+          + "editEpic=" + editEpic
           + "}";
       }
       return $toString;
@@ -302,7 +302,7 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return ((this.createEpic == null) ? (that.createEpic == null) : this.createEpic.equals(that.createEpic));
+        return ((this.editEpic == null) ? (that.editEpic == null) : this.editEpic.equals(that.editEpic));
       }
       return false;
     }
@@ -312,7 +312,7 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= (createEpic == null) ? 0 : createEpic.hashCode();
+        h ^= (editEpic == null) ? 0 : editEpic.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -320,30 +320,30 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
     }
 
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      final CreateEpic.Mapper createEpicFieldMapper = new CreateEpic.Mapper();
+      final EditEpic.Mapper editEpicFieldMapper = new EditEpic.Mapper();
 
       @Override
       public Data map(ResponseReader reader) {
-        final CreateEpic createEpic = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<CreateEpic>() {
+        final EditEpic editEpic = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<EditEpic>() {
           @Override
-          public CreateEpic read(ResponseReader reader) {
-            return createEpicFieldMapper.map(reader);
+          public EditEpic read(ResponseReader reader) {
+            return editEpicFieldMapper.map(reader);
           }
         });
-        return new Data(createEpic);
+        return new Data(editEpic);
       }
     }
   }
 
-  public static class CreateEpic {
+  public static class EditEpic {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("id", "id", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("idProject", "idProject", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("summary", "summary", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("createddate", "createddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("createdby", "createdby", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forCustomType("modifieddate", "modifieddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("modifiedby", "modifiedby", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
@@ -356,9 +356,9 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
 
     final @Nullable String summary;
 
-    final @Nullable Date createddate;
+    final @Nullable Date modifieddate;
 
-    final @Nullable String createdby;
+    final @Nullable String modifiedby;
 
     private transient volatile String $toString;
 
@@ -366,16 +366,16 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public CreateEpic(@NotNull String __typename, @Nullable String id, @Nullable String idProject,
-        @Nullable String name, @Nullable String summary, @Nullable Date createddate,
-        @Nullable String createdby) {
+    public EditEpic(@NotNull String __typename, @Nullable String id, @Nullable String idProject,
+        @Nullable String name, @Nullable String summary, @Nullable Date modifieddate,
+        @Nullable String modifiedby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = id;
       this.idProject = idProject;
       this.name = name;
       this.summary = summary;
-      this.createddate = createddate;
-      this.createdby = createdby;
+      this.modifieddate = modifieddate;
+      this.modifiedby = modifiedby;
     }
 
     public @NotNull String __typename() {
@@ -398,12 +398,12 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
       return this.summary;
     }
 
-    public @Nullable Date createddate() {
-      return this.createddate;
+    public @Nullable Date modifieddate() {
+      return this.modifieddate;
     }
 
-    public @Nullable String createdby() {
-      return this.createdby;
+    public @Nullable String modifiedby() {
+      return this.modifiedby;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -415,8 +415,8 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
           writer.writeString($responseFields[2], idProject);
           writer.writeString($responseFields[3], name);
           writer.writeString($responseFields[4], summary);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], createddate);
-          writer.writeString($responseFields[6], createdby);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[5], modifieddate);
+          writer.writeString($responseFields[6], modifiedby);
         }
       };
     }
@@ -424,14 +424,14 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
     @Override
     public String toString() {
       if ($toString == null) {
-        $toString = "CreateEpic{"
+        $toString = "EditEpic{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "idProject=" + idProject + ", "
           + "name=" + name + ", "
           + "summary=" + summary + ", "
-          + "createddate=" + createddate + ", "
-          + "createdby=" + createdby
+          + "modifieddate=" + modifieddate + ", "
+          + "modifiedby=" + modifiedby
           + "}";
       }
       return $toString;
@@ -442,15 +442,15 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
       if (o == this) {
         return true;
       }
-      if (o instanceof CreateEpic) {
-        CreateEpic that = (CreateEpic) o;
+      if (o instanceof EditEpic) {
+        EditEpic that = (EditEpic) o;
         return this.__typename.equals(that.__typename)
          && ((this.id == null) ? (that.id == null) : this.id.equals(that.id))
          && ((this.idProject == null) ? (that.idProject == null) : this.idProject.equals(that.idProject))
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
          && ((this.summary == null) ? (that.summary == null) : this.summary.equals(that.summary))
-         && ((this.createddate == null) ? (that.createddate == null) : this.createddate.equals(that.createddate))
-         && ((this.createdby == null) ? (that.createdby == null) : this.createdby.equals(that.createdby));
+         && ((this.modifieddate == null) ? (that.modifieddate == null) : this.modifieddate.equals(that.modifieddate))
+         && ((this.modifiedby == null) ? (that.modifiedby == null) : this.modifiedby.equals(that.modifiedby));
       }
       return false;
     }
@@ -470,26 +470,26 @@ public final class EpicMutation implements Mutation<EpicMutation.Data, EpicMutat
         h *= 1000003;
         h ^= (summary == null) ? 0 : summary.hashCode();
         h *= 1000003;
-        h ^= (createddate == null) ? 0 : createddate.hashCode();
+        h ^= (modifieddate == null) ? 0 : modifieddate.hashCode();
         h *= 1000003;
-        h ^= (createdby == null) ? 0 : createdby.hashCode();
+        h ^= (modifiedby == null) ? 0 : modifiedby.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
       return $hashCode;
     }
 
-    public static final class Mapper implements ResponseFieldMapper<CreateEpic> {
+    public static final class Mapper implements ResponseFieldMapper<EditEpic> {
       @Override
-      public CreateEpic map(ResponseReader reader) {
+      public EditEpic map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         final String idProject = reader.readString($responseFields[2]);
         final String name = reader.readString($responseFields[3]);
         final String summary = reader.readString($responseFields[4]);
-        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
-        final String createdby = reader.readString($responseFields[6]);
-        return new CreateEpic(__typename, id, idProject, name, summary, createddate, createdby);
+        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[5]);
+        final String modifiedby = reader.readString($responseFields[6]);
+        return new EditEpic(__typename, id, idProject, name, summary, modifieddate, modifiedby);
       }
     }
   }

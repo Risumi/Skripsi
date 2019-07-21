@@ -1,0 +1,17 @@
+query Sprinter($id: String!){
+  sprint(id:$id){
+    id        
+    name
+    begindate  
+    enddate
+    goal    
+    createddate
+    createdby{
+      nama    
+    }
+    modifieddate
+    modifiedby{
+      nama
+    }    
+  }
+}

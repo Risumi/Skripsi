@@ -29,19 +29,20 @@ import java.util.Map;
 import type.CustomType;
 
 public final class BacklogMutation implements Mutation<BacklogMutation.Data, BacklogMutation.Data, BacklogMutation.Variables> {
-  public static final String OPERATION_ID = "14521a389ad3c83d7569dbac809939244b1eac5a3f4bf7c225d05112c8824737";
+  public static final String OPERATION_ID = "9b547fd30b9beac15f5570bf5275bb39704ef22a69d982bf4b974aa1a13d6a1f";
 
-  public static final String QUERY_DOCUMENT = "mutation Backlog($id: String!, $idProject: String!, $idEpic: String!, $name: String!, $status: String!, $begindate: Date!, $enddate: Date!, $description: String!) {\n"
-      + "  createBacklog(id: $id, idProject: $idProject, idEpic: $idEpic, name: $name, status: $status, begindate: $begindate, enddate: $enddate, description: $description) {\n"
+  public static final String QUERY_DOCUMENT = "mutation Backlog($id: String!, $idProject: String!, $idEpic: String!, $assignee: String!, $name: String!, $status: String!, $description: String!, $createddate: Date!, $createdby: String!) {\n"
+      + "  createBacklog(id: $id, idProject: $idProject, idEpic: $idEpic, assignee: $assignee, name: $name, status: $status, description: $description, createddate: $createddate, createdby: $createdby) {\n"
       + "    __typename\n"
       + "    id\n"
       + "    idProject\n"
       + "    idEpic\n"
+      + "    assignee\n"
       + "    name\n"
       + "    status\n"
-      + "    begindate\n"
-      + "    enddate\n"
       + "    description\n"
+      + "    createddate\n"
+      + "    createdby\n"
       + "  }\n"
       + "}";
 
@@ -55,17 +56,18 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
   private final BacklogMutation.Variables variables;
 
   public BacklogMutation(@NotNull String id, @NotNull String idProject, @NotNull String idEpic,
-      @NotNull String name, @NotNull String status, @NotNull Date begindate, @NotNull Date enddate,
-      @NotNull String description) {
+      @NotNull String assignee, @NotNull String name, @NotNull String status,
+      @NotNull String description, @NotNull Date createddate, @NotNull String createdby) {
     Utils.checkNotNull(id, "id == null");
     Utils.checkNotNull(idProject, "idProject == null");
     Utils.checkNotNull(idEpic, "idEpic == null");
+    Utils.checkNotNull(assignee, "assignee == null");
     Utils.checkNotNull(name, "name == null");
     Utils.checkNotNull(status, "status == null");
-    Utils.checkNotNull(begindate, "begindate == null");
-    Utils.checkNotNull(enddate, "enddate == null");
     Utils.checkNotNull(description, "description == null");
-    variables = new BacklogMutation.Variables(id, idProject, idEpic, name, status, begindate, enddate, description);
+    Utils.checkNotNull(createddate, "createddate == null");
+    Utils.checkNotNull(createdby, "createdby == null");
+    variables = new BacklogMutation.Variables(id, idProject, idEpic, assignee, name, status, description, createddate, createdby);
   }
 
   @Override
@@ -109,15 +111,17 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
 
     private @NotNull String idEpic;
 
+    private @NotNull String assignee;
+
     private @NotNull String name;
 
     private @NotNull String status;
 
-    private @NotNull Date begindate;
-
-    private @NotNull Date enddate;
-
     private @NotNull String description;
+
+    private @NotNull Date createddate;
+
+    private @NotNull String createdby;
 
     Builder() {
     }
@@ -137,6 +141,11 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       return this;
     }
 
+    public Builder assignee(@NotNull String assignee) {
+      this.assignee = assignee;
+      return this;
+    }
+
     public Builder name(@NotNull String name) {
       this.name = name;
       return this;
@@ -147,18 +156,18 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       return this;
     }
 
-    public Builder begindate(@NotNull Date begindate) {
-      this.begindate = begindate;
-      return this;
-    }
-
-    public Builder enddate(@NotNull Date enddate) {
-      this.enddate = enddate;
-      return this;
-    }
-
     public Builder description(@NotNull String description) {
       this.description = description;
+      return this;
+    }
+
+    public Builder createddate(@NotNull Date createddate) {
+      this.createddate = createddate;
+      return this;
+    }
+
+    public Builder createdby(@NotNull String createdby) {
+      this.createdby = createdby;
       return this;
     }
 
@@ -166,12 +175,13 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       Utils.checkNotNull(id, "id == null");
       Utils.checkNotNull(idProject, "idProject == null");
       Utils.checkNotNull(idEpic, "idEpic == null");
+      Utils.checkNotNull(assignee, "assignee == null");
       Utils.checkNotNull(name, "name == null");
       Utils.checkNotNull(status, "status == null");
-      Utils.checkNotNull(begindate, "begindate == null");
-      Utils.checkNotNull(enddate, "enddate == null");
       Utils.checkNotNull(description, "description == null");
-      return new BacklogMutation(id, idProject, idEpic, name, status, begindate, enddate, description);
+      Utils.checkNotNull(createddate, "createddate == null");
+      Utils.checkNotNull(createdby, "createdby == null");
+      return new BacklogMutation(id, idProject, idEpic, assignee, name, status, description, createddate, createdby);
     }
   }
 
@@ -182,37 +192,41 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
 
     private final @NotNull String idEpic;
 
+    private final @NotNull String assignee;
+
     private final @NotNull String name;
 
     private final @NotNull String status;
 
-    private final @NotNull Date begindate;
-
-    private final @NotNull Date enddate;
-
     private final @NotNull String description;
+
+    private final @NotNull Date createddate;
+
+    private final @NotNull String createdby;
 
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
     Variables(@NotNull String id, @NotNull String idProject, @NotNull String idEpic,
-        @NotNull String name, @NotNull String status, @NotNull Date begindate,
-        @NotNull Date enddate, @NotNull String description) {
+        @NotNull String assignee, @NotNull String name, @NotNull String status,
+        @NotNull String description, @NotNull Date createddate, @NotNull String createdby) {
       this.id = id;
       this.idProject = idProject;
       this.idEpic = idEpic;
+      this.assignee = assignee;
       this.name = name;
       this.status = status;
-      this.begindate = begindate;
-      this.enddate = enddate;
       this.description = description;
+      this.createddate = createddate;
+      this.createdby = createdby;
       this.valueMap.put("id", id);
       this.valueMap.put("idProject", idProject);
       this.valueMap.put("idEpic", idEpic);
+      this.valueMap.put("assignee", assignee);
       this.valueMap.put("name", name);
       this.valueMap.put("status", status);
-      this.valueMap.put("begindate", begindate);
-      this.valueMap.put("enddate", enddate);
       this.valueMap.put("description", description);
+      this.valueMap.put("createddate", createddate);
+      this.valueMap.put("createdby", createdby);
     }
 
     public @NotNull String id() {
@@ -227,6 +241,10 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       return idEpic;
     }
 
+    public @NotNull String assignee() {
+      return assignee;
+    }
+
     public @NotNull String name() {
       return name;
     }
@@ -235,16 +253,16 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       return status;
     }
 
-    public @NotNull Date begindate() {
-      return begindate;
-    }
-
-    public @NotNull Date enddate() {
-      return enddate;
-    }
-
     public @NotNull String description() {
       return description;
+    }
+
+    public @NotNull Date createddate() {
+      return createddate;
+    }
+
+    public @NotNull String createdby() {
+      return createdby;
     }
 
     @Override
@@ -260,11 +278,12 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
           writer.writeString("id", id);
           writer.writeString("idProject", idProject);
           writer.writeString("idEpic", idEpic);
+          writer.writeString("assignee", assignee);
           writer.writeString("name", name);
           writer.writeString("status", status);
-          writer.writeCustom("begindate", CustomType.DATE, begindate);
-          writer.writeCustom("enddate", CustomType.DATE, enddate);
           writer.writeString("description", description);
+          writer.writeCustom("createddate", CustomType.DATE, createddate);
+          writer.writeString("createdby", createdby);
         }
       };
     }
@@ -272,7 +291,7 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("createBacklog", "createBacklog", new UnmodifiableMapBuilder<String, Object>(8)
+      ResponseField.forObject("createBacklog", "createBacklog", new UnmodifiableMapBuilder<String, Object>(9)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -285,6 +304,10 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
         .put("kind", "Variable")
         .put("variableName", "idEpic")
         .build())
+      .put("assignee", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "assignee")
+        .build())
       .put("name", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "name")
@@ -293,17 +316,17 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
         .put("kind", "Variable")
         .put("variableName", "status")
         .build())
-      .put("begindate", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "begindate")
-        .build())
-      .put("enddate", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "enddate")
-        .build())
       .put("description", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "description")
+        .build())
+      .put("createddate", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "createddate")
+        .build())
+      .put("createdby", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "createdby")
         .build())
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
@@ -389,11 +412,12 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       ResponseField.forString("id", "id", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("idProject", "idProject", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("idEpic", "idEpic", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("assignee", "assignee", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forCustomType("createddate", "createddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("createdby", "createdby", null, true, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
@@ -404,15 +428,17 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
 
     final @Nullable String idEpic;
 
+    final @Nullable String assignee;
+
     final @Nullable String name;
 
     final @Nullable String status;
 
-    final @Nullable Date begindate;
-
-    final @Nullable Date enddate;
-
     final @Nullable String description;
+
+    final @Nullable Date createddate;
+
+    final @Nullable String createdby;
 
     private transient volatile String $toString;
 
@@ -421,18 +447,19 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
     private transient volatile boolean $hashCodeMemoized;
 
     public CreateBacklog(@NotNull String __typename, @Nullable String id,
-        @Nullable String idProject, @Nullable String idEpic, @Nullable String name,
-        @Nullable String status, @Nullable Date begindate, @Nullable Date enddate,
-        @Nullable String description) {
+        @Nullable String idProject, @Nullable String idEpic, @Nullable String assignee,
+        @Nullable String name, @Nullable String status, @Nullable String description,
+        @Nullable Date createddate, @Nullable String createdby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = id;
       this.idProject = idProject;
       this.idEpic = idEpic;
+      this.assignee = assignee;
       this.name = name;
       this.status = status;
-      this.begindate = begindate;
-      this.enddate = enddate;
       this.description = description;
+      this.createddate = createddate;
+      this.createdby = createdby;
     }
 
     public @NotNull String __typename() {
@@ -451,6 +478,10 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       return this.idEpic;
     }
 
+    public @Nullable String assignee() {
+      return this.assignee;
+    }
+
     public @Nullable String name() {
       return this.name;
     }
@@ -459,16 +490,16 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
       return this.status;
     }
 
-    public @Nullable Date begindate() {
-      return this.begindate;
-    }
-
-    public @Nullable Date enddate() {
-      return this.enddate;
-    }
-
     public @Nullable String description() {
       return this.description;
+    }
+
+    public @Nullable Date createddate() {
+      return this.createddate;
+    }
+
+    public @Nullable String createdby() {
+      return this.createdby;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -479,11 +510,12 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
           writer.writeString($responseFields[1], id);
           writer.writeString($responseFields[2], idProject);
           writer.writeString($responseFields[3], idEpic);
-          writer.writeString($responseFields[4], name);
-          writer.writeString($responseFields[5], status);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], begindate);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[7], enddate);
-          writer.writeString($responseFields[8], description);
+          writer.writeString($responseFields[4], assignee);
+          writer.writeString($responseFields[5], name);
+          writer.writeString($responseFields[6], status);
+          writer.writeString($responseFields[7], description);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[8], createddate);
+          writer.writeString($responseFields[9], createdby);
         }
       };
     }
@@ -496,11 +528,12 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
           + "id=" + id + ", "
           + "idProject=" + idProject + ", "
           + "idEpic=" + idEpic + ", "
+          + "assignee=" + assignee + ", "
           + "name=" + name + ", "
           + "status=" + status + ", "
-          + "begindate=" + begindate + ", "
-          + "enddate=" + enddate + ", "
-          + "description=" + description
+          + "description=" + description + ", "
+          + "createddate=" + createddate + ", "
+          + "createdby=" + createdby
           + "}";
       }
       return $toString;
@@ -517,11 +550,12 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
          && ((this.id == null) ? (that.id == null) : this.id.equals(that.id))
          && ((this.idProject == null) ? (that.idProject == null) : this.idProject.equals(that.idProject))
          && ((this.idEpic == null) ? (that.idEpic == null) : this.idEpic.equals(that.idEpic))
+         && ((this.assignee == null) ? (that.assignee == null) : this.assignee.equals(that.assignee))
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
          && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
-         && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
-         && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
-         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description));
+         && ((this.description == null) ? (that.description == null) : this.description.equals(that.description))
+         && ((this.createddate == null) ? (that.createddate == null) : this.createddate.equals(that.createddate))
+         && ((this.createdby == null) ? (that.createdby == null) : this.createdby.equals(that.createdby));
       }
       return false;
     }
@@ -539,15 +573,17 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
         h *= 1000003;
         h ^= (idEpic == null) ? 0 : idEpic.hashCode();
         h *= 1000003;
+        h ^= (assignee == null) ? 0 : assignee.hashCode();
+        h *= 1000003;
         h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
         h ^= (status == null) ? 0 : status.hashCode();
         h *= 1000003;
-        h ^= (begindate == null) ? 0 : begindate.hashCode();
-        h *= 1000003;
-        h ^= (enddate == null) ? 0 : enddate.hashCode();
-        h *= 1000003;
         h ^= (description == null) ? 0 : description.hashCode();
+        h *= 1000003;
+        h ^= (createddate == null) ? 0 : createddate.hashCode();
+        h *= 1000003;
+        h ^= (createdby == null) ? 0 : createdby.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -561,12 +597,13 @@ public final class BacklogMutation implements Mutation<BacklogMutation.Data, Bac
         final String id = reader.readString($responseFields[1]);
         final String idProject = reader.readString($responseFields[2]);
         final String idEpic = reader.readString($responseFields[3]);
-        final String name = reader.readString($responseFields[4]);
-        final String status = reader.readString($responseFields[5]);
-        final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
-        final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[7]);
-        final String description = reader.readString($responseFields[8]);
-        return new CreateBacklog(__typename, id, idProject, idEpic, name, status, begindate, enddate, description);
+        final String assignee = reader.readString($responseFields[4]);
+        final String name = reader.readString($responseFields[5]);
+        final String status = reader.readString($responseFields[6]);
+        final String description = reader.readString($responseFields[7]);
+        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[8]);
+        final String createdby = reader.readString($responseFields[9]);
+        return new CreateBacklog(__typename, id, idProject, idEpic, assignee, name, status, description, createddate, createdby);
       }
     }
   }

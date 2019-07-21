@@ -1,0 +1,13 @@
+mutation BacklogEdit($id:String!,$idEpic:String!,$idSprint:String!,$assignee:String!,$name:String!,$status:String!,$description:String!,$modifieddate:Date!,$modifiedby:String!){
+  editBacklog(id:$id,idEpic:$idEpic,idSprint:$idSprint,assignee:$assignee,name:$name,status:$status,description:$description,modifieddate:$modifieddate,modifiedby:$modifiedby){
+    id    
+    idEpic
+    idSprint
+    assignee
+    name
+    status
+    description
+    modifieddate
+    modifiedby    
+  }
+}
