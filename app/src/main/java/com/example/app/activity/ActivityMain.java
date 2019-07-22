@@ -34,6 +34,7 @@ import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.model.Epic;
 import com.example.app.model.Sprint;
+import com.example.app.model.User;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
 
@@ -48,10 +49,13 @@ public class ActivityMain extends AppCompatActivity
     Intent intent;
     private MainViewModel model;
     String PID;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        user = new User("admin@admin.com","admin");
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
         model.instantiateListener(this);
@@ -201,29 +205,18 @@ public class ActivityMain extends AppCompatActivity
         }
     }
 
-    final int REQ_ADD_BACKLOG = 1;
-    final int REQ_ADD_SPRINT= 3;
-    final int REQ_ADD_EPIC= 4;
     @Override
     public void onClick(View view) {
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
         if (view==fab){
-            if (model.getCurrentSprint().getValue()!=null){
-                Intent intent = new Intent(this, ActivityAddSprint.class);
-                intent.putExtra("req code",REQ_ADD_SPRINT);
-                intent.putExtra("PID",PID);
-                intent.putExtra("SCount",model.getSprintCount().getValue());
-                startActivityForResult(intent,REQ_ADD_SPRINT);
-            }
-            else {
-                Intent intent = new Intent(this, ActivityAddSprint.class);
-                intent.putExtra("req code",REQ_ADD_SPRINT);
-                intent.putExtra("PID",PID);
-                intent.putExtra("SCount",model.getSprintCount().getValue());
-                startActivityForResult(intent,REQ_ADD_SPRINT);
-            }
-//            Log.d("PID",this.intent.getStringExtra("PID"));
+            Intent intent = new Intent(this, ActivityAddSprint.class);
+            intent.putExtra("req code",REQ_ADD_SPRINT);
+            intent.putExtra("PID",PID);
+            intent.putExtra("SCount",model.getSprintCount().getValue());
+            intent.putExtra("User",model.getUser());
+
+            startActivityForResult(intent,REQ_ADD_SPRINT);
         }else if(view==fab2){
             Intent intent = new Intent(this, ActivityAddBacklog.class);
             ArrayList<String> spinnerArray = new ArrayList<>();
@@ -237,17 +230,26 @@ public class ActivityMain extends AppCompatActivity
             intent.putStringArrayListExtra("epicID",idEpic);
             intent.putExtra("req code", REQ_ADD_BACKLOG);
             intent.putExtra("PID",PID);
-            intent.putExtra("blID",model.getListAllBacklog().getValue().get(model.getListAllBacklog().getValue().size()-1).getId());
+            intent.putExtra("User",model.getUser());
+            intent.putExtra("blID",model.getLargestBacklogID());
+//            Log.d("last bl id",model.getListAllBacklog().getValue().get(model.getListAllBacklog().getValue().size()-1).getId());
+            Log.d("Email",model.getUser().getEmail());
             startActivityForResult(intent, REQ_ADD_BACKLOG);
         }else if(view==fab3){
             Intent intent = new Intent(this, ActivityAddEpic.class);
             intent.putExtra("req code",REQ_ADD_EPIC);
             intent.putExtra("PID",PID);
             intent.putExtra("epID",model.getListEpic().getValue().size());
+            intent.putExtra("User",model.getUser());
             startActivityForResult(intent,REQ_ADD_EPIC);
         }
     }
-    final int  REQ_EDIT_BACKLOG = 2;
+
+    final int REQ_ADD_BACKLOG = 1;
+    final int REQ_EDIT_BACKLOG = 2;
+    final int REQ_ADD_SPRINT= 3;
+    final int REQ_ADD_EPIC= 4;
+    final int REQ_START_SPRINT= 5;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -295,6 +297,17 @@ public class ActivityMain extends AppCompatActivity
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentEpic){
                     ((FragmentEpic) fragmentInFrame).AddDataSet(newEpic);
+                }
+            }
+        }
+        if (requestCode == REQ_START_SPRINT) {
+            if (resultCode == RESULT_OK) {
+                Sprint newSprint = data.getParcelableExtra("Sprint");
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentBacklog){
+//                    ((FragmentBacklog) fragmentInFrame).AddDataSet(newEpic);
+                    model.editSprint(newSprint);
+                    model.setCurrentSprint(newSprint);
                 }
             }
         }

@@ -18,6 +18,7 @@ import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicke
 import com.example.app.R;
 import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.model.Sprint;
+import com.example.app.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -31,12 +32,14 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
     Intent intent;
     Sprint sprint;
     Date begda,endda;
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_sprint);
 
         intent = getIntent();
+        user =intent.getParcelableExtra("User");
         spinner = findViewById(R.id.spinner6);
         etName = findViewById(R.id.editText4);
         etStart = findViewById(R.id.editText5);
@@ -67,8 +70,8 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                     sprint.getCreateddate(),
                     sprint.getCreatedby(),
                     new Date(),
-                    "admin@admin.com");
-            intent.putExtra("Sprint", sprint);
+                    user.getEmail());
+            intent.putExtra("Sprint", newSprint);
             setResult(RESULT_OK, intent);
             finish();
         }else if (view ==img1){

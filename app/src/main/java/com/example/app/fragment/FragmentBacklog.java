@@ -17,6 +17,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.app.ListenerAdapter;
 import com.example.app.activity.ActivityStartSprint;
@@ -29,6 +30,7 @@ import com.example.app.model.Sprint;
 import com.example.app.activity.ActivityAddBacklog;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -168,9 +170,11 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
 
         spinner2 = view.findViewById(R.id.spinner5);
         List<String> spinnerArray2 = new ArrayList<>();
+        int selection=0;
         for (int i=0;i<model.getListSprint().getValue().size();i++){
             if (model.getCurrentSprint().getValue().getId()==model.getListSprint().getValue().get(i).getId()){
-                spinnerArray2.add(model.getListSprint().getValue().get(i).getId()+" (Running)");
+                spinnerArray2.add(model.getListSprint().getValue().get(i).getId()+" (Active)");
+                selection = i;
             }else {
                 spinnerArray2.add(model.getListSprint().getValue().get(i).getId());
             }
@@ -178,7 +182,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,spinnerArray2);
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(this);
-
+        spinner2.setSelection(selection);
         return view;
     }
 
@@ -249,6 +253,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         editBacklog.putExtra("PID", PID);
         editBacklog.putExtra("position",position);
         editBacklog.putExtra("req code",EDIT_BACKLOG);
+        editBacklog.putExtra("User",model.getUser());
         getActivity().startActivityForResult(editBacklog,EDIT_BACKLOG);
     }
 
@@ -294,7 +299,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        if (view==spinner){
+        if (adapterView.getId()==spinner.getId()){
             Log.d("Index ke : ",Integer.toString(i));
             Log.d("Key :",adapterView.getAdapter().getItem(i).toString());
             if (adapterView.getAdapter().getItem(i).toString().equalsIgnoreCase("all")){
@@ -303,7 +308,8 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
                 model.filterBacklog(model.getIDEpic(adapterView.getAdapter().getItem(i).toString()),"");
             }
             topListAdapter.notifyDataSetChanged();
-        }else if (view==spinner2){
+        }else if (adapterView.getId()==spinner2.getId()){
+            Log.d("Spinner 2","True");
             selectedSprint= model.getListSprint().getValue().get(i);
         }
 
@@ -323,10 +329,15 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     final int REQ_START_SPRINT = 5;
     @Override
     public void onClick(View view) {
+        Date now = new Date();
         if (view == btnStartSprint){
-            Intent intent = new Intent(getActivity(),ActivityStartSprint.class);
-            intent.putExtra("Sprint",selectedSprint);
-            getActivity().startActivityForResult(intent,REQ_START_SPRINT);
+            if (now.after(model.getCurrentSprint().getValue().getEndda())){
+                Intent intent = new Intent(getActivity(),ActivityStartSprint.class);
+                intent.putExtra("Sprint",selectedSprint);
+                getActivity().startActivityForResult(intent,REQ_START_SPRINT);
+            }else{
+                Toast.makeText(this.getActivity(),"Can't start sprint, there is an active sprint",Toast.LENGTH_SHORT).show();
+            }
         }
     }
 }

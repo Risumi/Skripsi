@@ -25,6 +25,7 @@ import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicke
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.R;
+import com.example.app.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -47,6 +48,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
     Intent resultIntent;
     String epicId="";
     String sprintId="";
+    User user;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +85,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         });
 
         resultIntent  = getIntent();
-
+        user = resultIntent.getParcelableExtra("User");
         ArrayList<String> spinnerArray = resultIntent.getStringArrayListExtra("spinner");
         ArrayList<String> epicID = resultIntent.getStringArrayListExtra("epicID");
         spinnerArray.add(0,"Select Epic");
@@ -185,10 +187,9 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                 desc = etBlDesc.getText().toString();
 //                    assignee = "";
                 if (resultIntent.getIntExtra("req code",1)==2){
-                    newBacklog = new Backlog(resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,epicId,name,status,"admin@admin.com",desc,new Date(),"admin@admin.com",new Date(),"admin@admin.com");
+                    newBacklog = new Backlog(resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,epicId,name,status,"admin@admin.com",desc,editBacklog.getCreateddate(),editBacklog.getCreatedby(),new Date(),user.getEmail());
                 }else {
-                    int lastNum = Integer.parseInt(resultIntent.getStringExtra("blID").substring(resultIntent.getStringExtra("blID").length() - 1))+1;
-                    newBacklog = new Backlog(resultIntent.getStringExtra("PID")+"-"+lastNum,resultIntent.getStringExtra("PID"),"",epicId,name,status,"admin@admin.com",desc,new Date(),"admin@admin.com",null,null);
+                    newBacklog = new Backlog(resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"",epicId,name,status,"admin@admin.com",desc,new Date(),user.getEmail(),null,null);
                 }
                 Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
                 resultIntent.putExtra("result",newBacklog);

@@ -17,6 +17,7 @@ import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicke
 import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.R;
 import com.example.app.model.Sprint;
+import com.example.app.model.User;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,6 +30,7 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
     Button button;
     Intent resultIntent;
     Date begda, endda;
+    User user;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +42,7 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
 //        startDate.setOnClickListener(this);
 
         resultIntent = getIntent();
+        user = resultIntent.getParcelableExtra("User");
 
         txtSprint = findViewById(R.id.tvSprint);
         txtSprint.setText("Sprint "+(resultIntent.getIntExtra("SCount",0)+1));
@@ -65,7 +68,7 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
 //            if (endda == null) {
 //                Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
 //            } else {
-            Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), txtSprint.getText().toString(), new Date(),new Date(), sprintGoal.getText().toString(),new Date(),"admin@admin.com",null,null);
+            Sprint newSprint = new Sprint(resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1), resultIntent.getStringExtra("PID"), txtSprint.getText().toString(), null,null, sprintGoal.getText().toString(),new Date(),user.getEmail(),null,null);
             resultIntent.putExtra("sprint", newSprint);
             setResult(RESULT_OK, resultIntent);
             finish();

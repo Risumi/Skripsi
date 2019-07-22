@@ -14,8 +14,8 @@
             android:title="Backlog" />
         <item
             android:id="@+id/nav_sprint"
-            android:icon="@drawable/ic_baseline_assignment_24px"
-            android:title="Sprint" />
+            android:icon="@drawable/ic_data_usage_black_24dp"
+            android:title="Active Sprint" />
         <item
             android:id="@+id/nav_sprint_report"
             android:icon="@drawable/ic_baseline_assignment_24px"
@@ -23,7 +23,7 @@
 
         <item
             android:id="@+id/nav_burndown"
-            android:icon="@drawable/ic_baseline_assessment_24px"
+            android:icon="@drawable/ic_timeline_black_24dp"
             android:title="Burndown Chart" />
         <item
             android:id="@+id/nav_setting"

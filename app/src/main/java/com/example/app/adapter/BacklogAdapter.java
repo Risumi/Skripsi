@@ -46,7 +46,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     @Override
     public void onBindViewHolder(@NonNull BacklogAdapter.BacklogViewHolder2 backlogViewHolder2, int i) {
         backlogViewHolder2.BacklogName.setText(backlogList.get(i).getName());
-        backlogViewHolder2.BacklogStatus.setText(backlogList.get(i).getStatus());
+        backlogViewHolder2.BacklogStatus.setText(backlogList.get(i).getId());
 //        backlogViewHolder2.BacklogDate.setText(formatDate(backlogList.get(i).getEndda()));
         String desc = backlogList.get(i).getDescription();
         if (desc.length()>40){

@@ -2,8 +2,10 @@ package com.example.app.fragment;
 
 
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -20,6 +22,9 @@ import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.SprintAdapter;
 import com.example.app.model.Sprint;
+
+import org.joda.time.DateTime;
+import org.joda.time.Period;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -80,6 +85,7 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
     TextView tvEmptyListBottom;
     TextView tvEmptyListMiddle;
     TextView tvSprint;
+    TextView tvRemaining;
     Button btnSprint;
     private MainViewModel model;
 
@@ -91,20 +97,25 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
         btnSprint = view.findViewById(R.id.button2);
         btnSprint.setOnClickListener(this);
         tvSprint = view.findViewById(R.id.textView7);
+        tvRemaining = view.findViewById(R.id.tvRemaining);
+        DateTime now = new DateTime(new Date());
+        DateTime end = new DateTime(model.getCurrentSprint().getValue().getEndda());
+        Period diff = new Period(now, end);
 
+        tvRemaining.setText(((Integer) diff.getDays()).toString()+" days remaining");
         if (model.getCurrentSprint().getValue()!=null){
             btnSprint.setVisibility(View.VISIBLE);
-            tvSprint.setText("Sprint "+model.getSprintCount().getValue());
+            tvSprint.setText(model.getCurrentSprint().getValue().getName());
             Date date = new Date();
 //            Date date1 = new Date(1999,01,01);
 //            if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
 //                btnSprint.setText("Standby");
 //            }
-            if (date.before(model.getCurrentSprint().getValue().getEndda())){
-                btnSprint.setText("Running");
-            }else if (date.after(model.getCurrentSprint().getValue().getEndda())){
-                btnSprint.setText("Finished");
-            }
+//            if (date.before(model.getCurrentSprint().getValue().getEndda())){
+//                btnSprint.setText("Running");
+//            }else if (date.after(model.getCurrentSprint().getValue().getEndda())){
+//                btnSprint.setText("Finished");
+//            }
         }else {
             btnSprint.setVisibility(View.GONE);
         }
@@ -194,23 +205,41 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
 
     @Override
     public void onClick(View view) {
-//        if (btnSprint.getText().toString().equalsIgnoreCase("End")){
-//
-//            // TODO: 24-May-19 change status project to no run
-//            Sprint sprint = model.getCurrentSprint().getValue();
-//            sprint.setBegda(new Date(1999,01,01));
-////            model.createSprint(sprint);
-//            model.setCurrentSprint(null);
-//
-//            btnSprint.setVisibility(View.GONE);
-//        }else {
-//            Date date = new Date();
-//            model.getCurrentSprint().getValue().setBegda(date);
-//            model.createSprint(model.getCurrentSprint().getValue());
-//
-//            // TODO: 24-May-19 change status project to running
-//
-//            btnSprint.setText("End");
-//        }
+        if (view == btnSprint){
+            initializeAlertDialog();
+            builder.show();
+        }
     }
+
+    AlertDialog.Builder builder;
+
+    void initializeAlertDialog(){
+        builder = new AlertDialog.Builder(this.getActivity());
+        builder.setMessage("Complete "+model.getCurrentSprint().getValue().getName()+"  ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        model.getCurrentSprint().getValue().setEndda(new Date());
+                        model.getCurrentSprint().getValue().setModifieddate(new Date());
+                        model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
+                        model.editSprint(model.getCurrentSprint().getValue());
+                        model.getCurrentSprint().setValue(null);
+                        model.getListBacklogSprint().getValue().clear();
+                        tvSprint.setText("Sprint");
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+    }
+
 }

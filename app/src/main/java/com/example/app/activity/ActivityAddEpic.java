@@ -11,6 +11,7 @@ import android.widget.EditText;
 import com.example.app.R;
 import com.example.app.model.Epic;
 import com.example.app.model.Project;
+import com.example.app.model.User;
 
 import java.util.Date;
 
@@ -18,6 +19,9 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
 
     EditText etEName, etEStatus, etEDesc;
     Button btn;
+    User user;
+    Intent resultIntent;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,6 +29,8 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 //        getActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_add_epic);
+        resultIntent = getIntent();
+        user = resultIntent.getParcelableExtra("User");
         etEName = findViewById(R.id.etEpicName);
         etEStatus= findViewById(R.id.eEpicStatus);
         etEDesc = findViewById(R.id.etEpicDesc);
@@ -36,8 +42,7 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
     public void onClick(View view) {
         if (view == btn){
             if (validateFields(etEName)){
-                Intent resultIntent = getIntent();
-                Epic newEpic = new Epic(resultIntent.getStringExtra("PID")+"-E "+(resultIntent.getIntExtra("epID",0)+1),resultIntent.getStringExtra("PID"),etEName.getText().toString(),etEDesc.getText().toString(),new Date(),"admin@admin.com",null,null);
+                Epic newEpic = new Epic(resultIntent.getStringExtra("PID")+"-E "+(resultIntent.getIntExtra("epID",0)+1),resultIntent.getStringExtra("PID"),etEName.getText().toString(),etEDesc.getText().toString(),new Date(),user.getEmail(),null,null);
                 resultIntent.putExtra("result",newEpic);
                 setResult(RESULT_OK, resultIntent);
                 finish();

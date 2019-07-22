@@ -13,6 +13,7 @@ import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
 import com.example.app.model.Sprint;
+import com.example.app.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,9 +31,11 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Backlog>> listBacklog;
     private MutableLiveData<ArrayList<Backlog>> listBacklogSprint;
     private MutableLiveData<Sprint> currentSprint;
+    private Sprint runningSprint;
     private MutableLiveData<ArrayList<Sprint>> listSprint;
     private MutableLiveData<ArrayList<Epic>> listEpic;
     private MutableLiveData<Integer> sprintCount;
+    private User user;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql/graphql";
     int sCount;
     ListenerGraphql listener;
@@ -52,6 +55,8 @@ public class MainViewModel extends ViewModel {
         sprintCount = new MutableLiveData<>();
 //        sprintCount.setValue(0);
 
+        user = new User("admin@admin.com","admin");
+
         ArrayList<Backlog> backlog3 = new ArrayList<>();
         listBacklog = new MutableLiveData<>();
         listBacklog.setValue(backlog3);
@@ -67,6 +72,14 @@ public class MainViewModel extends ViewModel {
         listFilterBacklog = new MutableLiveData<>();
         ArrayList<Backlog> backlog4 = new ArrayList<>();
         listFilterBacklog.setValue(backlog4);
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public User getUser() {
+        return user;
     }
 
     public void setListEpic(ArrayList<Epic> listEpic){
@@ -384,6 +397,7 @@ public class MainViewModel extends ViewModel {
                 .okHttpClient(okHttpClient)
                 .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
                 .build();
+        Log.d("ID Backlog",backlog.getId());
         BacklogMutation backlogMutation = BacklogMutation.builder()
                 .id(backlog.getId())
                 .idProject(backlog.getIdProject())
@@ -793,8 +807,9 @@ public class MainViewModel extends ViewModel {
     void splitData(){
         Log.d("Backlog count", ((Integer) listAllBacklog.getValue().size()).toString());
         Log.d("Sprint count", ((Integer) listSprint.getValue().size()).toString());
-        currentSprint.postValue(listSprint.getValue().get(listSprint.getValue().size()-1));
+        setCurrentSprint(listSprint.getValue());
         sCount = listSprint.getValue().size();
+        sprintCount.postValue(sCount);
         if (sCount == 0){
             listBacklog.getValue().addAll(listAllBacklog.getValue()) ;
             listFilterBacklog.getValue().addAll(listBacklog.getValue());
@@ -805,7 +820,7 @@ public class MainViewModel extends ViewModel {
                 //backlog di dalam sprint
                 Log.d("Backlog : "+i ,listAllBacklog.getValue().get(i).getIdProject());
 //                Log.d("Sprint",currentSprint.getValue().id);
-                if (listAllBacklog.getValue().get(i).getIdSprint().equalsIgnoreCase(currentSprint.getValue().getId())){
+                if (listAllBacklog.getValue().get(i).getIdSprint().equalsIgnoreCase(runningSprint.getId())){
                     listBacklogSprint.getValue().add(listAllBacklog.getValue().get(i));
                 }else {
                     listBacklog.getValue().add(listAllBacklog.getValue().get(i));
@@ -813,6 +828,18 @@ public class MainViewModel extends ViewModel {
             }
             listFilterBacklog.getValue().addAll(listBacklog.getValue());
             listener.endProgressDialog();
+        }
+    }
+
+    void setCurrentSprint(ArrayList <Sprint> sprintArrayList){
+        Sprint temp;
+        Date now = new Date();
+        for (int i = 0 ;i<sprintArrayList.size();i++){
+            temp = sprintArrayList.get(i);
+            if (now.after(temp.getBegda()) && now.before(temp.getEndda())){
+                currentSprint.postValue(sprintArrayList.get(i));
+                runningSprint = sprintArrayList.get(i);
+            }
         }
     }
 
@@ -915,5 +942,19 @@ public class MainViewModel extends ViewModel {
                 }
             }
         }
+    }
+
+    public int getLargestBacklogID(){
+        int last=0;
+        int temp=0;
+        for (int i=0;i<listAllBacklog.getValue().size();i++){
+            temp = Integer.parseInt(listAllBacklog.getValue().get(i).getId().substring(listAllBacklog.getValue().get(i).getId().length() - 1));
+            Log.d("Last",Integer.toString(temp));
+            if (last<temp){
+                last = temp;
+            }
+        }
+        Log.d("Last",Integer.toString(last));
+        return last;
     }
 }
