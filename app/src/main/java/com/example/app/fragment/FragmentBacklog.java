@@ -90,7 +90,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
                     rvBottom.setVisibility(View.VISIBLE);
                     tvSprint.setVisibility(View.VISIBLE);
                 }else {
-                    tvEmptyListBottom.setVisibility(View.GONE);
+                    tvEmptyListBottom.setVisibility(View.VISIBLE);
                     rvBottom.setVisibility(View.GONE);
                     tvSprint.setVisibility(View.GONE);
                 }
@@ -139,7 +139,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
                 tvEmptyListBottom.setVisibility(View.VISIBLE);
             }
         }else {
-            tvEmptyListBottom.setVisibility(View.GONE);
+            tvEmptyListBottom.setVisibility(View.VISIBLE);
             rvBottom.setVisibility(View.GONE);
             tvSprint.setVisibility(View.GONE);
         }
@@ -213,7 +213,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
 
     @Override
     public void setEmptyListBottom(boolean visibility) {
-        tvEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.GONE);
+//        tvEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.VISIBLE);
         rvBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
         log();
     }
@@ -316,8 +316,10 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         }else if (adapterView.getId()==spinner2.getId()){
             Log.d("Spinner 2","True");
             selectedSprint= model.getListSprint().getValue().get(i);
+            model.filterSprint(selectedSprint.getId());
+            bottomListAdapter.notifyDataSetChanged();
         }
-
+        log();
     }
 
     @Override

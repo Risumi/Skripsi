@@ -30,6 +30,7 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Backlog>> listFilterBacklog;
     private MutableLiveData<ArrayList<Backlog>> listBacklog;
     private MutableLiveData<ArrayList<Backlog>> listBacklogSprint;
+    private MutableLiveData<ArrayList<Backlog>> listFilterBacklogSprint;
     private MutableLiveData<Sprint> currentSprint;
     private Sprint runningSprint;
     private MutableLiveData<ArrayList<Sprint>> listSprint;
@@ -72,6 +73,10 @@ public class MainViewModel extends ViewModel {
         listFilterBacklog = new MutableLiveData<>();
         ArrayList<Backlog> backlog4 = new ArrayList<>();
         listFilterBacklog.setValue(backlog4);
+
+        listFilterBacklogSprint = new MutableLiveData<>();
+        ArrayList<Backlog> backlog5 = new ArrayList<>();
+        listFilterBacklogSprint.setValue(backlog5);
     }
 
     public void setUser(User user) {
@@ -762,9 +767,11 @@ public class MainViewModel extends ViewModel {
     public  MutableLiveData<ArrayList<Backlog>> getToDoBacklog(){
         MutableLiveData<ArrayList<Backlog>> listToDo = new MutableLiveData<>();
         ArrayList<Backlog> backlog = new ArrayList<>();
-        for (int i = 0; i< listBacklogSprint.getValue().size(); i++){
-            if (listBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("To Do")){
-                backlog.add(listBacklogSprint.getValue().get(i));
+        for (int i = 0; i< listFilterBacklogSprint.getValue().size(); i++){
+            if (listFilterBacklogSprint.getValue().get(i).getIdSprint().equals(currentSprint.getValue().getId())){
+                if (listFilterBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("To Do")){
+                    backlog.add(listFilterBacklogSprint.getValue().get(i));
+                }
             }
         }
         listToDo.setValue(backlog);
@@ -774,9 +781,11 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<ArrayList<Backlog>> getOnProgressBacklog(){
         MutableLiveData<ArrayList<Backlog>> listOnProgress = new MutableLiveData<>();
         ArrayList<Backlog> backlog = new ArrayList<>();
-        for (int i = 0; i< listBacklogSprint.getValue().size(); i++){
-            if (listBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("On Progress")){
-                backlog.add(listBacklogSprint.getValue().get(i));
+        for (int i = 0; i< listFilterBacklogSprint.getValue().size(); i++){
+            if (listFilterBacklogSprint.getValue().get(i).getIdSprint().equals(currentSprint.getValue().getId())) {
+                if (listFilterBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("On Progress")) {
+                    backlog.add(listFilterBacklogSprint.getValue().get(i));
+                }
             }
         }
         listOnProgress.setValue(backlog);
@@ -786,9 +795,11 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<ArrayList<Backlog>> getCompletedBacklog(){
         MutableLiveData<ArrayList<Backlog>> listCompleted = new MutableLiveData<>();
         ArrayList<Backlog> backlog = new ArrayList<>();
-        for (int i = 0; i< listBacklogSprint.getValue().size(); i++){
-            if (listBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("Completed")){
-                backlog.add(listBacklogSprint.getValue().get(i));
+        for (int i = 0; i< listFilterBacklogSprint.getValue().size(); i++){
+            if (listFilterBacklogSprint.getValue().get(i).getIdSprint().equals(currentSprint.getValue().getId())) {
+                if (listFilterBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("Completed")) {
+                    backlog.add(listFilterBacklogSprint.getValue().get(i));
+                }
             }
         }
         listCompleted.setValue(backlog);
@@ -813,25 +824,19 @@ public class MainViewModel extends ViewModel {
         setCurrentSprint(listSprint.getValue());
         sCount = listSprint.getValue().size();
         sprintCount.postValue(sCount);
-        if (runningSprint.getId()==null){
-            listBacklog.getValue().addAll(listAllBacklog.getValue()) ;
-            listFilterBacklog.getValue().addAll(listBacklog.getValue());
-            listener.endProgressDialog();
-            Log.d("Sprint status", "No sprint");
-        }else {
-            for (int i = 0; i< listAllBacklog.getValue().size(); i++){
-                //backlog di dalam sprint
-                Log.d("Backlog : "+i ,listAllBacklog.getValue().get(i).getIdProject());
-//                Log.d("Sprint",currentSprint.getValue().id);
-                if (listAllBacklog.getValue().get(i).getIdSprint().equalsIgnoreCase(runningSprint.getId())){
-                    listBacklogSprint.getValue().add(listAllBacklog.getValue().get(i));
-                }else {
-                    listBacklog.getValue().add(listAllBacklog.getValue().get(i));
-                }
+        for (int i = 0 ; i<listAllBacklog.getValue().size();i++){
+            if (listAllBacklog.getValue().get(i).getIdSprint().equals("")){
+                Log.d("ID Sprint "+i,listAllBacklog.getValue().get(i).getIdSprint()+ listAllBacklog.getValue().get(i).getId());
+                listBacklog.getValue().add(listAllBacklog.getValue().get(i));
+            }else{
+                Log.d("ID Sprint "+i,listAllBacklog.getValue().get(i).getIdSprint());
+                listBacklogSprint.getValue().add(listAllBacklog.getValue().get(i));
             }
-            listFilterBacklog.getValue().addAll(listBacklog.getValue());
-            listener.endProgressDialog();
         }
+        listFilterBacklog.getValue().addAll(listBacklog.getValue());
+        listFilterBacklogSprint.getValue().addAll(listBacklogSprint.getValue());
+        listener.endProgressDialog();
+//        }
     }
 
     void setCurrentSprint(ArrayList <Sprint> sprintArrayList){
@@ -918,6 +923,20 @@ public class MainViewModel extends ViewModel {
         }
     }
 
+    public void filterSprint(String id){
+        ArrayList <Backlog> backlogArrayList = new ArrayList<>();
+        backlogArrayList.clear();
+        backlogArrayList.addAll(listFilterBacklogSprint.getValue());
+        listBacklogSprint.getValue().clear();
+        for (int i=0;i<backlogArrayList.size();i++){
+            if (backlogArrayList.get(i).getIdSprint().equalsIgnoreCase(id)){
+                listBacklogSprint.getValue().add(backlogArrayList.get(i));
+                Log.d("ID Sprint 1",backlogArrayList.get(i).getIdSprint());
+                Log.d("ID Sprint 2",id);
+            }
+        }
+    }
+
     public String getIDEpic(String name){
         String id="";
         for (int i=0;i<listEpic.getValue().size();i++){
@@ -943,12 +962,18 @@ public class MainViewModel extends ViewModel {
     public void updateList(Backlog backlog, String todo){
         if (todo.equalsIgnoreCase("add")){
             listFilterBacklog.getValue().add(backlog);
+            for (int i = 0;i<listFilterBacklogSprint.getValue().size();i++){
+                if (listFilterBacklogSprint.getValue().get(i)==backlog){
+                    listFilterBacklogSprint.getValue().remove(i);
+                }
+            }
         }else if (todo.equalsIgnoreCase("remove")){
             for (int i = 0;i<listFilterBacklog.getValue().size();i++){
                 if (listFilterBacklog.getValue().get(i)==backlog){
                     listFilterBacklog.getValue().remove(i);
                 }
             }
+            listFilterBacklogSprint.getValue().add(backlog);
         }
     }
 
