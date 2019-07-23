@@ -131,8 +131,8 @@ public class MainViewModel extends ViewModel {
                     String ModifiedBy="";
                     Date ModifiedDate = null;
                     try {
-                        if (response.data().backlog.get(i).idEpic().name!=null){
-                            epicName=response.data().backlog.get(i).idEpic().name;
+                        if (response.data().backlog.get(i).idEpic().id!=null){
+                            epicName=response.data().backlog.get(i).idEpic().id;
                             Log.d("idEpic", epicName);
                         }
                     }catch (NullPointerException e){
@@ -146,8 +146,8 @@ public class MainViewModel extends ViewModel {
 
                     }
                     try {
-                        if (response.data().backlog.get(i).assignee().nama!=null){
-                            Assignee = response.data().backlog.get(i).assignee().nama;
+                        if (response.data().backlog.get(i).assignee().email!=null){
+                            Assignee = response.data().backlog.get(i).assignee().email;
                         }
                     }catch (NullPointerException e){
 
@@ -469,7 +469,10 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onResponse(@NotNull Response<BacklogEditMutation.Data> response) {
                 Log.d("Berhasil","yay");
-//                Log.d("Response", response.errors().get(0).message());
+                if (response.hasErrors()){
+                    Log.d("Response", response.errors().get(0).message());
+                }
+
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
@@ -810,7 +813,7 @@ public class MainViewModel extends ViewModel {
         setCurrentSprint(listSprint.getValue());
         sCount = listSprint.getValue().size();
         sprintCount.postValue(sCount);
-        if (sCount == 0){
+        if (runningSprint.getId()==null){
             listBacklog.getValue().addAll(listAllBacklog.getValue()) ;
             listFilterBacklog.getValue().addAll(listBacklog.getValue());
             listener.endProgressDialog();
@@ -836,9 +839,14 @@ public class MainViewModel extends ViewModel {
         Date now = new Date();
         for (int i = 0 ;i<sprintArrayList.size();i++){
             temp = sprintArrayList.get(i);
-            if (now.after(temp.getBegda()) && now.before(temp.getEndda())){
-                currentSprint.postValue(sprintArrayList.get(i));
-                runningSprint = sprintArrayList.get(i);
+            if (temp.getBegda()==null){
+
+            }else {
+                if (now.after(temp.getBegda()) && now.before(temp.getEndda())) {
+                    currentSprint.postValue(sprintArrayList.get(i));
+                    runningSprint = sprintArrayList.get(i);
+                    Log.d("current sprint ", sprintArrayList.get(i).getId());
+                }
             }
         }
     }

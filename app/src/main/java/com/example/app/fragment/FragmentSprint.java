@@ -99,7 +99,12 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
         tvSprint = view.findViewById(R.id.textView7);
         tvRemaining = view.findViewById(R.id.tvRemaining);
         DateTime now = new DateTime(new Date());
-        DateTime end = new DateTime(model.getCurrentSprint().getValue().getEndda());
+        DateTime end = new DateTime(new Date());
+        try {
+            end = new DateTime(model.getCurrentSprint().getValue().getEndda());
+        }catch (NullPointerException e){
+
+        }
         Period diff = new Period(now, end);
 
         tvRemaining.setText(((Integer) diff.getDays()).toString()+" days remaining");
@@ -184,12 +189,18 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
     public void setStatus(Backlog backlog, String status) {
         if (status.equalsIgnoreCase("Top")){
             backlog.setStatus("To Do");
+            backlog.setModifieddate(new Date());
+            backlog.setModifiedby(model.getUser().getEmail());
             model.editBacklog(backlog);
         }else if (status.equalsIgnoreCase("Middle")){
             backlog.setStatus("On Progress");
+            backlog.setModifieddate(new Date());
+            backlog.setModifiedby(model.getUser().getEmail());
             model.editBacklog(backlog);
         }else if (status.equalsIgnoreCase("Bottom")){
             backlog.setStatus("Completed");
+            backlog.setModifieddate(new Date());
+            backlog.setModifiedby(model.getUser().getEmail());
             model.editBacklog(backlog);
         }
     }

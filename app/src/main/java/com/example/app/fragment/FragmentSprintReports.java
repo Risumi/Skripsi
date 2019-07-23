@@ -1,13 +1,30 @@
 package com.example.app.fragment;
 
 
+import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import com.example.app.MainViewModel;
 import com.example.app.R;
+import com.github.mikephil.charting.charts.LineChart;
+import com.github.mikephil.charting.components.Description;
+import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.data.Entry;
+import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.LineDataSet;
+import com.github.mikephil.charting.formatter.ValueFormatter;
+
+import org.joda.time.DateTime;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -24,7 +41,8 @@ public class FragmentSprintReports extends Fragment {
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
-
+    LineChart chart ;
+    TextView txtSprint;
 
     public FragmentSprintReports() {
         // Required empty public constructor
@@ -61,7 +79,75 @@ public class FragmentSprintReports extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sprint_reports, container, false);
+        View view =inflater.inflate(R.layout.fragment_sprint_reports, container, false);
+        chart = view.findViewById(R.id.chart);
+        int daysDiff = 7;
+        txtSprint = view.findViewById(R.id.textView9);
+        DateTime dateTime = new DateTime();
+        Log.d("daysDiff", ((Integer) daysDiff).toString());
+
+        LineData lineData = new LineData();
+        DateTime tempDate = dateTime;
+
+        List<Entry> entries = new ArrayList<Entry>();
+        for (int i = 0 ; i<daysDiff;i++){
+            dateTime = tempDate.plusDays(i);
+            entries.add(new Entry(i,(daysDiff-1)-i));
+        }
+        LineDataSet dataSet = new LineDataSet(entries, "Ideal Effort");
+        int color = ContextCompat.getColor(this.getContext(), R.color.line1);
+        dataSet.setColor(color);
+        lineData.addDataSet(dataSet);
+
+        List<Entry> entries1 = new ArrayList<Entry>();
+        List<DateTime> exTime = new ArrayList<>();
+        for(int i = 0 ;i<daysDiff;i++) {
+            exTime.add(tempDate.plusDays(i));
+        }
+//        dateTime = tempDate.plusDays(i);
+        entries1.add(new Entry(0,(6)));
+        entries1.add(new Entry(1,(5)));
+        entries1.add(new Entry(2,(5)));
+        entries1.add(new Entry(3,(3)));
+        entries1.add(new Entry(4,(3)));
+        entries1.add(new Entry(5,(2)));
+        entries1.add(new Entry(6,(0)));
+
+
+//        }
+        LineDataSet dataSet1 = new LineDataSet(entries1, "Actual Effort");
+        color = ContextCompat.getColor(this.getContext(), R.color.line2);
+        dataSet1.setColor(color);
+        lineData.addDataSet(dataSet1);
+        ValueFormatter valueFormatter = new ValueFormatter() {
+            /**
+             * Called when drawing any label, used to change numbers into formatted strings.
+             *
+             * @param value float to be formatted
+             * @return formatted string label
+             */
+            @Override
+            public String getFormattedValue(float value) {
+                return super.getFormattedValue(Math.round(value));
+            }
+        };
+        lineData.setValueFormatter(valueFormatter);
+
+
+        Description description = new Description();
+        description.setText("");
+        XAxis xAxis = chart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+//        xAxis.setValueFormatter(new formatter());
+//        xAxis.setLabelCount(daysDiff/3);
+        chart.setDescription(description);    // Hide the description
+        chart.getAxisRight().setDrawLabels(false);
+        chart.getAxisLeft().setDrawGridLines(false);
+        chart.getXAxis().setDrawGridLines(false);
+        chart.getLegend().setEnabled(false);
+        chart.setData(lineData);
+        chart.invalidate();
+        return view;
     }
 
 }

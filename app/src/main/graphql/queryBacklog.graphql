@@ -5,13 +5,13 @@ query backlog($id:String!){
       id
     }
     idEpic{
-      name
+      id
     }
     name
     status
     description
     assignee{
-      nama      
+      email
     }
     createddate
     createdby{

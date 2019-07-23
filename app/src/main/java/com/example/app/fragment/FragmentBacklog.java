@@ -196,11 +196,15 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     @Override
     public void updateSprint(Backlog backlog,String todo) {
         if (todo.equalsIgnoreCase("update")){
-            backlog.setIdSprint(model.getCurrentSprint().getValue().getId());
+            backlog.setIdSprint(selectedSprint.getId());
+            backlog.setModifieddate(new Date());
+            backlog.setModifiedby(model.getUser().getEmail());
             model.editBacklog(backlog);
             model.updateList(backlog,"remove");
         }else if (todo.equalsIgnoreCase("remove")){
             backlog.setIdSprint("");
+            backlog.setModifieddate(new Date());
+            backlog.setModifiedby(model.getUser().getEmail());
             model.editBacklog(backlog);
             model.updateList(backlog,"add");
         }
@@ -292,6 +296,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
 
     public void setSprint(Sprint sprint){
         model.createSprint(sprint);
+        model.getListSprint().getValue().add(sprint);
     }
 
 
@@ -331,12 +336,17 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     public void onClick(View view) {
         Date now = new Date();
         if (view == btnStartSprint){
-            if (now.after(model.getCurrentSprint().getValue().getEndda())){
-                Intent intent = new Intent(getActivity(),ActivityStartSprint.class);
-                intent.putExtra("Sprint",selectedSprint);
-                getActivity().startActivityForResult(intent,REQ_START_SPRINT);
-            }else{
-                Toast.makeText(this.getActivity(),"Can't start sprint, there is an active sprint",Toast.LENGTH_SHORT).show();
+            if (spinner2.getAdapter().isEmpty()){
+                Toast.makeText(getActivity(),"No Sprint Selected",Toast.LENGTH_SHORT).show();
+            }else {
+                if (model.getCurrentSprint().getValue().getEndda()==null){
+                    Intent intent = new Intent(getActivity(),ActivityStartSprint.class);
+                    intent.putExtra("Sprint",selectedSprint);
+                    intent.putExtra("User",model.getUser());
+                    getActivity().startActivityForResult(intent,REQ_START_SPRINT);
+                }else{
+                    Toast.makeText(this.getActivity(),"Can't start sprint, there is an active sprint",Toast.LENGTH_SHORT).show();
+                }
             }
         }
     }

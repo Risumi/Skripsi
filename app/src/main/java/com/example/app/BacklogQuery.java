@@ -30,7 +30,7 @@ import java.util.Map;
 import type.CustomType;
 
 public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery.Data, BacklogQuery.Variables> {
-  public static final String OPERATION_ID = "572e3f3bbbbe84016845d0ec53b8217b6e3abdeb50a2579336eb59d37d036ceb";
+  public static final String OPERATION_ID = "28c3fb33f0b345d02277dc2d6375459d3ec4ac29cfc698ab26e50ff9d2be8dfc";
 
   public static final String QUERY_DOCUMENT = "query backlog($id: String!) {\n"
       + "  backlog(id: $id) {\n"
@@ -42,14 +42,14 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       + "    }\n"
       + "    idEpic {\n"
       + "      __typename\n"
-      + "      name\n"
+      + "      id\n"
       + "    }\n"
       + "    name\n"
       + "    status\n"
       + "    description\n"
       + "    assignee {\n"
       + "      __typename\n"
-      + "      nama\n"
+      + "      email\n"
       + "    }\n"
       + "    createddate\n"
       + "    createdby {\n"
@@ -612,12 +612,12 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
   public static class IdEpic {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
 
-    final @Nullable String name;
+    final @NotNull String id;
 
     private transient volatile String $toString;
 
@@ -625,17 +625,17 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public IdEpic(@NotNull String __typename, @Nullable String name) {
+    public IdEpic(@NotNull String __typename, @NotNull String id) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
-      this.name = name;
+      this.id = Utils.checkNotNull(id, "id == null");
     }
 
     public @NotNull String __typename() {
       return this.__typename;
     }
 
-    public @Nullable String name() {
-      return this.name;
+    public @NotNull String id() {
+      return this.id;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -643,7 +643,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], name);
+          writer.writeString($responseFields[1], id);
         }
       };
     }
@@ -653,7 +653,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       if ($toString == null) {
         $toString = "IdEpic{"
           + "__typename=" + __typename + ", "
-          + "name=" + name
+          + "id=" + id
           + "}";
       }
       return $toString;
@@ -667,7 +667,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       if (o instanceof IdEpic) {
         IdEpic that = (IdEpic) o;
         return this.__typename.equals(that.__typename)
-         && ((this.name == null) ? (that.name == null) : this.name.equals(that.name));
+         && this.id.equals(that.id);
       }
       return false;
     }
@@ -679,7 +679,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         h *= 1000003;
         h ^= __typename.hashCode();
         h *= 1000003;
-        h ^= (name == null) ? 0 : name.hashCode();
+        h ^= id.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -690,8 +690,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       @Override
       public IdEpic map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String name = reader.readString($responseFields[1]);
-        return new IdEpic(__typename, name);
+        final String id = reader.readString($responseFields[1]);
+        return new IdEpic(__typename, id);
       }
     }
   }
@@ -699,12 +699,12 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
   public static class Assignee {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("nama", "nama", null, true, Collections.<ResponseField.Condition>emptyList())
+      ResponseField.forString("email", "email", null, false, Collections.<ResponseField.Condition>emptyList())
     };
 
     final @NotNull String __typename;
 
-    final @Nullable String nama;
+    final @NotNull String email;
 
     private transient volatile String $toString;
 
@@ -712,17 +712,17 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Assignee(@NotNull String __typename, @Nullable String nama) {
+    public Assignee(@NotNull String __typename, @NotNull String email) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
-      this.nama = nama;
+      this.email = Utils.checkNotNull(email, "email == null");
     }
 
     public @NotNull String __typename() {
       return this.__typename;
     }
 
-    public @Nullable String nama() {
-      return this.nama;
+    public @NotNull String email() {
+      return this.email;
     }
 
     public ResponseFieldMarshaller marshaller() {
@@ -730,7 +730,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         @Override
         public void marshal(ResponseWriter writer) {
           writer.writeString($responseFields[0], __typename);
-          writer.writeString($responseFields[1], nama);
+          writer.writeString($responseFields[1], email);
         }
       };
     }
@@ -740,7 +740,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       if ($toString == null) {
         $toString = "Assignee{"
           + "__typename=" + __typename + ", "
-          + "nama=" + nama
+          + "email=" + email
           + "}";
       }
       return $toString;
@@ -754,7 +754,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       if (o instanceof Assignee) {
         Assignee that = (Assignee) o;
         return this.__typename.equals(that.__typename)
-         && ((this.nama == null) ? (that.nama == null) : this.nama.equals(that.nama));
+         && this.email.equals(that.email);
       }
       return false;
     }
@@ -766,7 +766,7 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
         h *= 1000003;
         h ^= __typename.hashCode();
         h *= 1000003;
-        h ^= (nama == null) ? 0 : nama.hashCode();
+        h ^= email.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -777,8 +777,8 @@ public final class BacklogQuery implements Query<BacklogQuery.Data, BacklogQuery
       @Override
       public Assignee map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
-        final String nama = reader.readString($responseFields[1]);
-        return new Assignee(__typename, nama);
+        final String email = reader.readString($responseFields[1]);
+        return new Assignee(__typename, email);
       }
     }
   }
