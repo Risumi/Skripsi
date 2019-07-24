@@ -5,14 +5,21 @@ import android.arch.lifecycle.ViewModelProviders;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.app.MainViewModel;
 import com.example.app.R;
+import com.example.app.adapter.SprintAdapter;
+import com.example.app.model.Backlog;
+import com.example.app.model.Epic;
+import com.example.app.model.Sprint;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
 import com.github.mikephil.charting.components.XAxis;
@@ -147,7 +154,33 @@ public class FragmentSprintReports extends Fragment {
         chart.getLegend().setEnabled(false);
         chart.setData(lineData);
         chart.invalidate();
+        etGoal = view.findViewById(R.id.editText3);
+        etGoal.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
+
+        ArrayList<Backlog> listCompleted= new ArrayList<>();
+        listCompleted.add(new Backlog("DOT-1",null,null,"DOT-E 1","Graphql query","Completed",null,null,null,null,null,null));
+        listCompleted.add(new Backlog("DOT-2",null,null,"DOT-E 2","Halaman profil","Completed",null,null,null,null,null,null));
+
+        ArrayList<Backlog> listNotCompleted= new ArrayList<>();
+        listNotCompleted.add(new Backlog("DOT-3",null,null,"DOT-E 1","Graphql mutation","On Progress",null,null,null,null,null,null));
+
+        ArrayList<Epic> listEpic = new ArrayList<>();
+        listEpic.add(new Epic("DOT-E 1",null,"Back end",null,null,null,null,null));
+        listEpic.add(new Epic("DOT-E 2",null,"Front end",null,null,null,null,null));
+
+        rvCompleted = view.findViewById(R.id.rvTop);
+        rvNotCompleted = view.findViewById(R.id.rvBottom);
+
+        rvCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        SprintAdapter AdapterCompleted = new SprintAdapter(listCompleted,listEpic);
+        rvCompleted.setAdapter(AdapterCompleted);
+
+        rvNotCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        SprintAdapter AdapterNotCompleted = new SprintAdapter(listNotCompleted,listEpic);
+        rvNotCompleted.setAdapter(AdapterNotCompleted);
+
         return view;
     }
-
+    EditText etGoal;
+    RecyclerView rvCompleted, rvNotCompleted;
 }

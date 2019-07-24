@@ -32,6 +32,11 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
         this.epicList = epicList;
     }
 
+    public SprintAdapter(ArrayList<Backlog> backlogList,ArrayList<Epic> epicList) {
+        this.backlogList = backlogList;
+        this.epicList = epicList;
+    }
+
     @NonNull
     @Override
     public SprintViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -55,7 +60,7 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
         }else{
             sprintViewHolder.epic.setText(getNameEpic(backlogList.get(i).getEpicName()));
         }
-
+        sprintViewHolder.id.setText(backlogList.get(i).getId());
 //        sprintViewHolder.fl.setOnTouchListener(this);
         sprintViewHolder.fl.setOnLongClickListener(this);
     }
@@ -122,12 +127,12 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
     }
 
     class SprintViewHolder extends RecyclerView.ViewHolder{
-        TextView name, date, epic;
+        TextView name, id, epic;
         FrameLayout fl;
         public SprintViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.txtName);
-            date = itemView.findViewById(R.id.txtDate);
+            id = itemView.findViewById(R.id.txtID);
             epic = itemView.findViewById(R.id.txtEpic);
             fl = itemView.findViewById(R.id.FM1);
         }

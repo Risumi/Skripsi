@@ -169,23 +169,24 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         spinner.setOnItemSelectedListener(this);
 
         spinner2 = view.findViewById(R.id.spinner5);
-        List<String> spinnerArray2 = new ArrayList<>();
+        spinnerArray2 = new ArrayList<>();
         int selection=0;
         for (int i=0;i<model.getListSprint().getValue().size();i++){
             if (model.getCurrentSprint().getValue().getId()==model.getListSprint().getValue().get(i).getId()){
-                spinnerArray2.add(model.getListSprint().getValue().get(i).getId()+" (Active)");
+                spinnerArray2.add(model.getListSprint().getValue().get(i).getName()+" (Active)");
                 selection = i;
             }else {
-                spinnerArray2.add(model.getListSprint().getValue().get(i).getId());
+                spinnerArray2.add(model.getListSprint().getValue().get(i).getName());
             }
         }
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,spinnerArray2);
+        adapter2 = new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,spinnerArray2);
         spinner2.setAdapter(adapter2);
         spinner2.setOnItemSelectedListener(this);
         spinner2.setSelection(selection);
         return view;
     }
-
+    ArrayAdapter<String> adapter2;
+    List<String> spinnerArray2;
     @Override
     public void setEmptyListTop(boolean visibility) {
         tvEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
@@ -264,6 +265,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     public void AddDataSet(Backlog backlog){
         model.getListBacklog().getValue().add(backlog);
         model.getListFilterBacklog().getValue().add(backlog);
+        model.getListAllBacklog().getValue().add(backlog);
         topListAdapter.notifyDataSetChanged();
         model.createBacklog(backlog);
     }
@@ -297,6 +299,8 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     public void setSprint(Sprint sprint){
         model.createSprint(sprint);
         model.getListSprint().getValue().add(sprint);
+        spinnerArray2.add(sprint.getName());
+        adapter2.notifyDataSetChanged();
     }
 
 
@@ -325,6 +329,15 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
+    }
+
+    public void notifySpinner(Sprint sprint) {
+        for (int i=0 ; i<model.getListSprint().getValue().size();i++){
+            if (sprint.getId().equalsIgnoreCase(model.getListSprint().getValue().get(i).getId())){
+                spinnerArray2.set(i,sprint.getId()+ " (Active)");
+                break;
+            }
+        }
     }
 
     @Override

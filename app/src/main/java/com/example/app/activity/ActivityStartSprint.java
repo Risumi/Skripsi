@@ -4,6 +4,7 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -69,7 +70,7 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
 //        etEnd.setEnabled(false);
         sprint = intent.getParcelableExtra("Sprint");
 
-        etName.setText(sprint.getId());
+        etName.setText(sprint.getName());
         etGoal.setText(sprint.getSprintGoal());
 
         begda = new Date();
@@ -87,6 +88,7 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                 Toast.makeText(this,"Start date must before end date",Toast.LENGTH_SHORT).show();
             }
             else {
+                Log.d("Endda",endda.toString());
                 Sprint newSprint = new Sprint(sprint.getId(),
                         sprint.getIdProject(),
                         etName.getText().toString(),
@@ -171,15 +173,15 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
             case 0: etEnd.setText("");break;
             case 1:
                 etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),1));
-                endda = formatString(etEnd.toString());
+                endda = getAddWeekDate(formatString(etStart.getText().toString()),1);
                 break;
             case 2:
                 etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),2));
-                endda = formatString(etEnd.toString());
+                endda = getAddWeekDate(formatString(etStart.getText().toString()),2);
                 break;
             case 3:
                 etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),3));
-                endda = formatString(etEnd.toString());
+                endda = getAddWeekDate(formatString(etStart.getText().toString()),3);
                 break;
             case 4:
 //                etEnd.setText("");
@@ -198,5 +200,12 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         calendar.setTime(date);
         calendar.add(Calendar.WEEK_OF_YEAR,i);
         return formatDate(calendar.getTime());
+    }
+
+    Date getAddWeekDate(Date date,int i){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.WEEK_OF_YEAR,i);
+        return calendar.getTime();
     }
 }

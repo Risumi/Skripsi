@@ -221,8 +221,8 @@ public class MainViewModel extends ViewModel {
     }
 
     public void fetchSprint(String PID){
-        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
             @Override public Date decode(CustomTypeValue value) {
                 try {
@@ -307,9 +307,24 @@ public class MainViewModel extends ViewModel {
     public void fetchEpic(String PID){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
+            @Override public Date decode(CustomTypeValue value) {
+                try {
+                    return formatDate.parse(value.value.toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override public CustomTypeValue encode(Date value) {
+                return new CustomTypeValue.GraphQLString(formatDate.format(value));
+            }
+        };
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
+                .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
                 .build();
         EpicQuery epicQuery= EpicQuery.builder().id(PID).build();
         apolloClient.query(epicQuery).enqueue(new ApolloCall.Callback<EpicQuery.Data>() {
@@ -770,6 +785,7 @@ public class MainViewModel extends ViewModel {
         for (int i = 0; i< listFilterBacklogSprint.getValue().size(); i++){
             if (listFilterBacklogSprint.getValue().get(i).getIdSprint().equals(currentSprint.getValue().getId())){
                 if (listFilterBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("To Do")){
+                    Log.d(listFilterBacklogSprint.getValue().get(i).getIdSprint(),currentSprint.getValue().getId());
                     backlog.add(listFilterBacklogSprint.getValue().get(i));
                 }
             }
@@ -784,6 +800,7 @@ public class MainViewModel extends ViewModel {
         for (int i = 0; i< listFilterBacklogSprint.getValue().size(); i++){
             if (listFilterBacklogSprint.getValue().get(i).getIdSprint().equals(currentSprint.getValue().getId())) {
                 if (listFilterBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("On Progress")) {
+                    Log.d(listFilterBacklogSprint.getValue().get(i).getIdSprint(),currentSprint.getValue().getId());
                     backlog.add(listFilterBacklogSprint.getValue().get(i));
                 }
             }
@@ -798,6 +815,7 @@ public class MainViewModel extends ViewModel {
         for (int i = 0; i< listFilterBacklogSprint.getValue().size(); i++){
             if (listFilterBacklogSprint.getValue().get(i).getIdSprint().equals(currentSprint.getValue().getId())) {
                 if (listFilterBacklogSprint.getValue().get(i).getStatus().equalsIgnoreCase("Completed")) {
+                    Log.d(listFilterBacklogSprint.getValue().get(i).getIdSprint(),currentSprint.getValue().getId());
                     backlog.add(listFilterBacklogSprint.getValue().get(i));
                 }
             }

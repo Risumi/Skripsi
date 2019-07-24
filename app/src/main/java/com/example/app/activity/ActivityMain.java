@@ -161,11 +161,11 @@ public class ActivityMain extends AppCompatActivity
             fragment = FragmentSetting.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
-        } else if (id == R.id.nav_burndown) {
+        }/* else if (id == R.id.nav_burndown) {
             fragment = FragmentBurndown.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
-        }else if (id == R.id.nav_sprint_report){
+        }*/else if (id == R.id.nav_sprint_report){
             fragment = FragmentSprintReports.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
@@ -305,7 +305,7 @@ public class ActivityMain extends AppCompatActivity
                 Sprint newSprint = data.getParcelableExtra("Sprint");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
-//                    ((FragmentBacklog) fragmentInFrame).AddDataSet(newEpic);
+                    ((FragmentBacklog) fragmentInFrame).notifySpinner(newSprint);
                     model.editSprint(newSprint);
                     model.setCurrentSprint(newSprint);
                 }

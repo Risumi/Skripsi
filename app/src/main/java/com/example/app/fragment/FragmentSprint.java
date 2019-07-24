@@ -132,38 +132,40 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
         tvEmptyListMiddle = view.findViewById(R.id.tvEmptyListMiddle);
         tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
 
-        if (model.getToDoBacklog().getValue().size()==0){
-            tvEmptyListTop.setVisibility(View.VISIBLE);
-        }
-        if (model.getOnProgressBacklog().getValue().size()==0){
-            tvEmptyListMiddle.setVisibility(View.VISIBLE);
-        }
-        if (model.getCompletedBacklog().getValue().size()==0){
-            tvEmptyListBottom.setVisibility(View.VISIBLE);
+        if (model.getCurrentSprint().getValue()!=null){
+            if (model.getToDoBacklog().getValue().size()==0){
+                tvEmptyListTop.setVisibility(View.VISIBLE);
+            }
+            if (model.getOnProgressBacklog().getValue().size()==0){
+                tvEmptyListMiddle.setVisibility(View.VISIBLE);
+            }
+            if (model.getCompletedBacklog().getValue().size()==0){
+                tvEmptyListBottom.setVisibility(View.VISIBLE);
+            }
         }
 
+
         rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter topListAdapter = new SprintAdapter(model.getToDoBacklog().getValue(),model.getListEpic().getValue(),this);
+        topListAdapter = new SprintAdapter(model.getToDoBacklog().getValue(),model.getListEpic().getValue(),this);
         rvTop.setAdapter(topListAdapter);
         rvTop.setOnDragListener(topListAdapter.getDragInstance());
         tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
-        rvTop.setOnDragListener(topListAdapter.getDragInstance());
 
         rvMiddle.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter middleListAdapter = new SprintAdapter(model.getOnProgressBacklog().getValue(),model.getListEpic().getValue(), this);
+        middleListAdapter = new SprintAdapter(model.getOnProgressBacklog().getValue(),model.getListEpic().getValue(), this);
         rvMiddle.setAdapter(middleListAdapter);
         tvEmptyListMiddle.setOnDragListener(middleListAdapter.getDragInstance());
         rvMiddle.setOnDragListener(middleListAdapter.getDragInstance());
 
         rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter bottomListAdapter = new SprintAdapter(model.getCompletedBacklog().getValue(),model.getListEpic().getValue(), this);
+        bottomListAdapter = new SprintAdapter(model.getCompletedBacklog().getValue(),model.getListEpic().getValue(), this);
         rvBottom.setAdapter(bottomListAdapter);
         tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
         rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
 
         return view;
     }
-
+    SprintAdapter topListAdapter,middleListAdapter,bottomListAdapter;
     @Override
     public void setEmptyListTop(boolean visibility) {
         tvEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
@@ -238,8 +240,11 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                         model.getCurrentSprint().getValue().setModifieddate(new Date());
                         model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
                         model.editSprint(model.getCurrentSprint().getValue());
-                        model.getCurrentSprint().setValue(null);
+                        model.getCurrentSprint().setValue(new Sprint());
                         model.getListBacklogSprint().getValue().clear();
+                        topListAdapter.notifyDataSetChanged();
+                        middleListAdapter.notifyDataSetChanged();
+                        bottomListAdapter.notifyDataSetChanged();
                         tvSprint.setText("Sprint");
                     }
                 });

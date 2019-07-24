@@ -21,10 +21,10 @@
             android:icon="@drawable/ic_baseline_assignment_24px"
             android:title="Sprint Report" />
 
-        <item
-            android:id="@+id/nav_burndown"
-            android:icon="@drawable/ic_timeline_black_24dp"
-            android:title="Burndown Chart" />
+        <!--<item-->
+            <!--android:id="@+id/nav_burndown"-->
+            <!--android:icon="@drawable/ic_timeline_black_24dp"-->
+            <!--android:title="Burndown Chart" />-->
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_baseline_settings_20px"
