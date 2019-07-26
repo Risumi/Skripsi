@@ -5,6 +5,8 @@ query Sprinter($id: String!){
     begindate  
     enddate
     goal    
+    status
+    retrospective
     createddate
     createdby{
       nama    

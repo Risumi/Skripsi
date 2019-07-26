@@ -1,9 +1,7 @@
 package com.example.app.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,53 +14,43 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.example.app.ProgressQuery;
 import com.example.app.R;
 import com.example.app.UserLoginQuery;
-import com.example.app.model.Progress;
+import com.example.app.UserMutation;
 import com.example.app.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Period;
-
 import okhttp3.OkHttpClient;
 
-public class ActivityLogin extends AppCompatActivity implements View.OnClickListener{
+public class ActivityRegister extends AppCompatActivity implements View.OnClickListener{
     EditText etEmail;
+    EditText etName;
     EditText etPassword;
-    Button btnLogin;
-    Button btnRegister;
-    Intent intent;
-    User user;
+    Button  button;
     AlertDialog.Builder builder;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_login);
-        etEmail= findViewById(R.id.editText);
-        etPassword= findViewById(R.id.editText2);
-        btnLogin = findViewById(R.id.button3);
-        btnLogin.setOnClickListener(this);
-        btnRegister= findViewById(R.id.button4);
-        btnRegister.setOnClickListener(this);
+        setContentView(R.layout.activity_register);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        etEmail = findViewById(R.id.editText7);
+        etName = findViewById(R.id.editText8);
+        etPassword = findViewById(R.id.editText9);
+        button = findViewById(R.id.button7);
+        button.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        if (view == btnLogin){
-            intent= new Intent(this,ActivityMain.class);
-            fetchLogin(etEmail.getText().toString(),etPassword.getText().toString());
-        }else if (view == btnRegister) {
-            intent = new Intent(this, ActivityRegister.class);
-            startActivity(intent);
-        }
+        createUser(etName.getText().toString(),etEmail.getText().toString(),etPassword.getText().toString());
     }
 
-    private void fetchLogin(String email,String password){
+    private void createUser(String name,String email,String password){
         ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(ActivityLogin.this);
+        progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setMessage("Loading ...");
         progressDialog.setCancelable(false);
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -70,20 +58,20 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        UserLoginQuery loginQuery = UserLoginQuery.builder().
+        UserMutation userMutation= UserMutation.builder().
+                nama(name).
                 email(email).
                 password(password).
+                role("User").
                 build();
-        apolloClient.query(loginQuery).enqueue(new ApolloCall.Callback<UserLoginQuery.Data>() {
+        apolloClient.mutate(userMutation).enqueue(new ApolloCall.Callback<UserMutation.Data>() {
             @Override
-            public void onResponse(@NotNull Response<UserLoginQuery.Data> response) {
+            public void onResponse(@NotNull Response<UserMutation.Data> response) {
                 if (response.hasErrors()) {
                     progressDialog.dismiss();
-                }else if (response.data().user().size()==1){
-                    user = new User(response.data().user().get(0).nama(), response.data().user().get(0).email());
-                }else if (response.data().user().size()!=1){
-                    progressDialog.dismiss();
-                    Toast.makeText(ActivityLogin.this,"Email and password didn't match", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(ActivityRegister.this,response.errors().get(0).message(), Toast.LENGTH_SHORT).show();
+                }else {
+                    Toast.makeText(ActivityRegister.this,"User created", Toast.LENGTH_LONG).show();
                 }
             }
             @Override
@@ -93,14 +81,13 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
 
                 }else {
                     progressDialog.dismiss();
-                    intent.putExtra("User",user);
-                    startActivity(intent);
+                    finish();
                 }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 progressDialog.dismiss();
-                ActivityLogin.this.runOnUiThread(new Runnable() {
+                ActivityRegister.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         initializeAlertDialog(e.getMessage());
@@ -122,7 +109,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        fetchLogin(etEmail.getText().toString(),etPassword.getText().toString());
+                        createUser(etName.getText().toString(),etEmail.getText().toString(),etPassword.getText().toString());
                     }
                 });
 

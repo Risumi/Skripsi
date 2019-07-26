@@ -30,7 +30,7 @@ import java.util.Map;
 import type.CustomType;
 
 public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQuery.Data, SprinterQuery.Variables> {
-  public static final String OPERATION_ID = "a96ce67af50714a337f3fba3bf1debe50279a19cae14b90132499d34f029b2c4";
+  public static final String OPERATION_ID = "f604a94965956cdc402c5b59e00e22bc82126e0231e8be86dd10eb13e3cc93d6";
 
   public static final String QUERY_DOCUMENT = "query Sprinter($id: String!) {\n"
       + "  sprint(id: $id) {\n"
@@ -40,6 +40,8 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
       + "    begindate\n"
       + "    enddate\n"
       + "    goal\n"
+      + "    status\n"
+      + "    retrospective\n"
       + "    createddate\n"
       + "    createdby {\n"
       + "      __typename\n"
@@ -253,6 +255,8 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
       ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("retrospective", "retrospective", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("createddate", "createddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forObject("createdby", "createdby", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("modifieddate", "modifieddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
@@ -271,6 +275,10 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
 
     final @Nullable String goal;
 
+    final @Nullable String status;
+
+    final @Nullable String retrospective;
+
     final @Nullable Date createddate;
 
     final @Nullable Createdby createdby;
@@ -287,7 +295,8 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
 
     public Sprint(@NotNull String __typename, @NotNull String id, @Nullable String name,
         @Nullable Date begindate, @Nullable Date enddate, @Nullable String goal,
-        @Nullable Date createddate, @Nullable Createdby createdby, @Nullable Date modifieddate,
+        @Nullable String status, @Nullable String retrospective, @Nullable Date createddate,
+        @Nullable Createdby createdby, @Nullable Date modifieddate,
         @Nullable Modifiedby modifiedby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = Utils.checkNotNull(id, "id == null");
@@ -295,6 +304,8 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
       this.begindate = begindate;
       this.enddate = enddate;
       this.goal = goal;
+      this.status = status;
+      this.retrospective = retrospective;
       this.createddate = createddate;
       this.createdby = createdby;
       this.modifieddate = modifieddate;
@@ -325,6 +336,14 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
       return this.goal;
     }
 
+    public @Nullable String status() {
+      return this.status;
+    }
+
+    public @Nullable String retrospective() {
+      return this.retrospective;
+    }
+
     public @Nullable Date createddate() {
       return this.createddate;
     }
@@ -351,10 +370,12 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], begindate);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], enddate);
           writer.writeString($responseFields[5], goal);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], createddate);
-          writer.writeObject($responseFields[7], createdby != null ? createdby.marshaller() : null);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[8], modifieddate);
-          writer.writeObject($responseFields[9], modifiedby != null ? modifiedby.marshaller() : null);
+          writer.writeString($responseFields[6], status);
+          writer.writeString($responseFields[7], retrospective);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[8], createddate);
+          writer.writeObject($responseFields[9], createdby != null ? createdby.marshaller() : null);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[10], modifieddate);
+          writer.writeObject($responseFields[11], modifiedby != null ? modifiedby.marshaller() : null);
         }
       };
     }
@@ -369,6 +390,8 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
           + "begindate=" + begindate + ", "
           + "enddate=" + enddate + ", "
           + "goal=" + goal + ", "
+          + "status=" + status + ", "
+          + "retrospective=" + retrospective + ", "
           + "createddate=" + createddate + ", "
           + "createdby=" + createdby + ", "
           + "modifieddate=" + modifieddate + ", "
@@ -391,6 +414,8 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
          && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
          && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
          && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal))
+         && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
+         && ((this.retrospective == null) ? (that.retrospective == null) : this.retrospective.equals(that.retrospective))
          && ((this.createddate == null) ? (that.createddate == null) : this.createddate.equals(that.createddate))
          && ((this.createdby == null) ? (that.createdby == null) : this.createdby.equals(that.createdby))
          && ((this.modifieddate == null) ? (that.modifieddate == null) : this.modifieddate.equals(that.modifieddate))
@@ -415,6 +440,10 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
         h ^= (enddate == null) ? 0 : enddate.hashCode();
         h *= 1000003;
         h ^= (goal == null) ? 0 : goal.hashCode();
+        h *= 1000003;
+        h ^= (status == null) ? 0 : status.hashCode();
+        h *= 1000003;
+        h ^= (retrospective == null) ? 0 : retrospective.hashCode();
         h *= 1000003;
         h ^= (createddate == null) ? 0 : createddate.hashCode();
         h *= 1000003;
@@ -442,21 +471,23 @@ public final class SprinterQuery implements Query<SprinterQuery.Data, SprinterQu
         final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
         final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
         final String goal = reader.readString($responseFields[5]);
-        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
-        final Createdby createdby = reader.readObject($responseFields[7], new ResponseReader.ObjectReader<Createdby>() {
+        final String status = reader.readString($responseFields[6]);
+        final String retrospective = reader.readString($responseFields[7]);
+        final Date createddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[8]);
+        final Createdby createdby = reader.readObject($responseFields[9], new ResponseReader.ObjectReader<Createdby>() {
           @Override
           public Createdby read(ResponseReader reader) {
             return createdbyFieldMapper.map(reader);
           }
         });
-        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[8]);
-        final Modifiedby modifiedby = reader.readObject($responseFields[9], new ResponseReader.ObjectReader<Modifiedby>() {
+        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[10]);
+        final Modifiedby modifiedby = reader.readObject($responseFields[11], new ResponseReader.ObjectReader<Modifiedby>() {
           @Override
           public Modifiedby read(ResponseReader reader) {
             return modifiedbyFieldMapper.map(reader);
           }
         });
-        return new Sprint(__typename, id, name, begindate, enddate, goal, createddate, createdby, modifieddate, modifiedby);
+        return new Sprint(__typename, id, name, begindate, enddate, goal, status, retrospective, createddate, createdby, modifieddate, modifiedby);
       }
     }
   }

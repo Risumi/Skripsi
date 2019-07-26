@@ -276,6 +276,8 @@ public class MainViewModel extends ViewModel {
                                 response.data().sprint.get(i).begindate,
                                 response.data().sprint.get(i).enddate,
                                 response.data().sprint.get(i).goal,
+                                response.data().sprint.get(i).status,
+                                "",
                                 response.data().sprint.get(i).createddate,
                                 CreatedBy,
                                 ModifiedDate,
@@ -574,6 +576,7 @@ public class MainViewModel extends ViewModel {
                 .idProject(sprint.getIdProject())
                 .name(sprint.getName())
                 .goal(sprint.getSprintGoal())
+                .status(sprint.getStatus())
                 .createddate(sprint.getCreateddate())
                 .createdby(sprint.getCreatedby())
                 .build();
@@ -630,6 +633,8 @@ public class MainViewModel extends ViewModel {
                 .begindate(sprint.getBegda())
                 .enddate(sprint.getEndda())
                 .goal(sprint.getSprintGoal())
+                .status(sprint.getStatus())
+                .retrospective(" ")
                 .modifieddate(sprint.getModifieddate())
                 .modifiedby(sprint.getModifiedby())
                 .build();
@@ -865,10 +870,11 @@ public class MainViewModel extends ViewModel {
             if (temp.getBegda()==null){
 
             }else {
-                if (now.after(temp.getBegda()) && now.before(temp.getEndda())) {
+                if (sprintArrayList.get(i).getStatus().equalsIgnoreCase("Active")) {
                     currentSprint.postValue(sprintArrayList.get(i));
                     runningSprint = sprintArrayList.get(i);
-                    Log.d("current sprint ", sprintArrayList.get(i).getId());
+//                    Log.d("current sprint ", sprintArrayList.get(i).getId());
+                    break;
                 }
             }
         }

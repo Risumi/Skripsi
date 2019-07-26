@@ -12,6 +12,8 @@ public class Sprint implements Parcelable {
     private Date begda;
     private Date endda;
     private String sprintGoal;
+    private String status;
+    private String retrospective;
     private Date createddate;
     private String createdby;
     private Date modifieddate;
@@ -20,17 +22,38 @@ public class Sprint implements Parcelable {
     public Sprint() {
     }
 
-    public Sprint(String id, String idProject, String name, Date begda, Date endda, String sprintGoal, Date createddate, String createdby, Date modifieddate, String modifiedby) {
+    public Sprint(String id, String idProject, String name, Date begda, Date endda, String sprintGoal, String status, String retrospective, Date createddate, String createdby, Date modifieddate, String modifiedby) {
         this.id = id;
         this.idProject = idProject;
         this.name = name;
         this.begda = begda;
         this.endda = endda;
         this.sprintGoal = sprintGoal;
+        this.status = status;
+        this.retrospective = retrospective;
         this.createddate = createddate;
         this.createdby = createdby;
         this.modifieddate = modifieddate;
         this.modifiedby = modifiedby;
+    }
+
+    protected Sprint(Parcel in) {
+        id = in.readString();
+        idProject = in.readString();
+        name = in.readString();
+        long tmpBegda = in.readLong();
+        begda = tmpBegda != -1 ? new Date(tmpBegda) : null;
+        long tmpEndda = in.readLong();
+        endda = tmpEndda != -1 ? new Date(tmpEndda) : null;
+        sprintGoal = in.readString();
+        status = in.readString();
+        retrospective = in.readString();
+        long tmpCreateddate = in.readLong();
+        createddate = tmpCreateddate != -1 ? new Date(tmpCreateddate) : null;
+        createdby = in.readString();
+        long tmpModifieddate = in.readLong();
+        modifieddate = tmpModifieddate != -1 ? new Date(tmpModifieddate) : null;
+        modifiedby = in.readString();
     }
 
     public String getId() {
@@ -81,6 +104,22 @@ public class Sprint implements Parcelable {
         this.sprintGoal = sprintGoal;
     }
 
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getRetrospective() {
+        return retrospective;
+    }
+
+    public void setRetrospective(String retrospective) {
+        this.retrospective = retrospective;
+    }
+
     public Date getCreateddate() {
         return createddate;
     }
@@ -113,23 +152,6 @@ public class Sprint implements Parcelable {
         this.modifiedby = modifiedby;
     }
 
-    protected Sprint(Parcel in) {
-        id = in.readString();
-        idProject = in.readString();
-        name = in.readString();
-        long tmpBegda = in.readLong();
-        begda = tmpBegda != -1 ? new Date(tmpBegda) : null;
-        long tmpEndda = in.readLong();
-        endda = tmpEndda != -1 ? new Date(tmpEndda) : null;
-        sprintGoal = in.readString();
-        long tmpCreateddate = in.readLong();
-        createddate = tmpCreateddate != -1 ? new Date(tmpCreateddate) : null;
-        createdby = in.readString();
-        long tmpModifieddate = in.readLong();
-        modifieddate = tmpModifieddate != -1 ? new Date(tmpModifieddate) : null;
-        modifiedby = in.readString();
-    }
-
     @Override
     public int describeContents() {
         return 0;
@@ -143,6 +165,8 @@ public class Sprint implements Parcelable {
         dest.writeLong(begda != null ? begda.getTime() : -1L);
         dest.writeLong(endda != null ? endda.getTime() : -1L);
         dest.writeString(sprintGoal);
+        dest.writeString(status);
+        dest.writeString(retrospective);
         dest.writeLong(createddate != null ? createddate.getTime() : -1L);
         dest.writeString(createdby);
         dest.writeLong(modifieddate != null ? modifieddate.getTime() : -1L);

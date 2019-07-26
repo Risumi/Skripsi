@@ -55,7 +55,7 @@ public class ActivityMain extends AppCompatActivity
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        user = new User("admin@admin.com","admin");
+
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
         model.instantiateListener(this);
@@ -87,6 +87,7 @@ public class ActivityMain extends AppCompatActivity
 
 
         intent = getIntent();
+        user = intent.getParcelableExtra("User");
         PID = intent.getStringExtra("PID");
 
 

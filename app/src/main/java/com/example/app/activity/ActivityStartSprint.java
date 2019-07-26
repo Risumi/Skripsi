@@ -95,6 +95,8 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                         begda,
                         endda,
                         etGoal.getText().toString(),
+                        "Active",
+                        "",
                         sprint.getCreateddate(),
                         sprint.getCreatedby(),
                         new Date(),

@@ -1,0 +1,8 @@
+mutation User($nama:String!,$email:String!,$password:String!,$role:String){
+  createUser(nama:$nama,email:$email,password:$password,role:$role){
+    nama
+    email
+    password
+    role    
+  }
+}

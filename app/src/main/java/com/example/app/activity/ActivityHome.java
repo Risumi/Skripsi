@@ -27,6 +27,7 @@ import com.example.app.R;
 import com.example.app.adapter.ProjectAdapter;
 import com.example.app.model.Progress;
 import com.example.app.model.Project;
+import com.example.app.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -41,6 +42,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     ArrayList<Project> listProject;
     ArrayList<Progress> listProgress;
     final int ADD_PROJECT =1;
+    User user;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
     AlertDialog.Builder builder;
 
@@ -48,6 +50,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        user = getIntent().getParcelableExtra("User");
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
@@ -74,6 +77,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if (view.getId() == R.id.fab){
             Intent addProject = new Intent(this, ActivityAddProject.class);
+            addProject.putExtra("User",user);
             startActivityForResult(addProject,ADD_PROJECT);
 //            listProject.add(new Project("IoT Project","IoP"));
 //            mAdapter.notifyDataSetChanged();

@@ -1,10 +1,12 @@
-mutation SprintEdit($id:String!,$name:String!,$begindate:Date!,$enddate:Date!,$goal:String!,$modifieddate:Date!,$modifiedby:String!){
-  editSprint(id:$id,name:$name,begindate:$begindate,enddate:$enddate,goal:$goal,modifieddate:$modifieddate,modifiedby:$modifiedby){
+mutation SprintEdit($id:String!,$name:String!,$begindate:Date!,$enddate:Date!,$goal:String!,$status:String!,$retrospective:String!,$modifieddate:Date!,$modifiedby:String!){
+  editSprint(id:$id,name:$name,begindate:$begindate,enddate:$enddate,goal:$goal,status:$status,retrospective:$retrospective,modifieddate:$modifieddate,modifiedby:$modifiedby){
     id    
     name
     begindate
     enddate
     goal       
+    status
+    retrospective
     modifieddate
     modifiedby    
   }

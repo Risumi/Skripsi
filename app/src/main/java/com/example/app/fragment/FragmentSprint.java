@@ -239,6 +239,7 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                         model.getCurrentSprint().getValue().setEndda(new Date());
                         model.getCurrentSprint().getValue().setModifieddate(new Date());
                         model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
+                        model.getCurrentSprint().getValue().setStatus("Done");
                         model.editSprint(model.getCurrentSprint().getValue());
                         model.getCurrentSprint().setValue(new Sprint());
                         model.getListBacklogSprint().getValue().clear();

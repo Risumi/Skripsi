@@ -1,9 +1,10 @@
-mutation Sprint($id:String!,$idProject:String!,$name:String!,$goal:String!,$createddate:Date!,$createdby:String!){
-  createSprint(id:$id,idProject:$idProject,name:$name,goal:$goal,createddate:$createddate,createdby:$createdby){
+mutation Sprint($id:String!,$idProject:String!,$name:String!,$goal:String!,$status:String!,$createddate:Date!,$createdby:String!){
+  createSprint(id:$id,idProject:$idProject,name:$name,goal:$goal,status:$status,createddate:$createddate,createdby:$createdby){
     id    
     idProject
     name    
     goal    
+    status
     createddate
     createdby   
   }

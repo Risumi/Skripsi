@@ -29,16 +29,18 @@ import java.util.Map;
 import type.CustomType;
 
 public final class SprintEditMutation implements Mutation<SprintEditMutation.Data, SprintEditMutation.Data, SprintEditMutation.Variables> {
-  public static final String OPERATION_ID = "eab6ca6fd5de712abcee6c5bb888b64b3094320c963837c8f4751ccd7c311ce0";
+  public static final String OPERATION_ID = "f333c5e23c47dafcd6cb05de352303e8dcfea6deedafe30407a203c3b3cd5cf1";
 
-  public static final String QUERY_DOCUMENT = "mutation SprintEdit($id: String!, $name: String!, $begindate: Date!, $enddate: Date!, $goal: String!, $modifieddate: Date!, $modifiedby: String!) {\n"
-      + "  editSprint(id: $id, name: $name, begindate: $begindate, enddate: $enddate, goal: $goal, modifieddate: $modifieddate, modifiedby: $modifiedby) {\n"
+  public static final String QUERY_DOCUMENT = "mutation SprintEdit($id: String!, $name: String!, $begindate: Date!, $enddate: Date!, $goal: String!, $status: String!, $retrospective: String!, $modifieddate: Date!, $modifiedby: String!) {\n"
+      + "  editSprint(id: $id, name: $name, begindate: $begindate, enddate: $enddate, goal: $goal, status: $status, retrospective: $retrospective, modifieddate: $modifieddate, modifiedby: $modifiedby) {\n"
       + "    __typename\n"
       + "    id\n"
       + "    name\n"
       + "    begindate\n"
       + "    enddate\n"
       + "    goal\n"
+      + "    status\n"
+      + "    retrospective\n"
       + "    modifieddate\n"
       + "    modifiedby\n"
       + "  }\n"
@@ -54,16 +56,18 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
   private final SprintEditMutation.Variables variables;
 
   public SprintEditMutation(@NotNull String id, @NotNull String name, @NotNull Date begindate,
-      @NotNull Date enddate, @NotNull String goal, @NotNull Date modifieddate,
-      @NotNull String modifiedby) {
+      @NotNull Date enddate, @NotNull String goal, @NotNull String status,
+      @NotNull String retrospective, @NotNull Date modifieddate, @NotNull String modifiedby) {
     Utils.checkNotNull(id, "id == null");
     Utils.checkNotNull(name, "name == null");
     Utils.checkNotNull(begindate, "begindate == null");
     Utils.checkNotNull(enddate, "enddate == null");
     Utils.checkNotNull(goal, "goal == null");
+    Utils.checkNotNull(status, "status == null");
+    Utils.checkNotNull(retrospective, "retrospective == null");
     Utils.checkNotNull(modifieddate, "modifieddate == null");
     Utils.checkNotNull(modifiedby, "modifiedby == null");
-    variables = new SprintEditMutation.Variables(id, name, begindate, enddate, goal, modifieddate, modifiedby);
+    variables = new SprintEditMutation.Variables(id, name, begindate, enddate, goal, status, retrospective, modifieddate, modifiedby);
   }
 
   @Override
@@ -111,6 +115,10 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
 
     private @NotNull String goal;
 
+    private @NotNull String status;
+
+    private @NotNull String retrospective;
+
     private @NotNull Date modifieddate;
 
     private @NotNull String modifiedby;
@@ -143,6 +151,16 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
       return this;
     }
 
+    public Builder status(@NotNull String status) {
+      this.status = status;
+      return this;
+    }
+
+    public Builder retrospective(@NotNull String retrospective) {
+      this.retrospective = retrospective;
+      return this;
+    }
+
     public Builder modifieddate(@NotNull Date modifieddate) {
       this.modifieddate = modifieddate;
       return this;
@@ -159,9 +177,11 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
       Utils.checkNotNull(begindate, "begindate == null");
       Utils.checkNotNull(enddate, "enddate == null");
       Utils.checkNotNull(goal, "goal == null");
+      Utils.checkNotNull(status, "status == null");
+      Utils.checkNotNull(retrospective, "retrospective == null");
       Utils.checkNotNull(modifieddate, "modifieddate == null");
       Utils.checkNotNull(modifiedby, "modifiedby == null");
-      return new SprintEditMutation(id, name, begindate, enddate, goal, modifieddate, modifiedby);
+      return new SprintEditMutation(id, name, begindate, enddate, goal, status, retrospective, modifieddate, modifiedby);
     }
   }
 
@@ -176,6 +196,10 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
 
     private final @NotNull String goal;
 
+    private final @NotNull String status;
+
+    private final @NotNull String retrospective;
+
     private final @NotNull Date modifieddate;
 
     private final @NotNull String modifiedby;
@@ -183,13 +207,15 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
     Variables(@NotNull String id, @NotNull String name, @NotNull Date begindate,
-        @NotNull Date enddate, @NotNull String goal, @NotNull Date modifieddate,
-        @NotNull String modifiedby) {
+        @NotNull Date enddate, @NotNull String goal, @NotNull String status,
+        @NotNull String retrospective, @NotNull Date modifieddate, @NotNull String modifiedby) {
       this.id = id;
       this.name = name;
       this.begindate = begindate;
       this.enddate = enddate;
       this.goal = goal;
+      this.status = status;
+      this.retrospective = retrospective;
       this.modifieddate = modifieddate;
       this.modifiedby = modifiedby;
       this.valueMap.put("id", id);
@@ -197,6 +223,8 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
       this.valueMap.put("begindate", begindate);
       this.valueMap.put("enddate", enddate);
       this.valueMap.put("goal", goal);
+      this.valueMap.put("status", status);
+      this.valueMap.put("retrospective", retrospective);
       this.valueMap.put("modifieddate", modifieddate);
       this.valueMap.put("modifiedby", modifiedby);
     }
@@ -219,6 +247,14 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
 
     public @NotNull String goal() {
       return goal;
+    }
+
+    public @NotNull String status() {
+      return status;
+    }
+
+    public @NotNull String retrospective() {
+      return retrospective;
     }
 
     public @NotNull Date modifieddate() {
@@ -244,6 +280,8 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
           writer.writeCustom("begindate", CustomType.DATE, begindate);
           writer.writeCustom("enddate", CustomType.DATE, enddate);
           writer.writeString("goal", goal);
+          writer.writeString("status", status);
+          writer.writeString("retrospective", retrospective);
           writer.writeCustom("modifieddate", CustomType.DATE, modifieddate);
           writer.writeString("modifiedby", modifiedby);
         }
@@ -253,7 +291,7 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("editSprint", "editSprint", new UnmodifiableMapBuilder<String, Object>(7)
+      ResponseField.forObject("editSprint", "editSprint", new UnmodifiableMapBuilder<String, Object>(9)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
@@ -273,6 +311,14 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
       .put("goal", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "goal")
+        .build())
+      .put("status", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "status")
+        .build())
+      .put("retrospective", new UnmodifiableMapBuilder<String, Object>(2)
+        .put("kind", "Variable")
+        .put("variableName", "retrospective")
         .build())
       .put("modifieddate", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
@@ -368,6 +414,8 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
       ResponseField.forCustomType("begindate", "begindate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("enddate", "enddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("goal", "goal", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("retrospective", "retrospective", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forCustomType("modifieddate", "modifieddate", null, true, CustomType.DATE, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("modifiedby", "modifiedby", null, true, Collections.<ResponseField.Condition>emptyList())
     };
@@ -384,6 +432,10 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
 
     final @Nullable String goal;
 
+    final @Nullable String status;
+
+    final @Nullable String retrospective;
+
     final @Nullable Date modifieddate;
 
     final @Nullable String modifiedby;
@@ -396,13 +448,16 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
 
     public EditSprint(@NotNull String __typename, @Nullable String id, @Nullable String name,
         @Nullable Date begindate, @Nullable Date enddate, @Nullable String goal,
-        @Nullable Date modifieddate, @Nullable String modifiedby) {
+        @Nullable String status, @Nullable String retrospective, @Nullable Date modifieddate,
+        @Nullable String modifiedby) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
       this.id = id;
       this.name = name;
       this.begindate = begindate;
       this.enddate = enddate;
       this.goal = goal;
+      this.status = status;
+      this.retrospective = retrospective;
       this.modifieddate = modifieddate;
       this.modifiedby = modifiedby;
     }
@@ -431,6 +486,14 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
       return this.goal;
     }
 
+    public @Nullable String status() {
+      return this.status;
+    }
+
+    public @Nullable String retrospective() {
+      return this.retrospective;
+    }
+
     public @Nullable Date modifieddate() {
       return this.modifieddate;
     }
@@ -449,8 +512,10 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[3], begindate);
           writer.writeCustom((ResponseField.CustomTypeField) $responseFields[4], enddate);
           writer.writeString($responseFields[5], goal);
-          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[6], modifieddate);
-          writer.writeString($responseFields[7], modifiedby);
+          writer.writeString($responseFields[6], status);
+          writer.writeString($responseFields[7], retrospective);
+          writer.writeCustom((ResponseField.CustomTypeField) $responseFields[8], modifieddate);
+          writer.writeString($responseFields[9], modifiedby);
         }
       };
     }
@@ -465,6 +530,8 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
           + "begindate=" + begindate + ", "
           + "enddate=" + enddate + ", "
           + "goal=" + goal + ", "
+          + "status=" + status + ", "
+          + "retrospective=" + retrospective + ", "
           + "modifieddate=" + modifieddate + ", "
           + "modifiedby=" + modifiedby
           + "}";
@@ -485,6 +552,8 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
          && ((this.begindate == null) ? (that.begindate == null) : this.begindate.equals(that.begindate))
          && ((this.enddate == null) ? (that.enddate == null) : this.enddate.equals(that.enddate))
          && ((this.goal == null) ? (that.goal == null) : this.goal.equals(that.goal))
+         && ((this.status == null) ? (that.status == null) : this.status.equals(that.status))
+         && ((this.retrospective == null) ? (that.retrospective == null) : this.retrospective.equals(that.retrospective))
          && ((this.modifieddate == null) ? (that.modifieddate == null) : this.modifieddate.equals(that.modifieddate))
          && ((this.modifiedby == null) ? (that.modifiedby == null) : this.modifiedby.equals(that.modifiedby));
       }
@@ -508,6 +577,10 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
         h *= 1000003;
         h ^= (goal == null) ? 0 : goal.hashCode();
         h *= 1000003;
+        h ^= (status == null) ? 0 : status.hashCode();
+        h *= 1000003;
+        h ^= (retrospective == null) ? 0 : retrospective.hashCode();
+        h *= 1000003;
         h ^= (modifieddate == null) ? 0 : modifieddate.hashCode();
         h *= 1000003;
         h ^= (modifiedby == null) ? 0 : modifiedby.hashCode();
@@ -526,9 +599,11 @@ public final class SprintEditMutation implements Mutation<SprintEditMutation.Dat
         final Date begindate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[3]);
         final Date enddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[4]);
         final String goal = reader.readString($responseFields[5]);
-        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[6]);
-        final String modifiedby = reader.readString($responseFields[7]);
-        return new EditSprint(__typename, id, name, begindate, enddate, goal, modifieddate, modifiedby);
+        final String status = reader.readString($responseFields[6]);
+        final String retrospective = reader.readString($responseFields[7]);
+        final Date modifieddate = reader.readCustomType((ResponseField.CustomTypeField) $responseFields[8]);
+        final String modifiedby = reader.readString($responseFields[9]);
+        return new EditSprint(__typename, id, name, begindate, enddate, goal, status, retrospective, modifieddate, modifiedby);
       }
     }
   }

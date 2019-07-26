@@ -6,6 +6,7 @@ import android.os.Parcelable;
 public class User implements Parcelable {
     private String email;
     private String name;
+    private String role;
 
     public User(String email, String name) {
         this.email = email;
