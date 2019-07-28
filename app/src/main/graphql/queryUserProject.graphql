@@ -1,0 +1,8 @@
+query UserProject($id:String!){
+  userproject(id:$id){
+    email{
+      email
+      nama
+    }
+  }
+}

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -52,7 +53,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View view) {
         if (view == btnLogin){
-            intent= new Intent(this,ActivityMain.class);
+            intent= new Intent(this,ActivityHome.class);
             fetchLogin(etEmail.getText().toString(),etPassword.getText().toString());
         }else if (view == btnRegister) {
             intent = new Intent(this, ActivityRegister.class);
@@ -65,6 +66,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         progressDialog = new ProgressDialog(ActivityLogin.this);
         progressDialog.setMessage("Loading ...");
         progressDialog.setCancelable(false);
+        progressDialog.show();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
@@ -77,13 +79,22 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         apolloClient.query(loginQuery).enqueue(new ApolloCall.Callback<UserLoginQuery.Data>() {
             @Override
             public void onResponse(@NotNull Response<UserLoginQuery.Data> response) {
+//                Log.d("User",response.data().user().get(0).nama());
                 if (response.hasErrors()) {
                     progressDialog.dismiss();
                 }else if (response.data().user().size()==1){
-                    user = new User(response.data().user().get(0).nama(), response.data().user().get(0).email());
+
+                    user = new User(response.data().user().get(0).email(), response.data().user().get(0).nama());
+                    intent.putExtra("User",user);
+                    startActivity(intent);
                 }else if (response.data().user().size()!=1){
                     progressDialog.dismiss();
-                    Toast.makeText(ActivityLogin.this,"Email and password didn't match", Toast.LENGTH_SHORT).show();
+                    ActivityLogin.this.runOnUiThread(new Runnable() {
+                         @Override
+                         public void run() {
+                             Toast.makeText(ActivityLogin.this, "Email and password didn't match", Toast.LENGTH_SHORT).show();
+                         }
+                     });
                 }
             }
             @Override
@@ -93,8 +104,7 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
 
                 }else {
                     progressDialog.dismiss();
-                    intent.putExtra("User",user);
-                    startActivity(intent);
+
                 }
             }
             @Override

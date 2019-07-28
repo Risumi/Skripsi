@@ -1,8 +1,8 @@
-mutation Project($id:String!,$name:String!,$description:String!,$status:String!){
-  createProject(id:$id,name:$name,description:$description,status:$status){
+mutation Project($id:String!,$name:String!,$description:String!,$status:String!,$email:String!){
+  createProject(id:$id,name:$name,description:$description,status:$status,email:$email){
     id
     name
-    description
-    status
+    description    
+    status    
   }
 }

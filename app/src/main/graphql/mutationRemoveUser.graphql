@@ -1,0 +1,6 @@
+mutation RemoveUser($idProject:String!,$email:String!){
+  deleteUserproject(idProject:$idProject,email:$email){
+    idProject
+    email      
+  }
+}

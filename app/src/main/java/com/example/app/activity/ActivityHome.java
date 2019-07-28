@@ -23,6 +23,7 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.example.app.AllProjectQuery;
 import com.example.app.ProgressQuery;
 import com.example.app.ProjectMutation;
+import com.example.app.ProjectUserQuery;
 import com.example.app.R;
 import com.example.app.adapter.ProjectAdapter;
 import com.example.app.model.Progress;
@@ -61,11 +62,11 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         listProject = new ArrayList<>();
         listProgress = new ArrayList<>();
 //        new fetchProject().execute();
-        fetchProject();
+        fetchProject(user.getEmail());
 //        listProject.add(new Project("Blog Project","BP",true));
 //        listProject.add(new Project("IS Project","IP",true));
 //        listProject.add(new Project("IoT Project","IoP",false));
-        mAdapter = new ProjectAdapter(this, listProject,listProgress);
+        mAdapter = new ProjectAdapter(this, listProject,listProgress,user);
         Log.d("fool", ((Integer) mAdapter.getItemCount()).toString());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
@@ -98,7 +99,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         }
     }
     ProgressDialog progressDialog;
-    private void fetchProject(){
+    private void fetchProject(String email){
         progressDialog = new ProgressDialog(ActivityHome.this);
         progressDialog.setMessage("Loading ...");
         progressDialog.setCancelable(false);
@@ -108,12 +109,22 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        AllProjectQuery allProjectQuery = AllProjectQuery.builder().build();
-        apolloClient.query(allProjectQuery).enqueue(new ApolloCall.Callback<AllProjectQuery.Data>() {
+        ProjectUserQuery projectUserQuery= ProjectUserQuery.builder().
+                id(email).build();
+        apolloClient.query(projectUserQuery).enqueue(new ApolloCall.Callback<ProjectUserQuery.Data>() {
             @Override
-            public void onResponse(@NotNull Response<AllProjectQuery.Data> response) {
-                for (int i = 0 ;i<response.data().project().size();i++){
-                    listProject.add(new Project(response.data().project().get(i).name(),response.data().project().get(i).id(),response.data().project().get(i).status(),response.data().project().get(i).description()));
+            public void onResponse(@NotNull Response<ProjectUserQuery.Data> response) {
+                Log.d("Size", ((Integer) response.data().projectuser().size()).toString());
+                if(response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }
+                for (int i = 0 ;i<response.data().projectuser().size();i++){
+                    listProject.add(new Project(
+                            response.data().projectuser().get(i).idProject().name(),
+                            response.data().projectuser().get(i).idProject().id(),
+                            response.data().projectuser().get(i).idProject().status(),
+                            response.data().projectuser().get(i).idProject().description()));
+                    Log.d("project name",response.data().projectuser().get(i).idProject().name());
                 }
             }
             @Override
@@ -201,7 +212,13 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        ProjectMutation projectMutation= ProjectMutation.builder().id(project.getId()).name(project.getName()).description(project.getDescription()).status("").build();
+        ProjectMutation projectMutation= ProjectMutation.builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .status("")
+                .email(user.getEmail())
+                .build();
         apolloClient.mutate(projectMutation).enqueue(new ApolloCall.Callback<ProjectMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<ProjectMutation.Data> response) {
@@ -240,7 +257,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        fetchProject();
+                        fetchProject(user.getEmail());
                     }
                 });
 

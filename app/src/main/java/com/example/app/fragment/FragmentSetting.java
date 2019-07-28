@@ -1,13 +1,31 @@
 package com.example.app.fragment;
 
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.app.MainViewModel;
 import com.example.app.R;
+import com.example.app.adapter.AlertAddUser;
+import com.example.app.adapter.UserAdapter;
+import com.example.app.model.Project;
+import com.example.app.model.User;
+
+import java.util.ArrayList;
 
 
 /**
@@ -15,16 +33,16 @@ import com.example.app.R;
  * Use the {@link FragmentSetting#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSetting extends Fragment {
+public class FragmentSetting extends Fragment implements View.OnClickListener, UserAdapter.UserViewHolder.ClickListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
+    private Project project;
+    private String PID;
+    private MainViewModel model;
 
     public FragmentSetting() {
         // Required empty public constructor
@@ -39,10 +57,10 @@ public class FragmentSetting extends Fragment {
      * @return A new instance of fragment FragmentSetting.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentSetting newInstance(String param1, String param2) {
+    public static FragmentSetting newInstance(Project param1, String param2) {
         FragmentSetting fragment = new FragmentSetting();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
+        args.putParcelable(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
@@ -52,16 +70,94 @@ public class FragmentSetting extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            project = getArguments().getParcelable(ARG_PARAM1);
+            PID = getArguments().getString(ARG_PARAM2);
         }
-    }
 
+        model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
+        model.getListUser().observe(this, new Observer<ArrayList<User>>() {
+            @Override
+            public void onChanged(@Nullable ArrayList<User> users) {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+    }
+    EditText txtName,txtDescription;
+    TextView txtId;
+    Button btnAdd, btnConfirm;
+    RecyclerView rvUser;
+    UserAdapter mAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_setting, container, false);
+        View view =inflater.inflate(R.layout.fragment_setting, container, false);
+        txtName = view.findViewById(R.id.editText10);
+        txtName.setText(project.getName());
+        txtDescription = view.findViewById(R.id.editText12);
+        txtDescription.setText(project.getDescription());
+        txtId = view.findViewById(R.id.textView19);
+        txtId.setText(project.getId());
+
+        btnAdd = view.findViewById(R.id.button9);
+        btnAdd.setOnClickListener(this);
+        btnConfirm = view.findViewById(R.id.btnConfirm);
+        btnConfirm.setOnClickListener(this);
+        rvUser = view.findViewById(R.id.rvTim);
+        mAdapter = new UserAdapter(this.getActivity(), model.getListUser().getValue(),this::onItemClicked);
+        rvUser.setAdapter(mAdapter);
+        rvUser.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        return view;
     }
 
+    @Override
+    public void onClick(View view) {
+        if (view==btnAdd){
+            openDialog();
+        }else if (view==btnConfirm){
+
+        }
+    }
+
+    public void openDialog() {
+        AlertAddUser alertAddUser= new AlertAddUser();
+        alertAddUser.show(getActivity().getSupportFragmentManager(), "Alert Add User");
+    }
+
+    @Override
+    public void onItemClicked(int position, User user, UserAdapter adapter) {
+        if (user.getEmail().equals( model.getUser().getEmail())){
+            Toast.makeText(getActivity(),"Can't delete",Toast.LENGTH_LONG).show();
+        }else {
+            initializeAlertDialog(user);
+            AlertDialog alert11 = builder.create();
+            alert11.show();
+
+        }
+    }
+
+    AlertDialog.Builder builder;
+
+    void initializeAlertDialog(User user){
+        builder = new AlertDialog.Builder(getActivity());
+        builder.setMessage("Are you sure  ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        model.removeUser(user,PID);
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                    }
+                });
+    }
 }

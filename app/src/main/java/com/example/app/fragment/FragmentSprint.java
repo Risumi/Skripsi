@@ -243,8 +243,11 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                         model.editSprint(model.getCurrentSprint().getValue());
                         model.getCurrentSprint().setValue(new Sprint());
                         model.getListBacklogSprint().getValue().clear();
+                        topListAdapter.getList().clear();
                         topListAdapter.notifyDataSetChanged();
+                        middleListAdapter.getList().clear();
                         middleListAdapter.notifyDataSetChanged();
+                        bottomListAdapter.getList().clear();
                         bottomListAdapter.notifyDataSetChanged();
                         tvSprint.setText("Sprint");
                     }

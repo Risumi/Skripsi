@@ -1,0 +1,7 @@
+mutation AddUser($idProject:String!,$email:String!){
+  addUser(idProject:$idProject,email:$email){
+    idProject
+    email
+    name
+  }
+}

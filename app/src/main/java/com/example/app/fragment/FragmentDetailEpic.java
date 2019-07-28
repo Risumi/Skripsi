@@ -67,16 +67,16 @@ public class FragmentDetailEpic extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail_epic, container, false);
         editText = view.findViewById(R.id.etEpicName);
-        editText.setEnabled(false);
-        editText.setText(mParam1.getName());
+        editText.setFocusable(false);
+        editText.setText(mParam1.getId());
 
         editText3 = view.findViewById(R.id.etEpicDesc);
-        editText3.setEnabled(false);
-//        editText3.setText(mParam1.getDescription());
+        editText3.setFocusable(false);
+        editText3.setText(mParam1.getSummary());
 
         editText2 = view.findViewById(R.id.eEpicStatus);
-        editText2.setEnabled(false);
-//        editText3.setText(mParam1.getStatus());
+        editText2.setFocusable(false);
+        editText2.setText(mParam1.getName());
 
         return view;
     }

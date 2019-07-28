@@ -6,9 +6,9 @@ package com.example.app;// AUTO-GENERATED FILE. DO NOT MODIFY.
 
 import com.apollographql.apollo.api.InputFieldMarshaller;
 import com.apollographql.apollo.api.InputFieldWriter;
-import com.apollographql.apollo.api.Mutation;
 import com.apollographql.apollo.api.Operation;
 import com.apollographql.apollo.api.OperationName;
+import com.apollographql.apollo.api.Query;
 import com.apollographql.apollo.api.ResponseField;
 import com.apollographql.apollo.api.ResponseFieldMapper;
 import com.apollographql.apollo.api.ResponseFieldMarshaller;
@@ -23,38 +23,37 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
-public final class ProjectMutation implements Mutation<ProjectMutation.Data, ProjectMutation.Data, ProjectMutation.Variables> {
-  public static final String OPERATION_ID = "2688a6e5d851eb4574644572b4ffb81cf22795a0b7b5d044703ef81722d7d945";
+public final class ProjectUserQuery implements Query<ProjectUserQuery.Data, ProjectUserQuery.Data, ProjectUserQuery.Variables> {
+  public static final String OPERATION_ID = "bb83ba0472d3336d2b63668c19b8d3cea60283d5a42ce882c83325b9765acb23";
 
-  public static final String QUERY_DOCUMENT = "mutation Project($id: String!, $name: String!, $description: String!, $status: String!, $email: String!) {\n"
-      + "  createProject(id: $id, name: $name, description: $description, status: $status, email: $email) {\n"
+  public static final String QUERY_DOCUMENT = "query ProjectUser($id: String!) {\n"
+      + "  projectuser(id: $id) {\n"
       + "    __typename\n"
-      + "    id\n"
-      + "    name\n"
-      + "    description\n"
-      + "    status\n"
+      + "    idProject {\n"
+      + "      __typename\n"
+      + "      id\n"
+      + "      name\n"
+      + "      description\n"
+      + "      status\n"
+      + "    }\n"
       + "  }\n"
       + "}";
 
   public static final OperationName OPERATION_NAME = new OperationName() {
     @Override
     public String name() {
-      return "Project";
+      return "ProjectUser";
     }
   };
 
-  private final ProjectMutation.Variables variables;
+  private final ProjectUserQuery.Variables variables;
 
-  public ProjectMutation(@NotNull String id, @NotNull String name, @NotNull String description,
-      @NotNull String status, @NotNull String email) {
+  public ProjectUserQuery(@NotNull String id) {
     Utils.checkNotNull(id, "id == null");
-    Utils.checkNotNull(name, "name == null");
-    Utils.checkNotNull(description, "description == null");
-    Utils.checkNotNull(status, "status == null");
-    Utils.checkNotNull(email, "email == null");
-    variables = new ProjectMutation.Variables(id, name, description, status, email);
+    variables = new ProjectUserQuery.Variables(id);
   }
 
   @Override
@@ -68,12 +67,12 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
   }
 
   @Override
-  public ProjectMutation.Data wrapData(ProjectMutation.Data data) {
+  public ProjectUserQuery.Data wrapData(ProjectUserQuery.Data data) {
     return data;
   }
 
   @Override
-  public ProjectMutation.Variables variables() {
+  public ProjectUserQuery.Variables variables() {
     return variables;
   }
 
@@ -94,14 +93,6 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
   public static final class Builder {
     private @NotNull String id;
 
-    private @NotNull String name;
-
-    private @NotNull String description;
-
-    private @NotNull String status;
-
-    private @NotNull String email;
-
     Builder() {
     }
 
@@ -110,81 +101,24 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
       return this;
     }
 
-    public Builder name(@NotNull String name) {
-      this.name = name;
-      return this;
-    }
-
-    public Builder description(@NotNull String description) {
-      this.description = description;
-      return this;
-    }
-
-    public Builder status(@NotNull String status) {
-      this.status = status;
-      return this;
-    }
-
-    public Builder email(@NotNull String email) {
-      this.email = email;
-      return this;
-    }
-
-    public ProjectMutation build() {
+    public ProjectUserQuery build() {
       Utils.checkNotNull(id, "id == null");
-      Utils.checkNotNull(name, "name == null");
-      Utils.checkNotNull(description, "description == null");
-      Utils.checkNotNull(status, "status == null");
-      Utils.checkNotNull(email, "email == null");
-      return new ProjectMutation(id, name, description, status, email);
+      return new ProjectUserQuery(id);
     }
   }
 
   public static final class Variables extends Operation.Variables {
     private final @NotNull String id;
 
-    private final @NotNull String name;
-
-    private final @NotNull String description;
-
-    private final @NotNull String status;
-
-    private final @NotNull String email;
-
     private final transient Map<String, Object> valueMap = new LinkedHashMap<>();
 
-    Variables(@NotNull String id, @NotNull String name, @NotNull String description,
-        @NotNull String status, @NotNull String email) {
+    Variables(@NotNull String id) {
       this.id = id;
-      this.name = name;
-      this.description = description;
-      this.status = status;
-      this.email = email;
       this.valueMap.put("id", id);
-      this.valueMap.put("name", name);
-      this.valueMap.put("description", description);
-      this.valueMap.put("status", status);
-      this.valueMap.put("email", email);
     }
 
     public @NotNull String id() {
       return id;
-    }
-
-    public @NotNull String name() {
-      return name;
-    }
-
-    public @NotNull String description() {
-      return description;
-    }
-
-    public @NotNull String status() {
-      return status;
-    }
-
-    public @NotNull String email() {
-      return email;
     }
 
     @Override
@@ -198,10 +132,6 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
         @Override
         public void marshal(InputFieldWriter writer) throws IOException {
           writer.writeString("id", id);
-          writer.writeString("name", name);
-          writer.writeString("description", description);
-          writer.writeString("status", status);
-          writer.writeString("email", email);
         }
       };
     }
@@ -209,31 +139,15 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
 
   public static class Data implements Operation.Data {
     static final ResponseField[] $responseFields = {
-      ResponseField.forObject("createProject", "createProject", new UnmodifiableMapBuilder<String, Object>(5)
+      ResponseField.forList("projectuser", "projectuser", new UnmodifiableMapBuilder<String, Object>(1)
       .put("id", new UnmodifiableMapBuilder<String, Object>(2)
         .put("kind", "Variable")
         .put("variableName", "id")
         .build())
-      .put("name", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "name")
-        .build())
-      .put("description", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "description")
-        .build())
-      .put("status", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "status")
-        .build())
-      .put("email", new UnmodifiableMapBuilder<String, Object>(2)
-        .put("kind", "Variable")
-        .put("variableName", "email")
-        .build())
       .build(), true, Collections.<ResponseField.Condition>emptyList())
     };
 
-    final @Nullable CreateProject createProject;
+    final @Nullable List<Projectuser> projectuser;
 
     private transient volatile String $toString;
 
@@ -241,19 +155,26 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public Data(@Nullable CreateProject createProject) {
-      this.createProject = createProject;
+    public Data(@Nullable List<Projectuser> projectuser) {
+      this.projectuser = projectuser;
     }
 
-    public @Nullable CreateProject createProject() {
-      return this.createProject;
+    public @Nullable List<Projectuser> projectuser() {
+      return this.projectuser;
     }
 
     public ResponseFieldMarshaller marshaller() {
       return new ResponseFieldMarshaller() {
         @Override
         public void marshal(ResponseWriter writer) {
-          writer.writeObject($responseFields[0], createProject != null ? createProject.marshaller() : null);
+          writer.writeList($responseFields[0], projectuser, new ResponseWriter.ListWriter() {
+            @Override
+            public void write(List items, ResponseWriter.ListItemWriter listItemWriter) {
+              for (Object item : items) {
+                listItemWriter.writeObject(((Projectuser) item).marshaller());
+              }
+            }
+          });
         }
       };
     }
@@ -262,7 +183,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
     public String toString() {
       if ($toString == null) {
         $toString = "Data{"
-          + "createProject=" + createProject
+          + "projectuser=" + projectuser
           + "}";
       }
       return $toString;
@@ -275,7 +196,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
       }
       if (o instanceof Data) {
         Data that = (Data) o;
-        return ((this.createProject == null) ? (that.createProject == null) : this.createProject.equals(that.createProject));
+        return ((this.projectuser == null) ? (that.projectuser == null) : this.projectuser.equals(that.projectuser));
       }
       return false;
     }
@@ -285,7 +206,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
       if (!$hashCodeMemoized) {
         int h = 1;
         h *= 1000003;
-        h ^= (createProject == null) ? 0 : createProject.hashCode();
+        h ^= (projectuser == null) ? 0 : projectuser.hashCode();
         $hashCode = h;
         $hashCodeMemoized = true;
       }
@@ -293,25 +214,124 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
     }
 
     public static final class Mapper implements ResponseFieldMapper<Data> {
-      final CreateProject.Mapper createProjectFieldMapper = new CreateProject.Mapper();
+      final Projectuser.Mapper projectuserFieldMapper = new Projectuser.Mapper();
 
       @Override
       public Data map(ResponseReader reader) {
-        final CreateProject createProject = reader.readObject($responseFields[0], new ResponseReader.ObjectReader<CreateProject>() {
+        final List<Projectuser> projectuser = reader.readList($responseFields[0], new ResponseReader.ListReader<Projectuser>() {
           @Override
-          public CreateProject read(ResponseReader reader) {
-            return createProjectFieldMapper.map(reader);
+          public Projectuser read(ResponseReader.ListItemReader listItemReader) {
+            return listItemReader.readObject(new ResponseReader.ObjectReader<Projectuser>() {
+              @Override
+              public Projectuser read(ResponseReader reader) {
+                return projectuserFieldMapper.map(reader);
+              }
+            });
           }
         });
-        return new Data(createProject);
+        return new Data(projectuser);
       }
     }
   }
 
-  public static class CreateProject {
+  public static class Projectuser {
     static final ResponseField[] $responseFields = {
       ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
-      ResponseField.forString("id", "id", null, true, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forObject("idProject", "idProject", null, true, Collections.<ResponseField.Condition>emptyList())
+    };
+
+    final @NotNull String __typename;
+
+    final @Nullable IdProject idProject;
+
+    private transient volatile String $toString;
+
+    private transient volatile int $hashCode;
+
+    private transient volatile boolean $hashCodeMemoized;
+
+    public Projectuser(@NotNull String __typename, @Nullable IdProject idProject) {
+      this.__typename = Utils.checkNotNull(__typename, "__typename == null");
+      this.idProject = idProject;
+    }
+
+    public @NotNull String __typename() {
+      return this.__typename;
+    }
+
+    public @Nullable IdProject idProject() {
+      return this.idProject;
+    }
+
+    public ResponseFieldMarshaller marshaller() {
+      return new ResponseFieldMarshaller() {
+        @Override
+        public void marshal(ResponseWriter writer) {
+          writer.writeString($responseFields[0], __typename);
+          writer.writeObject($responseFields[1], idProject != null ? idProject.marshaller() : null);
+        }
+      };
+    }
+
+    @Override
+    public String toString() {
+      if ($toString == null) {
+        $toString = "Projectuser{"
+          + "__typename=" + __typename + ", "
+          + "idProject=" + idProject
+          + "}";
+      }
+      return $toString;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+      if (o == this) {
+        return true;
+      }
+      if (o instanceof Projectuser) {
+        Projectuser that = (Projectuser) o;
+        return this.__typename.equals(that.__typename)
+         && ((this.idProject == null) ? (that.idProject == null) : this.idProject.equals(that.idProject));
+      }
+      return false;
+    }
+
+    @Override
+    public int hashCode() {
+      if (!$hashCodeMemoized) {
+        int h = 1;
+        h *= 1000003;
+        h ^= __typename.hashCode();
+        h *= 1000003;
+        h ^= (idProject == null) ? 0 : idProject.hashCode();
+        $hashCode = h;
+        $hashCodeMemoized = true;
+      }
+      return $hashCode;
+    }
+
+    public static final class Mapper implements ResponseFieldMapper<Projectuser> {
+      final IdProject.Mapper idProjectFieldMapper = new IdProject.Mapper();
+
+      @Override
+      public Projectuser map(ResponseReader reader) {
+        final String __typename = reader.readString($responseFields[0]);
+        final IdProject idProject = reader.readObject($responseFields[1], new ResponseReader.ObjectReader<IdProject>() {
+          @Override
+          public IdProject read(ResponseReader reader) {
+            return idProjectFieldMapper.map(reader);
+          }
+        });
+        return new Projectuser(__typename, idProject);
+      }
+    }
+  }
+
+  public static class IdProject {
+    static final ResponseField[] $responseFields = {
+      ResponseField.forString("__typename", "__typename", null, false, Collections.<ResponseField.Condition>emptyList()),
+      ResponseField.forString("id", "id", null, false, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("name", "name", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("description", "description", null, true, Collections.<ResponseField.Condition>emptyList()),
       ResponseField.forString("status", "status", null, true, Collections.<ResponseField.Condition>emptyList())
@@ -319,7 +339,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
 
     final @NotNull String __typename;
 
-    final @Nullable String id;
+    final @NotNull String id;
 
     final @Nullable String name;
 
@@ -333,10 +353,10 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
 
     private transient volatile boolean $hashCodeMemoized;
 
-    public CreateProject(@NotNull String __typename, @Nullable String id, @Nullable String name,
+    public IdProject(@NotNull String __typename, @NotNull String id, @Nullable String name,
         @Nullable String description, @Nullable String status) {
       this.__typename = Utils.checkNotNull(__typename, "__typename == null");
-      this.id = id;
+      this.id = Utils.checkNotNull(id, "id == null");
       this.name = name;
       this.description = description;
       this.status = status;
@@ -346,7 +366,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
       return this.__typename;
     }
 
-    public @Nullable String id() {
+    public @NotNull String id() {
       return this.id;
     }
 
@@ -378,7 +398,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
     @Override
     public String toString() {
       if ($toString == null) {
-        $toString = "CreateProject{"
+        $toString = "IdProject{"
           + "__typename=" + __typename + ", "
           + "id=" + id + ", "
           + "name=" + name + ", "
@@ -394,10 +414,10 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
       if (o == this) {
         return true;
       }
-      if (o instanceof CreateProject) {
-        CreateProject that = (CreateProject) o;
+      if (o instanceof IdProject) {
+        IdProject that = (IdProject) o;
         return this.__typename.equals(that.__typename)
-         && ((this.id == null) ? (that.id == null) : this.id.equals(that.id))
+         && this.id.equals(that.id)
          && ((this.name == null) ? (that.name == null) : this.name.equals(that.name))
          && ((this.description == null) ? (that.description == null) : this.description.equals(that.description))
          && ((this.status == null) ? (that.status == null) : this.status.equals(that.status));
@@ -412,7 +432,7 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
         h *= 1000003;
         h ^= __typename.hashCode();
         h *= 1000003;
-        h ^= (id == null) ? 0 : id.hashCode();
+        h ^= id.hashCode();
         h *= 1000003;
         h ^= (name == null) ? 0 : name.hashCode();
         h *= 1000003;
@@ -425,15 +445,15 @@ public final class ProjectMutation implements Mutation<ProjectMutation.Data, Pro
       return $hashCode;
     }
 
-    public static final class Mapper implements ResponseFieldMapper<CreateProject> {
+    public static final class Mapper implements ResponseFieldMapper<IdProject> {
       @Override
-      public CreateProject map(ResponseReader reader) {
+      public IdProject map(ResponseReader reader) {
         final String __typename = reader.readString($responseFields[0]);
         final String id = reader.readString($responseFields[1]);
         final String name = reader.readString($responseFields[2]);
         final String description = reader.readString($responseFields[3]);
         final String status = reader.readString($responseFields[4]);
-        return new CreateProject(__typename, id, name, description, status);
+        return new IdProject(__typename, id, name, description, status);
       }
     }
   }

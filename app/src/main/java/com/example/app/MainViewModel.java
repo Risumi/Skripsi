@@ -32,6 +32,7 @@ public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Backlog>> listBacklogSprint;
     private MutableLiveData<ArrayList<Backlog>> listFilterBacklogSprint;
     private MutableLiveData<Sprint> currentSprint;
+    private MutableLiveData<ArrayList<User>> listUser ;
     private Sprint runningSprint;
     private MutableLiveData<ArrayList<Sprint>> listSprint;
     private MutableLiveData<ArrayList<Epic>> listEpic;
@@ -56,8 +57,6 @@ public class MainViewModel extends ViewModel {
         sprintCount = new MutableLiveData<>();
 //        sprintCount.setValue(0);
 
-        user = new User("admin@admin.com","admin");
-
         ArrayList<Backlog> backlog3 = new ArrayList<>();
         listBacklog = new MutableLiveData<>();
         listBacklog.setValue(backlog3);
@@ -77,10 +76,18 @@ public class MainViewModel extends ViewModel {
         listFilterBacklogSprint = new MutableLiveData<>();
         ArrayList<Backlog> backlog5 = new ArrayList<>();
         listFilterBacklogSprint.setValue(backlog5);
+
+        listUser = new MutableLiveData<>();
+        ArrayList<User> users= new ArrayList<>();
+        listUser.setValue(users);
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public MutableLiveData<ArrayList<User>> getListUser() {
+        return listUser;
     }
 
     public User getUser() {
@@ -377,7 +384,7 @@ public class MainViewModel extends ViewModel {
                  Log.d("event",event.name());
                  if (event.name().equalsIgnoreCase("completed")){
 //                     listAllBacklog.postValue(backlog);
-                     fetchBacklog(PID);
+                     fetchUser(PID);
                  }
              }
 
@@ -390,6 +397,45 @@ public class MainViewModel extends ViewModel {
                  listener.startAlert(e.getMessage(),"fetch");
              }
          }
+        );
+    }
+
+    public void fetchUser(String PID){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        UserProjectQuery epicQuery= UserProjectQuery.builder().id(PID).build();
+        apolloClient.query(epicQuery).enqueue(new ApolloCall.Callback<UserProjectQuery.Data>() {
+              @Override
+              public void onResponse(@NotNull Response<UserProjectQuery.Data> response) {
+                  if (response.hasErrors()){
+                      Log.d("Error",response.errors().get(0).message());
+                  }else {
+                      for (int i = 0 ; i<response.data().userproject().size();i++){
+
+                          listUser.getValue().add(new User(
+                                  response.data().userproject().get(i).email().email,
+                                  response.data().userproject().get(i).email().nama));
+                      }
+                  }
+              }
+              @Override
+              public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                  super.onStatusEvent(event);
+                  Log.d("event",event.name());
+                  if (event.name().equalsIgnoreCase("completed")){
+                      fetchBacklog(PID);
+                  }
+              }
+              @Override
+              public void onFailure(@NotNull ApolloException e) {
+                  Log.d("Gagal",e.getMessage());
+                  e.printStackTrace();
+                  listener.startAlert(e.getMessage(),"fetch");
+              }
+          }
         );
     }
 
@@ -697,7 +743,9 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onResponse(@NotNull Response<EpicMutation.Data> response) {
                 Log.d("Berhasil","yay");
-                Log.d("Response", response.errors().get(0).message());
+                if (response.hasErrors()){
+                    Log.d("Response", response.errors().get(0).message());
+                }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
@@ -756,6 +804,87 @@ public class MainViewModel extends ViewModel {
                 Log.d("Gagal","shit");
                 listener.endProgressDialog();
                 listener.startAlert(e.getMessage(),"createEpic");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
+            }
+        });
+    }
+
+    public void addUser(String email,String PID){
+        listener.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        AddUserMutation addUserMutation= AddUserMutation.builder()
+                .idProject(PID)
+                .email(email)
+                .build();
+        apolloClient.mutate(addUserMutation).enqueue(new ApolloCall.Callback<AddUserMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<AddUserMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Response", response.errors().get(0).message());
+                    listener.endProgressDialog();
+                    listener.startAlert("No email found","No email");
+                }else {
+                    listUser.getValue().add(new User
+                            (response.data().addUser.email,
+                            response.data().addUser.name));
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"createEpic");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
+            }
+        });
+    }
+
+    public void removeUser(User user,String PID){
+        listener.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        RemoveUserMutation addUserMutation= RemoveUserMutation.builder()
+                .idProject(PID)
+                .email(user.getEmail())
+                .build();
+        apolloClient.mutate(addUserMutation).enqueue(new ApolloCall.Callback<RemoveUserMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<RemoveUserMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Response", response.errors().get(0).message());
+                }else {
+                    listUser.getValue().remove(user);
+
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                listener.endProgressDialog();
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
@@ -870,11 +999,12 @@ public class MainViewModel extends ViewModel {
             if (temp.getBegda()==null){
 
             }else {
-                if (sprintArrayList.get(i).getStatus().equalsIgnoreCase("Active")) {
-                    currentSprint.postValue(sprintArrayList.get(i));
-                    runningSprint = sprintArrayList.get(i);
-//                    Log.d("current sprint ", sprintArrayList.get(i).getId());
-                    break;
+                if (sprintArrayList.get(i).getStatus()!=null){
+                    if (sprintArrayList.get(i).getStatus().equalsIgnoreCase("Active")) {
+                        currentSprint.postValue(sprintArrayList.get(i));
+                        runningSprint = sprintArrayList.get(i);
+                        break;
+                    }
                 }
             }
         }
@@ -976,12 +1106,25 @@ public class MainViewModel extends ViewModel {
         for (int i=0;i<listEpic.getValue().size();i++){
             if (listEpic.getValue().get(i).getId().equalsIgnoreCase(id)){
                 name = listEpic.getValue().get(i).getName();
+                break;
             }
             Log.d("Epic ID",id);
             Log.d("Epic Name",name);
         }
         return name;
     }
+
+    public String getUserName(String email){
+        String name="";
+        for (int i=0;i<listUser.getValue().size();i++){
+            if (listUser.getValue().get(i).getEmail().equalsIgnoreCase(email)){
+                name = listUser.getValue().get(i).getName();
+                break;
+            }
+        }
+        return name;
+    }
+
 
     public void updateList(Backlog backlog, String todo){
         if (todo.equalsIgnoreCase("add")){

@@ -25,6 +25,7 @@ import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicke
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.R;
+import com.example.app.model.Project;
 import com.example.app.model.User;
 
 import java.text.SimpleDateFormat;
@@ -40,7 +41,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
     EditText etBlName, etBlDesc;
     String mDateStart;
     String mDateEnd;
-    String status, name,desc,assignee;
+    String status, name,desc;
+    String assignee="";
     TextView tvDate;
     Date begdda, endda;
     Spinner spinner,spinner2, spinner3;
@@ -87,8 +89,12 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         resultIntent  = getIntent();
         user = resultIntent.getParcelableExtra("User");
         ArrayList<String> spinnerArray = resultIntent.getStringArrayListExtra("spinner");
+        ArrayList<String> spinnerArray2 = resultIntent.getStringArrayListExtra("spinner2");
         ArrayList<String> epicID = resultIntent.getStringArrayListExtra("epicID");
+        ArrayList<String> emailUser = resultIntent.getStringArrayListExtra("emailUser");
         spinnerArray.add(0,"Select Epic");
+        spinnerArray2.add(0,"Select Assignee");
+        spinnerArray2.add(1,"Unassigned");
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,spinnerArray){
             @Override
             public boolean isEnabled(int position) {
@@ -127,7 +133,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
                         }else {
                             epicId = epicID.get(i - 2);
-                            if (epicId.equalsIgnoreCase("---")) {
+                            if (epicId.equalsIgnoreCase("None")) {
                                 epicId = "";
                             }
                         }
@@ -141,14 +147,54 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
             }
         });
-        ArrayAdapter<CharSequence> adapter3 = ArrayAdapter.createFromResource(this, R.array.Asignee, android.R.layout.simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+
+        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item,spinnerArray2){
+            @Override
+            public boolean isEnabled(int position) {
+                if(position == 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    return true;
+                }
+            }
+
+            @Override
+            public View getDropDownView(int position, @Nullable @android.support.annotation.Nullable View convertView, @NonNull @android.support.annotation.NonNull ViewGroup parent) {
+                View view = super.getDropDownView(position, convertView, parent);
+                TextView tv = (TextView) view;
+                if(position == 0){
+                    tv.setTextColor(Color.GRAY);
+                }
+                else {
+                    tv.setTextColor(Color.BLACK);
+                }
+                return view;
+            }
+        };
         spinner3.setAdapter(adapter3);
         spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 Log.d("Spinner :","1");
-                assignee = adapterView.getItemAtPosition(i).toString();
+                if (emailUser.size()!=0){
+                    Log.d("index spinner",Integer.toString(i));
+                    if (adapterView.getAdapter().getCount()>0){
+                        if ((i-2)<0){
+
+                        }else {
+                            assignee = emailUser.get(i - 2);
+                            if (epicId.equalsIgnoreCase("None")) {
+                                assignee = "";
+                            }
+                        }
+                    }
+                    Log.d("Email User",assignee);
+                }
+//                assignee = adapterView.getItemAtPosition(i).toString();
             }
 
             @Override
@@ -163,15 +209,28 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             etBlName.setText(editBacklog.getName());
             int spinnerPos = adapter.getPosition(editBacklog.getStatus());
             spinner.setSelection(spinnerPos);
-//            Log.d("Loh",resultIntent.getStringExtra("epicName"));
-            int spinnerPos2 = adapter2.getPosition(resultIntent.getStringExtra("epicName"));
+
+            String temp = "";
+            if (resultIntent.getStringExtra("epicName").equals("")){
+                temp = "No Epic";
+            }else {
+                temp =resultIntent.getStringExtra("epicName");
+            }
+            int spinnerPos2 = adapter2.getPosition(temp);
             Log.d("Epic Namee",resultIntent.getStringExtra("epicName"));
             spinner2.setSelection(spinnerPos2);
-//            int spinnerPos3 = adapter.getPosition(editBacklog.getAssignee());
-//            spinner.setSelection(spinnerPos3);
+
+            if (resultIntent.getStringExtra("userName").equals("")){
+                temp = "Unassigned";
+            }else {
+                temp =resultIntent.getStringExtra("userName");
+            }
+            int spinnerPos3 = adapter.getPosition(temp);
+            spinner3.setSelection(spinnerPos3);
+
             sprintId = editBacklog.getIdSprint();
             etBlDesc.setText(editBacklog.getDescription());
-//            tvDate.setText(mDateStart+" - "+mDateEnd);
+
             Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
 
         }
@@ -187,9 +246,33 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                 desc = etBlDesc.getText().toString();
 //                    assignee = "";
                 if (resultIntent.getIntExtra("req code",1)==2){
-                    newBacklog = new Backlog(resultIntent.getStringExtra("blsID"),resultIntent.getStringExtra("PID"),sprintId,epicId,name,status,"admin@admin.com",desc,editBacklog.getCreateddate(),editBacklog.getCreatedby(),new Date(),user.getEmail());
+                    newBacklog = new Backlog(
+                            resultIntent.getStringExtra("blsID"),
+                            resultIntent.getStringExtra("PID"),
+                            sprintId,
+                            epicId,
+                            name,
+                            status,
+                            assignee,
+                            desc,
+                            editBacklog.getCreateddate(),
+                            editBacklog.getCreatedby(),
+                            new Date(),
+                            user.getEmail());
                 }else {
-                    newBacklog = new Backlog(resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),resultIntent.getStringExtra("PID"),"",epicId,name,status,"admin@admin.com",desc,new Date(),user.getEmail(),null,null);
+                    newBacklog = new Backlog(
+                            resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)+1),
+                            resultIntent.getStringExtra("PID"),
+                            "",
+                            epicId,
+                            name,
+                            status,
+                            assignee,
+                            desc,
+                            new Date(),
+                            user.getEmail(),
+                            null,
+                            null);
                 }
                 Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
                 resultIntent.putExtra("result",newBacklog);

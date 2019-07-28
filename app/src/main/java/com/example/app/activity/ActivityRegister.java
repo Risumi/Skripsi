@@ -37,15 +37,19 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
         setContentView(R.layout.activity_register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         etEmail = findViewById(R.id.editText7);
-        etName = findViewById(R.id.editText8);
-        etPassword = findViewById(R.id.editText9);
+        etName = findViewById(R.id.editText9);
+        etPassword = findViewById(R.id.editText8);
         button = findViewById(R.id.button7);
         button.setOnClickListener(this);
     }
 
     @Override
     public void onClick(View view) {
-        createUser(etName.getText().toString(),etEmail.getText().toString(),etPassword.getText().toString());
+        if (etName.getText().toString().length()<3 || etPassword.getText().toString().length()<3 || etEmail.getText().toString().length() < 10){
+            Toast.makeText(this,"Field must be at least 3 characters",Toast.LENGTH_SHORT).show();
+        }else {
+            createUser(etName.getText().toString(),etEmail.getText().toString(),etPassword.getText().toString());
+        }
     }
 
     private void createUser(String name,String email,String password){
@@ -71,7 +75,12 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
                     progressDialog.dismiss();
                     Toast.makeText(ActivityRegister.this,response.errors().get(0).message(), Toast.LENGTH_SHORT).show();
                 }else {
-                    Toast.makeText(ActivityRegister.this,"User created", Toast.LENGTH_LONG).show();
+                    ActivityRegister.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ActivityRegister.this,"User created", Toast.LENGTH_LONG).show();
+                        }
+                    });
                 }
             }
             @Override

@@ -20,9 +20,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.app.ListenerGraphql;
+import com.example.app.adapter.AlertAddUser;
 import com.example.app.fragment.FragmentSprintReports;
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
@@ -42,7 +44,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class ActivityMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql {
+        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener  {
     private Fragment fragment;
     private FloatingActionButton fab,fab2,fab3;
     FloatingActionsMenu fam;
@@ -84,12 +86,16 @@ public class ActivityMain extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        View headerView = navigationView.getHeaderView(0);
+        TextView navUsername = (TextView) headerView.findViewById(R.id.txtName);
+        TextView navUserEmail = (TextView) headerView.findViewById(R.id.textView);
 
 
         intent = getIntent();
         user = intent.getParcelableExtra("User");
         PID = intent.getStringExtra("PID");
-
+        navUsername.setText(user.getName());
+        navUserEmail.setText(user.getEmail());
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         fragment = FragmentEpic.newInstance(intent.getStringExtra("PID"),"");
@@ -98,6 +104,7 @@ public class ActivityMain extends AppCompatActivity
 //        setFab();
 
         model.fetchEpic(PID);
+        model.setUser(user);
 
         getSupportActionBar().setTitle(intent.getStringExtra("PName"));
         Log.d("PID",PID);
@@ -159,7 +166,7 @@ public class ActivityMain extends AppCompatActivity
             fam.collapse();
             fam.setVisibility(View.GONE);
         } else if (id == R.id.nav_setting) {
-            fragment = FragmentSetting.newInstance("","");
+            fragment = FragmentSetting.newInstance(intent.getParcelableExtra("project"),PID);
             fam.collapse();
             fam.setVisibility(View.GONE);
         }/* else if (id == R.id.nav_burndown) {
@@ -222,13 +229,21 @@ public class ActivityMain extends AppCompatActivity
             Intent intent = new Intent(this, ActivityAddBacklog.class);
             ArrayList<String> spinnerArray = new ArrayList<>();
             ArrayList<String> idEpic = new ArrayList<>();
-            spinnerArray.add("---");
+            spinnerArray.add("None");
             for (int i=0;i<model.getListEpic().getValue().size();i++){
                 spinnerArray.add(model.getListEpic().getValue().get(i).getName());
                 idEpic.add(model.getListEpic().getValue().get(i).getId());
             }
             intent.putStringArrayListExtra("spinner",spinnerArray);
             intent.putStringArrayListExtra("epicID",idEpic);
+            ArrayList<String> spinnerArray2 = new ArrayList<>();
+            ArrayList<String> emailUser = new ArrayList<>();
+            for (int i=0;i<model.getListUser().getValue().size();i++){
+                spinnerArray2.add(model.getListUser().getValue().get(i).getName());
+                emailUser.add(model.getListUser().getValue().get(i).getEmail());
+            }
+            intent.putStringArrayListExtra("spinner2",spinnerArray2);
+            intent.putStringArrayListExtra("emailUser",emailUser);
             intent.putExtra("req code", REQ_ADD_BACKLOG);
             intent.putExtra("PID",PID);
             intent.putExtra("User",model.getUser());
@@ -306,6 +321,8 @@ public class ActivityMain extends AppCompatActivity
                 Sprint newSprint = data.getParcelableExtra("Sprint");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentBacklog){
+                    model.getListSprint().getValue().set(data.getIntExtra("indexSprint",0),newSprint);
+//                    Log.d("Index", ((Integer) data.getIntExtra("indexSprint", 0)).toString());
                     ((FragmentBacklog) fragmentInFrame).notifySpinner(newSprint);
                     model.editSprint(newSprint);
                     model.setCurrentSprint(newSprint);
@@ -370,30 +387,46 @@ public class ActivityMain extends AppCompatActivity
 
     void initializeAlertDialog(String error,String code){
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("Error : "+ error+"\nRetry ?");
-        builder.setCancelable(false);
-
-        builder.setPositiveButton(
-                "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        if (code=="fetch"){
-                            model.reset();
-                            model.fetchEpic(PID);
+        if (code.equalsIgnoreCase("no email")){
+            builder.setMessage("Error : "+ error);
+            builder.setCancelable(false);
+            builder.setPositiveButton(
+                    "Ok",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
                         }
+                    });
+        }else {
+            builder.setMessage("Error : "+ error+"\nRetry ?");
+            builder.setCancelable(false);
 
-                    }
-                });
+            builder.setPositiveButton(
+                    "Yes",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            if (code=="fetch"){
+                                model.reset();
+                                model.fetchEpic(PID);
+                            }
 
-        builder.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finish();
-                    }
-                });
+                        }
+                    });
+
+            builder.setNegativeButton(
+                    "No",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                            finish();
+                        }
+                    });
+        }
     }
 
+    @Override
+    public void addUser(String email) {
+        model.addUser(email,PID);
+    }
 }

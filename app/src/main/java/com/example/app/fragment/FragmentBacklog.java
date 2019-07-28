@@ -47,6 +47,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
     // TODO: Rename and change types of parameters
     private String PID;
     private String mParam2;
+    int indexSprint;
 
 
     public FragmentBacklog() {
@@ -235,6 +236,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
             editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
             editBacklog.putExtra("blsID",model.getListBacklog().getValue().get(position).getId());
             editBacklog.putExtra("epicName",model.getEpicName(model.getListBacklog().getValue().get(position).getEpicName()));
+            editBacklog.putExtra("userName",model.getUserName(model.getListBacklogSprint().getValue().get(position).getAssignee()));
             Log.d("Epic Name ",model.getEpicName(model.getListBacklog().getValue().get(position).getId()));
         }else if (adapter == bottomListAdapter){
             Log.d("adapter","bot");
@@ -242,19 +244,28 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
             editBacklog.putExtra("backlog",model.getListBacklogSprint().getValue().get(position));
             editBacklog.putExtra("blsID",model.getListBacklogSprint().getValue().get(position).getId());
             editBacklog.putExtra("epicName",model.getEpicName(model.getListBacklogSprint().getValue().get(position).getEpicName()));
+            editBacklog.putExtra("userName",model.getUserName(model.getListBacklogSprint().getValue().get(position).getAssignee()));
 //            Log.d("Epic Name ",model.getEpicName(model.getListBacklog().getValue().get(position).getId()));
         }
 
         Log.d("position", ((Integer) position).toString());
         ArrayList<String> spinnerArray = new ArrayList<>();
         ArrayList<String> idEpic = new ArrayList<>();
-        spinnerArray.add("---");
+        spinnerArray.add("None");
         for (int i=0;i<model.getListEpic().getValue().size();i++){
             spinnerArray.add(model.getListEpic().getValue().get(i).getName());
             idEpic.add(model.getListEpic().getValue().get(i).getId());
         }
         editBacklog.putStringArrayListExtra("spinner",spinnerArray);
         editBacklog.putStringArrayListExtra("epicID",idEpic);
+        ArrayList<String> spinnerArray2 = new ArrayList<>();
+        ArrayList<String> emailUser = new ArrayList<>();
+        for (int i=0;i<model.getListUser().getValue().size();i++){
+            spinnerArray2.add(model.getListUser().getValue().get(i).getName());
+            emailUser.add(model.getListUser().getValue().get(i).getEmail());
+        }
+        editBacklog.putStringArrayListExtra("spinner2",spinnerArray2);
+        editBacklog.putStringArrayListExtra("emailUser",emailUser);
         editBacklog.putExtra("PID", PID);
         editBacklog.putExtra("position",position);
         editBacklog.putExtra("req code",EDIT_BACKLOG);
@@ -320,6 +331,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         }else if (adapterView.getId()==spinner2.getId()){
             Log.d("Spinner 2","True");
             selectedSprint= model.getListSprint().getValue().get(i);
+            indexSprint = i ;
             model.filterSprint(selectedSprint.getId());
             bottomListAdapter.notifyDataSetChanged();
         }
@@ -338,6 +350,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
                 break;
             }
         }
+        adapter2.notifyDataSetChanged();
     }
 
     @Override
@@ -358,6 +371,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
                     Intent intent = new Intent(getActivity(),ActivityStartSprint.class);
                     intent.putExtra("Sprint",selectedSprint);
                     intent.putExtra("User",model.getUser());
+                    intent.putExtra("indexSprint",indexSprint);
                     getActivity().startActivityForResult(intent,REQ_START_SPRINT);
                 }else{
                     Toast.makeText(this.getActivity(),"Can't start sprint, there is an active sprint",Toast.LENGTH_SHORT).show();

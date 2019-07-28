@@ -1,0 +1,10 @@
+query ProjectUser($id:String!){
+  projectuser(id:$id){
+    idProject{
+      id
+      name
+      description
+      status
+    }
+  }
+}

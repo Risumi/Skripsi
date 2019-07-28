@@ -7,4 +7,5 @@
     <color name="colorBlack">#B2000000</color>
     <color name="line1">#3333FF</color>
     <color name="line2">#FF3333</color>
+    <color name="def">#00FF00</color>
 </resources>

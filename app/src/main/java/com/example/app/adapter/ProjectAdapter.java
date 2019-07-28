@@ -16,6 +16,7 @@ import com.example.app.activity.ActivityMain;
 import com.example.app.model.Backlog;
 import com.example.app.model.Progress;
 import com.example.app.model.Project;
+import com.example.app.model.User;
 
 import java.util.ArrayList;
 
@@ -26,13 +27,15 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     ArrayList<Progress> progressArrayList;
     Context _context;
     Project current;
+    User user;
 
 
-    public ProjectAdapter(Context _context, ArrayList<Project> projectArrayList,ArrayList<Progress> progressArrayList) {
+    public ProjectAdapter(Context _context, ArrayList<Project> projectArrayList,ArrayList<Progress> progressArrayList,User user) {
         this.mInflater = LayoutInflater.from(_context);
         this.projectArrayList = projectArrayList;
         this._context = _context;
         this.progressArrayList = progressArrayList;
+        this.user = user;
     }
 
     @Override
@@ -99,6 +102,8 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             Intent intent = new Intent(_context, ActivityMain.class);
             intent.putExtra("PName",projectArrayList.get(getAdapterPosition()).getName());
             intent.putExtra("PID",projectArrayList.get(getAdapterPosition()).getId());
+            intent.putExtra("project",projectArrayList.get(getAdapterPosition()));
+            intent.putExtra("User",user);
             _context.startActivity(intent);
         }
     }
