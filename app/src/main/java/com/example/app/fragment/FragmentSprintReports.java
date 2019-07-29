@@ -11,7 +11,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.example.app.MainViewModel;
@@ -30,7 +33,9 @@ import com.github.mikephil.charting.formatter.ValueFormatter;
 
 import org.joda.time.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -39,7 +44,7 @@ import java.util.List;
  * Use the {@link FragmentSprintReports#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSprintReports extends Fragment {
+public class FragmentSprintReports extends Fragment implements AdapterView.OnItemSelectedListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -80,16 +85,61 @@ public class FragmentSprintReports extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
     }
 
+    Spinner spinner;
+    MainViewModel model;
+    TextView txtDate;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view =inflater.inflate(R.layout.fragment_sprint_reports, container, false);
+
+        initializeChart(view);
+
+        spinner = view.findViewById(R.id.spinner7);
+        etGoal = view.findViewById(R.id.editText3);
+        txtDate = view.findViewById(R.id.textView22);
+        List<String> spinnerArray = new ArrayList<>();
+        for (int i=0;i<model.getListSprintDone().getValue().size();i++){
+            spinnerArray.add(model.getListSprintDone().getValue().get(i).getName());
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(),R.layout.support_simple_spinner_dropdown_item,spinnerArray);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemSelectedListener(this);
+
+        rvCompleted = view.findViewById(R.id.rvTop);
+        rvNotCompleted = view.findViewById(R.id.rvBottom);
+
+
+        ArrayList<Backlog> listCompleted= new ArrayList<>();
+        listCompleted.add(new Backlog("DOT-1",null,null,"DOT-E 1","Graphql query","Completed",null,null,null,null,null,null));
+        listCompleted.add(new Backlog("DOT-2",null,null,"DOT-E 2","Halaman profil","Completed",null,null,null,null,null,null));
+
+        ArrayList<Backlog> listNotCompleted= new ArrayList<>();
+        listNotCompleted.add(new Backlog("DOT-3",null,null,"DOT-E 1","Graphql mutation","On Progress",null,null,null,null,null,null));
+
+        ArrayList<Epic> listEpic = new ArrayList<>();
+        listEpic.add(new Epic("DOT-E 1",null,"Back end",null,null,null,null,null));
+        listEpic.add(new Epic("DOT-E 2",null,"Front end",null,null,null,null,null));
+
+        rvCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        AdapterCompleted = new SprintAdapter(model.getListBacklogSprintDone().getValue(),model.getListEpic().getValue());
+        rvCompleted.setAdapter(AdapterCompleted);
+
+        rvNotCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        AdapterNotCompleted = new SprintAdapter(listNotCompleted,listEpic);
+        rvNotCompleted.setAdapter(AdapterNotCompleted);
+
+        return view;
+    }
+    SprintAdapter AdapterCompleted, AdapterNotCompleted;
+    void initializeChart(View view){
         chart = view.findViewById(R.id.chart);
         int daysDiff = 7;
-        txtSprint = view.findViewById(R.id.textView9);
+
         DateTime dateTime = new DateTime();
         Log.d("daysDiff", ((Integer) daysDiff).toString());
 
@@ -154,33 +204,37 @@ public class FragmentSprintReports extends Fragment {
         chart.getLegend().setEnabled(false);
         chart.setData(lineData);
         chart.invalidate();
-        etGoal = view.findViewById(R.id.editText3);
-        etGoal.setText("Lorem ipsum dolor sit amet, consectetur adipiscing elit.");
 
-        ArrayList<Backlog> listCompleted= new ArrayList<>();
-        listCompleted.add(new Backlog("DOT-1",null,null,"DOT-E 1","Graphql query","Completed",null,null,null,null,null,null));
-        listCompleted.add(new Backlog("DOT-2",null,null,"DOT-E 2","Halaman profil","Completed",null,null,null,null,null,null));
-
-        ArrayList<Backlog> listNotCompleted= new ArrayList<>();
-        listNotCompleted.add(new Backlog("DOT-3",null,null,"DOT-E 1","Graphql mutation","On Progress",null,null,null,null,null,null));
-
-        ArrayList<Epic> listEpic = new ArrayList<>();
-        listEpic.add(new Epic("DOT-E 1",null,"Back end",null,null,null,null,null));
-        listEpic.add(new Epic("DOT-E 2",null,"Front end",null,null,null,null,null));
-
-        rvCompleted = view.findViewById(R.id.rvTop);
-        rvNotCompleted = view.findViewById(R.id.rvBottom);
-
-        rvCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter AdapterCompleted = new SprintAdapter(listCompleted,listEpic);
-        rvCompleted.setAdapter(AdapterCompleted);
-
-        rvNotCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        SprintAdapter AdapterNotCompleted = new SprintAdapter(listNotCompleted,listEpic);
-        rvNotCompleted.setAdapter(AdapterNotCompleted);
-
-        return view;
     }
+
     EditText etGoal;
     RecyclerView rvCompleted, rvNotCompleted;
+    Sprint selectedSprint;
+    int indexSprint;
+    @Override
+    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+        if (model.getListSprintDone().getValue().get(i)!=null) {
+            if (model.getListSprintDone().getValue().get(i).getBegda()!=null){
+                etGoal.setText(model.getListSprintDone().getValue().get(i).getSprintGoal());
+                txtDate.setText(formatDate(model.getListSprintDone().getValue().get(i).getBegda())+" - "+formatDate(model.getListSprintDone().getValue().get(i).getEndda()));
+            }
+        }
+        selectedSprint= model.getListSprintDone().getValue().get(i);
+        indexSprint = i ;
+        model.filterSprintDone(selectedSprint.getId());
+        AdapterCompleted.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onNothingSelected(AdapterView<?> adapterView) {
+
+    }
+
+    public String formatDate(Date rawDate) {
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
+
+        String formattedDate = formatDate.format(rawDate);
+        return formattedDate;
+    }
 }
+

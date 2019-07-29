@@ -82,8 +82,8 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
             }
         });
     }
-    EditText txtName,txtDescription;
-    TextView txtId;
+    EditText txtName,txtDescription, txtKey;
+
     Button btnAdd, btnConfirm;
     RecyclerView rvUser;
     UserAdapter mAdapter;
@@ -96,8 +96,9 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
         txtName.setText(project.getName());
         txtDescription = view.findViewById(R.id.editText12);
         txtDescription.setText(project.getDescription());
-        txtId = view.findViewById(R.id.textView19);
-        txtId.setText(project.getId());
+        txtKey = view.findViewById(R.id.editText11);
+        txtKey.setText(project.getId());
+        txtKey.setFocusable(false);
 
         btnAdd = view.findViewById(R.id.button9);
         btnAdd.setOnClickListener(this);
@@ -115,7 +116,9 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
         if (view==btnAdd){
             openDialog();
         }else if (view==btnConfirm){
-
+            project.setName(txtName.getText().toString());
+            project.setDescription(txtDescription.getText().toString());
+            model.projectEdit(project);
         }
     }
 
@@ -132,7 +135,6 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
             initializeAlertDialog(user);
             AlertDialog alert11 = builder.create();
             alert11.show();
-
         }
     }
 

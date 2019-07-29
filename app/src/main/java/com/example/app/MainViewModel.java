@@ -12,6 +12,7 @@ import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
+import com.example.app.model.Project;
 import com.example.app.model.Sprint;
 import com.example.app.model.User;
 
@@ -21,8 +22,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import okhttp3.OkHttpClient;
+
 import type.CustomType;
 
 public class MainViewModel extends ViewModel {
@@ -80,6 +83,18 @@ public class MainViewModel extends ViewModel {
         listUser = new MutableLiveData<>();
         ArrayList<User> users= new ArrayList<>();
         listUser.setValue(users);
+
+        listSprintDone = new MutableLiveData<>();
+        ArrayList<Sprint> sprints2= new ArrayList<>();
+        listSprintDone.setValue(sprints2);
+
+        listFilterBacklogSprintDone = new MutableLiveData<>();
+        ArrayList<Backlog> backlog6 = new ArrayList<>();
+        listFilterBacklogSprintDone.setValue(backlog6);
+
+        listBacklogSprintDone = new MutableLiveData<>();
+        ArrayList<Backlog> backlog7 = new ArrayList<>();
+        listBacklogSprintDone.setValue(backlog7);
     }
 
     public void setUser(User user) {
@@ -816,6 +831,79 @@ public class MainViewModel extends ViewModel {
         });
     }
 
+    public void projectEdit(Project project){
+        listener.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        EditProjectMutation editProjectMutation = EditProjectMutation .builder()
+                .id(project.getId())
+                .name(project.getName())
+                .description(project.getDescription())
+                .status("")
+                .build();
+        apolloClient.mutate(editProjectMutation).enqueue(new ApolloCall.Callback<EditProjectMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<EditProjectMutation.Data> response) {
+                if (response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }else {
+                    Log.d("Berhasil","yay");
+                    listener.setToast("Setting saved");
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                listener.endProgressDialog();
+//                listener.startAlert(e.getMessage(),"createEpic");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
+            }
+        });
+    }
+
+//    public void setStatus(){
+//        listener.startProgressDialog();
+//        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+//        ApolloClient apolloClient = ApolloClient.builder()
+//                .serverUrl(BASE_URL)
+//                .okHttpClient(okHttpClient)
+//                .build();
+//        List<BacklogInput> backlogInputs = new ArrayList<>();
+//        SetStatusMutation setStatusMutation = SetStatusMutation.builder()
+//                .backlog(backlogInputs)
+//                .build();
+//        apolloClient.mutate(setStatusMutation).enqueue(new ApolloCall.Callback<SetStatusMutation.Data>() {
+//            @Override
+//            public void onResponse(@NotNull Response<SetStatusMutation.Data> response) {
+//                Log.d("Berhasil","yay");
+//            }
+//            @Override
+//            public void onFailure(@NotNull ApolloException e) {
+//                Log.d("Gagal","shit");
+//                listener.endProgressDialog();
+//                listener.startAlert(e.getMessage(),"createEpic");
+//                e.printStackTrace();
+//            }
+//            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+//                super.onStatusEvent(event);
+//                Log.d("event",event.name());
+//                if (event.name().equalsIgnoreCase("completed")){
+//                    listener.endProgressDialog();
+//                }
+//            }
+//        });
+//    }
+
     public void addUser(String email,String PID){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -970,11 +1058,14 @@ public class MainViewModel extends ViewModel {
         return sprintCount;
     }
 
+    MutableLiveData<ArrayList<Backlog>> listBacklogSprintDone ;
+    MutableLiveData<ArrayList<Backlog>> listFilterBacklogSprintDone ;
+
     void splitData(){
         Log.d("Backlog count", ((Integer) listAllBacklog.getValue().size()).toString());
         Log.d("Sprint count", ((Integer) listSprint.getValue().size()).toString());
         setCurrentSprint(listSprint.getValue());
-        sCount = listSprint.getValue().size();
+        sCount = listSprint.getValue().size()+listSprintDone.getValue().size();
         sprintCount.postValue(sCount);
         for (int i = 0 ; i<listAllBacklog.getValue().size();i++){
             if (listAllBacklog.getValue().get(i).getIdSprint().equals("")){
@@ -983,30 +1074,58 @@ public class MainViewModel extends ViewModel {
             }else{
                 Log.d("ID Sprint "+i,listAllBacklog.getValue().get(i).getIdSprint());
                 listBacklogSprint.getValue().add(listAllBacklog.getValue().get(i));
+                for (int j = 0 ; j<listSprintDone.getValue().size();j++){
+                    if (listAllBacklog.getValue().get(i).getIdSprint().equals(listSprintDone.getValue().get(j).getId()) && listAllBacklog.getValue().get(i).getStatus().equalsIgnoreCase("Completed")){
+                        listBacklogSprintDone.getValue().add(listAllBacklog.getValue().get(i));
+                        listBacklogSprint.getValue().remove(listAllBacklog.getValue().get(i));
+                    }else if (listAllBacklog.getValue().get(i).getIdSprint().equals(listSprintDone.getValue().get(j).getId()) && !listAllBacklog.getValue().get(i).getStatus().equalsIgnoreCase("Completed")){
+                        listBacklog.getValue().add(listAllBacklog.getValue().get(i));
+                        listBacklogSprint.getValue().remove(listAllBacklog.getValue().get(i));
+                    }
+                    Log.d("j", ((Integer) j).toString());
+                }
             }
+            Log.d("i", ((Integer) i).toString());
         }
         listFilterBacklog.getValue().addAll(listBacklog.getValue());
         listFilterBacklogSprint.getValue().addAll(listBacklogSprint.getValue());
+        listFilterBacklogSprintDone.getValue().addAll(listBacklogSprintDone.getValue());
         listener.endProgressDialog();
-//        }
+    }
+
+    private MutableLiveData<ArrayList<Sprint>>  listSprintDone ;
+
+    public MutableLiveData<ArrayList<Sprint>> getListSprintDone() {
+        return listSprintDone;
+    }
+
+    public MutableLiveData<ArrayList<Backlog>> getListBacklogSprintDone() {
+        return listBacklogSprintDone;
+    }
+
+    public MutableLiveData<ArrayList<Backlog>> getListFilterBacklogSprintDone() {
+        return listFilterBacklogSprintDone;
     }
 
     void setCurrentSprint(ArrayList <Sprint> sprintArrayList){
-        Sprint temp;
-        Date now = new Date();
-        for (int i = 0 ;i<sprintArrayList.size();i++){
-            temp = sprintArrayList.get(i);
-            if (temp.getBegda()==null){
-
-            }else {
-                if (sprintArrayList.get(i).getStatus()!=null){
-                    if (sprintArrayList.get(i).getStatus().equalsIgnoreCase("Active")) {
-                        currentSprint.postValue(sprintArrayList.get(i));
-                        runningSprint = sprintArrayList.get(i);
-                        break;
-                    }
+        ArrayList<Sprint> tempListSprint = new ArrayList<>() ;
+        tempListSprint.addAll(sprintArrayList);
+//        Log.d("Status", ((Integer) sprintArrayList.size()).toString());
+        Sprint temp2 = new Sprint();
+        int temp =sprintArrayList.size();
+        for (int i = 0 ;i<temp;i++){
+            if (tempListSprint.get(i).getStatus()!=null){
+                if (tempListSprint.get(i).getStatus().equalsIgnoreCase("Active")) {
+                    currentSprint.postValue(tempListSprint.get(i));
+                    runningSprint = tempListSprint.get(i);
+                }else if (tempListSprint.get(i).getStatus().equalsIgnoreCase("Done")){
+                    listSprintDone.getValue().add(tempListSprint.get(i));
+                    temp2 = tempListSprint.get(i);
+                    listSprint.getValue().remove(temp2);
                 }
             }
+            Log.d("Status", ((Integer) i).toString());
+
         }
     }
 
@@ -1085,6 +1204,20 @@ public class MainViewModel extends ViewModel {
         for (int i=0;i<backlogArrayList.size();i++){
             if (backlogArrayList.get(i).getIdSprint().equalsIgnoreCase(id)){
                 listBacklogSprint.getValue().add(backlogArrayList.get(i));
+                Log.d("ID Sprint 1",backlogArrayList.get(i).getIdSprint());
+                Log.d("ID Sprint 2",id);
+            }
+        }
+    }
+
+    public void filterSprintDone(String id){
+        ArrayList <Backlog> backlogArrayList = new ArrayList<>();
+        backlogArrayList.clear();
+        backlogArrayList.addAll(listFilterBacklogSprintDone.getValue());
+        listBacklogSprintDone.getValue().clear();
+        for (int i=0;i<backlogArrayList.size();i++){
+            if (backlogArrayList.get(i).getIdSprint().equalsIgnoreCase(id)){
+                listBacklogSprintDone.getValue().add(backlogArrayList.get(i));
                 Log.d("ID Sprint 1",backlogArrayList.get(i).getIdSprint());
                 Log.d("ID Sprint 2",id);
             }

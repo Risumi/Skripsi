@@ -181,6 +181,12 @@ public class ActivityMain extends AppCompatActivity
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+        if (id == R.id.nav_logout){
+            Intent intent = new Intent(this,ActivityLogin.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
+            finish();
+        }
         return true;
     }
 
@@ -381,6 +387,17 @@ public class ActivityMain extends AppCompatActivity
         model.setCurrentSprint(sprint);
         Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
         ((FragmentBacklog) fragmentInFrame).notifyAdapter();
+    }
+
+    @Override
+    public void setToast(String message) {
+        ActivityMain.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ActivityMain.this,message,Toast.LENGTH_SHORT).show();
+            }
+        });
+
     }
 
     AlertDialog.Builder builder;

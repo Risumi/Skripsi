@@ -236,7 +236,7 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
             editBacklog.putExtra("backlog",model.getListBacklog().getValue().get(position));
             editBacklog.putExtra("blsID",model.getListBacklog().getValue().get(position).getId());
             editBacklog.putExtra("epicName",model.getEpicName(model.getListBacklog().getValue().get(position).getEpicName()));
-            editBacklog.putExtra("userName",model.getUserName(model.getListBacklogSprint().getValue().get(position).getAssignee()));
+            editBacklog.putExtra("userName",model.getUserName(model.getListBacklog().getValue().get(position).getAssignee()));
             Log.d("Epic Name ",model.getEpicName(model.getListBacklog().getValue().get(position).getId()));
         }else if (adapter == bottomListAdapter){
             Log.d("adapter","bot");

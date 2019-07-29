@@ -112,6 +112,9 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
             btnSprint.setVisibility(View.VISIBLE);
             tvSprint.setText(model.getCurrentSprint().getValue().getName());
             Date date = new Date();
+            if (model.getCurrentSprint().getValue().getName()==null){
+                tvSprint.setText("No Active Sprint");
+            }
 //            Date date1 = new Date(1999,01,01);
 //            if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
 //                btnSprint.setText("Standby");
@@ -236,10 +239,18 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        model.getListSprint().getValue().remove(model.getCurrentSprint().getValue());
                         model.getCurrentSprint().getValue().setEndda(new Date());
                         model.getCurrentSprint().getValue().setModifieddate(new Date());
                         model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
                         model.getCurrentSprint().getValue().setStatus("Done");
+                        model.getListSprintDone().getValue().add(model.getCurrentSprint().getValue());
+                        model.getListBacklogSprintDone().getValue().addAll(bottomListAdapter.getList());
+                        model.getListFilterBacklogSprintDone().getValue().addAll(bottomListAdapter.getList());
+                        model.getListBacklog().getValue().addAll(topListAdapter.getList());
+                        model.getListBacklog().getValue().addAll(middleListAdapter.getList());
+                        model.getListFilterBacklog().getValue().addAll(topListAdapter.getList());
+                        model.getListFilterBacklog().getValue().addAll(middleListAdapter.getList());
                         model.editSprint(model.getCurrentSprint().getValue());
                         model.getCurrentSprint().setValue(new Sprint());
                         model.getListBacklogSprint().getValue().clear();
@@ -249,7 +260,7 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                         middleListAdapter.notifyDataSetChanged();
                         bottomListAdapter.getList().clear();
                         bottomListAdapter.notifyDataSetChanged();
-                        tvSprint.setText("Sprint");
+                        tvSprint.setText("No Active Sprint");
                     }
                 });
 

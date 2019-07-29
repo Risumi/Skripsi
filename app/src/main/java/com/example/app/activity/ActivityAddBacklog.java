@@ -187,7 +187,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
                         }else {
                             assignee = emailUser.get(i - 2);
-                            if (epicId.equalsIgnoreCase("None")) {
+                            if (assignee.equalsIgnoreCase("Unassigned")) {
                                 assignee = "";
                             }
                         }
@@ -212,12 +212,11 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
             String temp = "";
             if (resultIntent.getStringExtra("epicName").equals("")){
-                temp = "No Epic";
+                temp = "None";
             }else {
                 temp =resultIntent.getStringExtra("epicName");
             }
             int spinnerPos2 = adapter2.getPosition(temp);
-            Log.d("Epic Namee",resultIntent.getStringExtra("epicName"));
             spinner2.setSelection(spinnerPos2);
 
             if (resultIntent.getStringExtra("userName").equals("")){
