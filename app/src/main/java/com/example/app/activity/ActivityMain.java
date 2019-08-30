@@ -2,22 +2,25 @@ package com.example.app.activity;
 
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
-import android.arch.lifecycle.ViewModelProviders;
 import android.content.DialogInterface;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AlertDialog;
+
 import android.util.Log;
 import android.view.View;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
+import androidx.lifecycle.ViewModelProviders;
+
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
@@ -28,7 +31,6 @@ import com.example.app.adapter.AlertAddUser;
 import com.example.app.fragment.FragmentSprintReports;
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
-import com.example.app.fragment.FragmentBurndown;
 import com.example.app.fragment.FragmentEpic;
 import com.example.app.fragment.FragmentSetting;
 import com.example.app.fragment.FragmentSprint;
@@ -39,9 +41,9 @@ import com.example.app.model.Sprint;
 import com.example.app.model.User;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener  {

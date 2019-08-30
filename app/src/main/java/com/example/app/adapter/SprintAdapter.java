@@ -2,8 +2,6 @@ package com.example.app.adapter;
 
 import android.content.ClipData;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,8 @@ import com.example.app.model.Epic;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+
+import androidx.recyclerview.widget.RecyclerView;
 
 public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> implements  View.OnLongClickListener{
 
@@ -37,7 +37,7 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
         this.epicList = epicList;
     }
 
-    @NonNull
+
     @Override
     public SprintViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_sprint, parent, false);
@@ -49,7 +49,7 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull SprintViewHolder sprintViewHolder, int i) {
+    public void onBindViewHolder(SprintViewHolder sprintViewHolder, int i) {
         sprintViewHolder.name.setText(backlogList.get(i).getName());
 //        sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
         sprintViewHolder.fl.setTag(i);

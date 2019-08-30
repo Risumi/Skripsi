@@ -1,7 +1,6 @@
 package com.example.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -14,6 +13,8 @@ import com.example.app.model.Project;
 import com.example.app.model.User;
 
 import java.util.Date;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityAddEpic extends AppCompatActivity implements View.OnClickListener {
 

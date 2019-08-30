@@ -4,8 +4,6 @@ import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
@@ -34,6 +32,8 @@ import java.util.Date;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityAddBacklog extends AppCompatActivity implements View.OnClickListener
 {
@@ -109,7 +109,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public View getDropDownView(int position, @Nullable @android.support.annotation.Nullable View convertView, @NonNull @android.support.annotation.NonNull ViewGroup parent) {
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if(position == 0){
@@ -163,7 +163,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             }
 
             @Override
-            public View getDropDownView(int position, @Nullable @android.support.annotation.Nullable View convertView, @NonNull @android.support.annotation.NonNull ViewGroup parent) {
+            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 View view = super.getDropDownView(position, convertView, parent);
                 TextView tv = (TextView) view;
                 if(position == 0){

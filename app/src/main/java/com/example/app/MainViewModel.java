@@ -1,7 +1,6 @@
 package com.example.app;
 
-import android.arch.lifecycle.MutableLiveData;
-import android.arch.lifecycle.ViewModel;
+
 import android.util.Log;
 
 import com.apollographql.apollo.ApolloCall;
@@ -24,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.ViewModel;
 import okhttp3.OkHttpClient;
 
 import type.CustomType;

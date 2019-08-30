@@ -2,7 +2,6 @@ package com.example.app.fragment;
 
 import android.app.DialogFragment;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,6 +16,8 @@ import com.example.app.R;
 import java.text.DateFormat;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import androidx.annotation.Nullable;
 
 public class FragmentDatePicker extends DialogFragment {
 

@@ -3,15 +3,9 @@ package com.example.app.activity;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -20,12 +14,12 @@ import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.BacklogEpicQuery;
-import com.example.app.EpicQuery;
 import com.example.app.R;
-import com.example.app.fragment.FragmentBacklog;
 import com.example.app.fragment.FragmentDetailEpic;
 import com.example.app.fragment.FragmentTask;
+import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -34,8 +28,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import com.example.app.model.Backlog;
-
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import okhttp3.OkHttpClient;
 import type.CustomType;
 

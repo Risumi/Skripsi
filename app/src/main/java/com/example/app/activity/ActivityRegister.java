@@ -2,8 +2,6 @@ package com.example.app.activity;
 
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -21,6 +19,8 @@ import com.example.app.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.OkHttpClient;
 
 public class ActivityRegister extends AppCompatActivity implements View.OnClickListener{

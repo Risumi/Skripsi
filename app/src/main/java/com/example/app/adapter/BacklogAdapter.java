@@ -2,8 +2,6 @@ package com.example.app.adapter;
 
 import android.content.ClipData;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +17,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogViewHolder2> implements View.OnLongClickListener {
     ArrayList<Backlog> backlogList;
     Listener listener;
@@ -30,7 +30,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         this.clickListener = clickListener;
     }
 
-    @NonNull
+
     @Override
     public BacklogAdapter.BacklogViewHolder2 onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backlog, parent, false);
@@ -44,7 +44,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BacklogAdapter.BacklogViewHolder2 backlogViewHolder2, int i) {
+    public void onBindViewHolder(BacklogAdapter.BacklogViewHolder2 backlogViewHolder2, int i) {
         backlogViewHolder2.BacklogName.setText(backlogList.get(i).getName());
         backlogViewHolder2.BacklogStatus.setText(backlogList.get(i).getId());
 //        backlogViewHolder2.BacklogDate.setText(formatDate(backlogList.get(i).getEndda()));

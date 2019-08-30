@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +25,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.time.Period;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.OkHttpClient;
 
 public class ActivityLogin extends AppCompatActivity implements View.OnClickListener{

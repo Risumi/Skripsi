@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".activity.ActivityAddBacklog">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -118,5 +118,5 @@
             app:layout_constraintEnd_toEndOf="@+id/etBlName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner3" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>

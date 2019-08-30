@@ -1,7 +1,6 @@
 package com.example.app.activity;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.MenuItem;
 import android.view.View;
@@ -10,6 +9,8 @@ import android.widget.EditText;
 
 import com.example.app.model.Project;
 import com.example.app.R;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityAddProject extends AppCompatActivity implements View.OnClickListener{
 

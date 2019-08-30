@@ -1,12 +1,15 @@
 package com.example.app.fragment;
 
 
-import android.arch.lifecycle.ViewModelProviders;
+
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,8 +23,6 @@ import android.widget.TextView;
 import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.SprintAdapter;
-import com.example.app.model.Backlog;
-import com.example.app.model.Epic;
 import com.example.app.model.Sprint;
 import com.github.mikephil.charting.charts.LineChart;
 import com.github.mikephil.charting.components.Description;
@@ -90,7 +91,8 @@ public class FragmentSprintReports extends Fragment implements AdapterView.OnIte
 
     Spinner spinner;
     MainViewModel model;
-    TextView txtDate;
+    TextView txtDate, tvRvBot;
+    View view2;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -114,24 +116,31 @@ public class FragmentSprintReports extends Fragment implements AdapterView.OnIte
         rvNotCompleted = view.findViewById(R.id.rvBottom);
 
 
-        ArrayList<Backlog> listCompleted= new ArrayList<>();
-        listCompleted.add(new Backlog("DOT-1",null,null,"DOT-E 1","Graphql query","Completed",null,null,null,null,null,null));
-        listCompleted.add(new Backlog("DOT-2",null,null,"DOT-E 2","Halaman profil","Completed",null,null,null,null,null,null));
-
-        ArrayList<Backlog> listNotCompleted= new ArrayList<>();
-        listNotCompleted.add(new Backlog("DOT-3",null,null,"DOT-E 1","Graphql mutation","On Progress",null,null,null,null,null,null));
-
-        ArrayList<Epic> listEpic = new ArrayList<>();
-        listEpic.add(new Epic("DOT-E 1",null,"Back end",null,null,null,null,null));
-        listEpic.add(new Epic("DOT-E 2",null,"Front end",null,null,null,null,null));
+//        ArrayList<Backlog> listCompleted= new ArrayList<>();
+//        listCompleted.add(new Backlog("DOT-1",null,null,"DOT-E 1","Graphql query","Completed",null,null,null,null,null,null));
+//        listCompleted.add(new Backlog("DOT-2",null,null,"DOT-E 2","Halaman profil","Completed",null,null,null,null,null,null));
+//
+//        ArrayList<Backlog> listNotCompleted= new ArrayList<>();
+//        listNotCompleted.add(new Backlog("DOT-3",null,null,"DOT-E 1","Graphql mutation","On Progress",null,null,null,null,null,null));
+//
+//        ArrayList<Epic> listEpic = new ArrayList<>();
+//        listEpic.add(new Epic("DOT-E 1",null,"Back end",null,null,null,null,null));
+//        listEpic.add(new Epic("DOT-E 2",null,"Front end",null,null,null,null,null));
 
         rvCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         AdapterCompleted = new SprintAdapter(model.getListBacklogSprintDone().getValue(),model.getListEpic().getValue());
         rvCompleted.setAdapter(AdapterCompleted);
 
-        rvNotCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        AdapterNotCompleted = new SprintAdapter(listNotCompleted,listEpic);
-        rvNotCompleted.setAdapter(AdapterNotCompleted);
+//        rvNotCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+//        AdapterNotCompleted = new SprintAdapter(listNotCompleted,listEpic);
+//        rvNotCompleted.setAdapter(AdapterNotCompleted);
+//
+//        view2 = view.findViewById(R.id.view2);
+//        tvRvBot = view.findViewById(R.id.textView15);
+//
+//        view2.setVisibility(View.GONE);
+//        tvRvBot.setVisibility(View.GONE);
+//        rvNotCompleted.setVisibility(View.GONE);
 
         return view;
     }
