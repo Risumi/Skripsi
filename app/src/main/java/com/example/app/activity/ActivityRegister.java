@@ -36,9 +36,9 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        etEmail = findViewById(R.id.editText7);
-        etName = findViewById(R.id.editText9);
-        etPassword = findViewById(R.id.editText8);
+        etEmail = findViewById(R.id.etEmail);
+        etName = findViewById(R.id.etName);
+        etPassword = findViewById(R.id.etPassword);
         button = findViewById(R.id.button7);
         button.setOnClickListener(this);
     }

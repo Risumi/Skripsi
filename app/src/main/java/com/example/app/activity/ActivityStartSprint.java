@@ -4,9 +4,11 @@ import android.app.DialogFragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -29,9 +31,9 @@ import java.util.Date;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-public class ActivityStartSprint extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemSelectedListener{
+public class ActivityStartSprint extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener{
 
-    Spinner spinner;
+    AutoCompleteTextView spinner;
     EditText etName,etStart, etEnd, etGoal;
     Button btn;
     ImageView img1, img2;
@@ -46,13 +48,6 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
 
         intent = getIntent();
         user =intent.getParcelableExtra("User");
-
-        spinner = findViewById(R.id.spinner6);
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Duration,android.R.layout.simple_spinner_dropdown_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(this);
-
         etName = findViewById(R.id.editText4);
         etStart = findViewById(R.id.editText5);
         Date now = new Date();
@@ -71,10 +66,14 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         sprint = intent.getParcelableExtra("Sprint");
 
         etName.setText(sprint.getName());
-        etGoal.setText(sprint.getSprintGoal());
-
+        etGoal.setText(sprint.getSprintGoal());;
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Duration,R.layout.dropdown_menu_popup_item);
+        spinner=  findViewById(R.id.filled_exposed_dropdown);
+        spinner.setAdapter(adapter);
+        spinner.setOnItemClickListener(this);
         begda = new Date();
         endda = new Date();
+//        spinner.setText(spinner.getAdapter().getItem(1).toString(), false);
     }
 
     @Override
@@ -109,11 +108,10 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
             openDateRangePicker(etStart,1);
         }else if (view == img2){
             openDateRangePicker(etEnd,2);
-            spinner.setSelection(4);
 //            etEnd.setText(formatDate(endda));
         }
     }
-
+    int selection = 0;
     private void openDateRangePicker(final TextView textView, final int i) {
         FragmentDatePicker pickerFrag = new FragmentDatePicker();
         pickerFrag.setCallback(new FragmentDatePicker.Callback() {
@@ -130,8 +128,15 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                 Date date = selectedDate.getStartDate().getTime();
                 if (i == 1) {
                     begda = date;
+                    String text = spinner.getText().toString();
+                    if (selection!=0 && !text.equalsIgnoreCase("Custom")){
+                        etEnd.setText(getAddWeek(begda,selection));
+                        endda = getAddWeekDate(begda,selection);
+
+                    }
                 } else {
                     endda = date;
+                    spinner.setText("Custom",false);
                 }
                 textView.setText(formatDate(date));
             }
@@ -169,33 +174,6 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         return date;
     }
 
-    @Override
-    public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        switch (i){
-            case 0: etEnd.setText("");break;
-            case 1:
-                etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),1));
-                endda = getAddWeekDate(formatString(etStart.getText().toString()),1);
-                break;
-            case 2:
-                etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),2));
-                endda = getAddWeekDate(formatString(etStart.getText().toString()),2);
-                break;
-            case 3:
-                etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),3));
-                endda = getAddWeekDate(formatString(etStart.getText().toString()),3);
-                break;
-            case 4:
-//                etEnd.setText("");
-                break;
-            default:break;
-        }
-    }
-
-    @Override
-    public void onNothingSelected(AdapterView<?> adapterView) {
-
-    }
 
     String getAddWeek(Date date,int i){
         Calendar calendar = Calendar.getInstance();
@@ -209,5 +187,36 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         calendar.setTime(date);
         calendar.add(Calendar.WEEK_OF_YEAR,i);
         return calendar.getTime();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return true;
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+        switch (i){
+            case 0:
+                etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),1));
+                endda = getAddWeekDate(formatString(etStart.getText().toString()),1);
+                selection =1;
+                break;
+            case 1:
+                etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),2));
+                endda = getAddWeekDate(formatString(etStart.getText().toString()),2);
+                selection =2;
+                break;
+            case 2:
+                etEnd.setText(getAddWeek(formatString(etStart.getText().toString()),3));
+                endda = getAddWeekDate(formatString(etStart.getText().toString()),3);
+                selection =3;
+                break;
+        }
     }
 }

@@ -10,12 +10,17 @@
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="title_activity_home2">HomeActivity2</string>
+    <string name="title_activity_epic">Epic</string>
+
+    <string name="title_epic_detail">Detail</string>
+
+    <string name="title_list_task">List Tasks</string>
+
     <string-array name="Status">
         <item>To Do</item>
         <item>On Progress</item>
         <item>Completed</item>
     </string-array>
-
     <string-array name="Asignee">
         <item>Select Asignee</item>
         <item>Rizky Suhaimi</item>
@@ -23,16 +28,9 @@
         <item>Anugerah Wijaya</item>
         <item>Charles Sanggalangi</item>
     </string-array>
-
     <string-array name="Duration">
-        <item>Duration</item>
         <item>1 week</item>
         <item>2 week</item>
         <item>3 week</item>
-        <item>Custom</item>
     </string-array>
-
-    <string name="title_activity_epic">Epic</string>
-    <string name="title_epic_detail">Detail</string>
-    <string name="title_list_task">List Tasks</string>
 </resources>

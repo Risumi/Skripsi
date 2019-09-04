@@ -10,20 +10,25 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <EditText
-            android:id="@+id/etBlName"
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/textInputLayout5"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
             android:layout_marginEnd="24dp"
-            android:ems="10"
-            android:hint="Issue Name"
-            android:inputType="textPersonName"
-            android:translationX="-5dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etBlName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Issue Name"
+                android:inputType="textPersonName" />
+        </com.google.android.material.textfield.TextInputLayout>
 
         <View
             android:id="@+id/view"
@@ -91,9 +96,8 @@
             android:entries="@array/Status"
             android:spinnerMode="dropdown"
             android:translationX="-10dp"
-            app:layout_constraintEnd_toEndOf="@+id/etBlName"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/etBlName" />
+            app:layout_constraintTop_toBottomOf="@+id/textInputLayout5" />
 
         <Spinner
             android:id="@+id/spinner3"
@@ -103,7 +107,6 @@
             android:layout_marginTop="24dp"
             android:spinnerMode="dropdown"
             android:translationX="-10dp"
-            app:layout_constraintEnd_toEndOf="@+id/etBlName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner" />
 
@@ -115,7 +118,6 @@
             android:layout_marginTop="24dp"
             android:spinnerMode="dropdown"
             android:translationX="-10dp"
-            app:layout_constraintEnd_toEndOf="@+id/etBlName"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/spinner3" />
     </androidx.constraintlayout.widget.ConstraintLayout>

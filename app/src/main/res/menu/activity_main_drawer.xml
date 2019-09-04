@@ -21,14 +21,19 @@
             android:icon="@drawable/ic_baseline_assignment_24px"
             android:title="Sprint Report" />
 
-        <!--<item-->
-            <!--android:id="@+id/nav_burndown"-->
-            <!--android:icon="@drawable/ic_timeline_black_24dp"-->
-            <!--android:title="Burndown Chart" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_burndown"-->
+<!--            android:icon="@drawable/ic_timeline_black_24dp"-->
+<!--            android:title="Burndown Chart" />-->
         <item
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_baseline_settings_20px"
             android:title="Project Setting" />
+        <item
+            android:id="@+id/nav_demo"
+            android:icon="@drawable/ic_layers_black_24dp"
+            android:title="Demo" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_exit_to_app_black_24dp"

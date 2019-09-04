@@ -20,6 +20,8 @@ import com.example.app.R;
 import com.example.app.UserLoginQuery;
 import com.example.app.model.Progress;
 import com.example.app.model.User;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -30,20 +32,22 @@ import androidx.appcompat.app.AppCompatActivity;
 import okhttp3.OkHttpClient;
 
 public class ActivityLogin extends AppCompatActivity implements View.OnClickListener{
-    EditText etEmail;
-    EditText etPassword;
-    Button btnLogin;
-    Button btnRegister;
+//    EditText etEmail;
+//    EditText etPassword;
+    MaterialButton btnLogin;
+    MaterialButton btnRegister;
     Intent intent;
     User user;
     AlertDialog.Builder builder;
+    EditText etEmail ;
+    EditText etPassword ;
     private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-        etEmail= findViewById(R.id.editText);
-        etPassword= findViewById(R.id.editText2);
+        etEmail= findViewById(R.id.etEmail);
+        etPassword= findViewById(R.id.etPassword);
         btnLogin = findViewById(R.id.button3);
         btnLogin.setOnClickListener(this);
         btnRegister= findViewById(R.id.button4);

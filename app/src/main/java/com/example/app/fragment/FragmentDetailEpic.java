@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.app.model.Epic;
@@ -62,10 +63,11 @@ public class FragmentDetailEpic extends Fragment {
     }
 
     EditText editText,editText2,editText3;
+    Button button;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_detail_epic, container, false);
+        View view = inflater.inflate(R.layout.activity_add_epic, container, false);
         editText = view.findViewById(R.id.etEpicName);
         editText.setFocusable(false);
         editText.setText(mParam1.getId());
@@ -77,6 +79,9 @@ public class FragmentDetailEpic extends Fragment {
         editText2 = view.findViewById(R.id.eEpicStatus);
         editText2.setFocusable(false);
         editText2.setText(mParam1.getName());
+
+        button = view.findViewById(R.id.button);
+        button.setVisibility(View.GONE);
 
         return view;
     }

@@ -188,6 +188,10 @@ public class ActivityMain extends AppCompatActivity
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
+        }else if (id ==R.id.nav_demo){
+            Intent intent = new Intent(this,DemoActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            startActivity(intent);
         }
         return true;
     }
