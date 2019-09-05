@@ -254,7 +254,6 @@ public class FragmentBacklog extends Fragment implements Listener, BacklogAdapte
         Log.d("position", ((Integer) position).toString());
         ArrayList<String> spinnerArray = new ArrayList<>();
         ArrayList<String> idEpic = new ArrayList<>();
-        spinnerArray.add("None");
         for (int i=0;i<model.getListEpic().getValue().size();i++){
             spinnerArray.add(model.getListEpic().getValue().get(i).getName());
             idEpic.add(model.getListEpic().getValue().get(i).getId());

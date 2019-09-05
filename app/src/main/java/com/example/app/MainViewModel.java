@@ -1282,8 +1282,7 @@ public class MainViewModel extends ViewModel {
         int last=0;
         int temp=0;
         for (int i=0;i<listAllBacklog.getValue().size();i++){
-            temp = Integer.parseInt(listAllBacklog.getValue().get(i).getId().substring(listAllBacklog.getValue().get(i).getId().length() - 1));
-            Log.d("Last",Integer.toString(temp));
+            temp = Integer.parseInt(listAllBacklog.getValue().get(i).getId().replaceAll("[^0-9]",""));
             if (last<temp){
                 last = temp;
             }

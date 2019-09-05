@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.app.ListenerGraphql;
 import com.example.app.adapter.AlertAddUser;
+import com.example.app.fragment.FragmentDemo;
 import com.example.app.fragment.FragmentSprintReports;
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
@@ -179,6 +180,10 @@ public class ActivityMain extends AppCompatActivity
             fragment = FragmentSprintReports.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
+        }else if (id == R.id.nav_demo){
+            fragment = FragmentDemo.newInstance("","");
+            fam.collapse();
+            fam.setVisibility(View.GONE);
         }
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -188,11 +193,11 @@ public class ActivityMain extends AppCompatActivity
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
             finish();
-        }else if (id ==R.id.nav_demo){
+        }/*else if (id ==R.id.nav_demo){
             Intent intent = new Intent(this,DemoActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
             startActivity(intent);
-        }
+        }*/
         return true;
     }
 
@@ -241,7 +246,6 @@ public class ActivityMain extends AppCompatActivity
             Intent intent = new Intent(this, ActivityAddBacklog.class);
             ArrayList<String> spinnerArray = new ArrayList<>();
             ArrayList<String> idEpic = new ArrayList<>();
-            spinnerArray.add("None");
             for (int i=0;i<model.getListEpic().getValue().size();i++){
                 spinnerArray.add(model.getListEpic().getValue().get(i).getName());
                 idEpic.add(model.getListEpic().getValue().get(i).getId());

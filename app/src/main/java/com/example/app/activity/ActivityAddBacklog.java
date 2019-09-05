@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -45,12 +46,12 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
     String assignee="";
     TextView tvDate;
     Date begdda, endda;
-    Spinner spinner,spinner2, spinner3;
     Backlog newBacklog, editBacklog;
     Intent resultIntent;
     String epicId="";
     String sprintId="";
     User user;
+    AutoCompleteTextView ddStatus, ddEpic, ddAssignee;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -64,25 +65,17 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         button2 = findViewById(R.id.button5);
         button2.setOnClickListener(this);
         etBlDesc =findViewById(R.id.etBlDesc);
-        spinner =  findViewById(R.id.spinner);
-        spinner2 = findViewById(R.id.spinner3);
-        spinner3 = findViewById(R.id.spinner4);
-        spinner3 = findViewById(R.id.spinner4);
+        ddStatus = findViewById(R.id.ddStatus);
+        ddEpic = findViewById(R.id.ddEpic);
+        ddAssignee = findViewById(R.id.ddAssignee);
 
 
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.Status, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Status,R.layout.dropdown_menu_popup_item);
+        ddStatus.setAdapter(adapter);
+        ddStatus.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("Spinner :","1");
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 status = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
 
@@ -92,140 +85,44 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         ArrayList<String> spinnerArray2 = resultIntent.getStringArrayListExtra("spinner2");
         ArrayList<String> epicID = resultIntent.getStringArrayListExtra("epicID");
         ArrayList<String> emailUser = resultIntent.getStringArrayListExtra("emailUser");
-        spinnerArray.add(0,"Select Epic");
-        spinnerArray2.add(0,"Select Assignee");
-        spinnerArray2.add(1,"Unassigned");
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(this,R.layout.support_simple_spinner_dropdown_item,spinnerArray){
-            @Override
-            public boolean isEnabled(int position) {
-                if(position == 0)
-                {
-                    return false;
-                }
-                else
-                {
-                    return true;
-                }
-            }
+        spinnerArray2.add(0,"Unassigned");
 
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(this,R.layout.dropdown_menu_popup_item,spinnerArray);
+        ddEpic.setAdapter(adapter2);
+        ddEpic.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if(position == 0){
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-        spinner2.setAdapter(adapter2);
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("Spinner :","2");
-                if (epicID.size()!=0){
-                    Log.d("index spinner",Integer.toString(i));
-                    if (adapterView.getAdapter().getCount()>0){
-                        if ((i-2)<0){
-
-                        }else {
-                            epicId = epicID.get(i - 2);
-                            if (epicId.equalsIgnoreCase("None")) {
-                                epicId = "";
-                            }
-                        }
-                    }
-                    Log.d("epic ID",epicId);
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                epicId= epicID.get(i);
             }
         });
 
-
-        ArrayAdapter<String> adapter3 = new ArrayAdapter<String>(this, R.layout.support_simple_spinner_dropdown_item,spinnerArray2){
+        ArrayAdapter<String> adapter3= new ArrayAdapter<>(this,R.layout.dropdown_menu_popup_item,spinnerArray2);
+        ddAssignee.setAdapter(adapter3);
+        ddAssignee.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
-            public boolean isEnabled(int position) {
-                if(position == 0)
-                {
-                    return false;
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if (i == 0){
+                    assignee = "";
+                }else {
+                    assignee= emailUser.get(i-1);
                 }
-                else
-                {
-                    return true;
-                }
-            }
-
-            @Override
-            public View getDropDownView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-                View view = super.getDropDownView(position, convertView, parent);
-                TextView tv = (TextView) view;
-                if(position == 0){
-                    tv.setTextColor(Color.GRAY);
-                }
-                else {
-                    tv.setTextColor(Color.BLACK);
-                }
-                return view;
-            }
-        };
-        spinner3.setAdapter(adapter3);
-        spinner3.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                Log.d("Spinner :","1");
-                if (emailUser.size()!=0){
-                    Log.d("index spinner",Integer.toString(i));
-                    if (adapterView.getAdapter().getCount()>0){
-                        if ((i-2)<0){
-
-                        }else {
-                            assignee = emailUser.get(i - 2);
-                            if (assignee.equalsIgnoreCase("Unassigned")) {
-                                assignee = "";
-                            }
-                        }
-                    }
-                    Log.d("Email User",assignee);
-                }
-//                assignee = adapterView.getItemAtPosition(i).toString();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
             }
         });
+
 
         if (resultIntent.getIntExtra("req code",1)==2){
             button2.setVisibility(View.VISIBLE);
             editBacklog = resultIntent.getParcelableExtra("backlog");
             etBlName.setText(editBacklog.getName());
-            int spinnerPos = adapter.getPosition(editBacklog.getStatus());
-            spinner.setSelection(spinnerPos);
-
-            String temp = "";
-            if (resultIntent.getStringExtra("epicName").equals("")){
-                temp = "None";
+            ddStatus.setText(editBacklog.getStatus(),false);
+            status = editBacklog.getStatus();
+            ddEpic.setText(resultIntent.getStringExtra("epicName"),false);
+            String nama= resultIntent.getStringExtra("userName");
+            if (nama.equalsIgnoreCase("")){
+                ddAssignee.setText("Unassigned",false);
             }else {
-                temp =resultIntent.getStringExtra("epicName");
+                ddAssignee.setText(resultIntent.getStringExtra("userName"),false);
             }
-            int spinnerPos2 = adapter2.getPosition(temp);
-            spinner2.setSelection(spinnerPos2);
-
-            if (resultIntent.getStringExtra("userName").equals("")){
-                temp = "Unassigned";
-            }else {
-                temp =resultIntent.getStringExtra("userName");
-            }
-            int spinnerPos3 = adapter.getPosition(temp);
-            spinner3.setSelection(spinnerPos3);
 
             sprintId = editBacklog.getIdSprint();
             etBlDesc.setText(editBacklog.getDescription());
@@ -234,6 +131,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
         }
         Log.d("PID",resultIntent.getStringExtra("PID"));
+        Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
+
     }
 
 

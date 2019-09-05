@@ -10,4 +10,7 @@
     <color name="line1">#3333FF</color>
     <color name="line2">#FF3333</color>
     <color name="def">#00FF00</color>
+    <color name="list_item_background">#AACCCCCC</color>
+    <color name="app_color">#D81B60</color>
+
 </resources>
