@@ -42,17 +42,19 @@ public class ItemAdapter extends DragItemAdapter<Pair<Long, Backlog>, ItemAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        String text = mItemList.get(position).second.getName();
-        holder.mText.setText(text);
+        Backlog backlog= mItemList.get(position).second;
+        holder.txtName.setText(backlog.getName());
+        holder.txtID.setText(backlog.getId());
         holder.itemView.setTag(mItemList.get(position));
     }
 
     class ViewHolder extends DragItemAdapter.ViewHolder {
-        TextView mText;
+        TextView txtName, txtID;
 
         ViewHolder(final View itemView) {
             super(itemView, mGrabHandleId, mDragOnLongPress);
-            mText = (TextView) itemView.findViewById(R.id.text);
+            txtName = itemView.findViewById(R.id.txtName);
+            txtID = itemView.findViewById(R.id.txtID);
         }
 
         @Override

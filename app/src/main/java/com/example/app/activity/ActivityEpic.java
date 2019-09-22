@@ -37,7 +37,7 @@ import type.CustomType;
 
 public class ActivityEpic extends AppCompatActivity {
 
-    private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
+    private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
     ArrayList<Backlog> listBacklogEpic;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener

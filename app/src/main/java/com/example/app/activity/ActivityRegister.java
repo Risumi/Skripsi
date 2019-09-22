@@ -29,7 +29,7 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
     EditText etPassword;
     Button  button;
     AlertDialog.Builder builder;
-    private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
+    private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

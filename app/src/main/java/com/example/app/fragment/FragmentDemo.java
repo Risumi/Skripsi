@@ -20,6 +20,8 @@ import com.example.app.model.Backlog;
 import com.woxthebox.draglistview.BoardView;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -46,15 +48,6 @@ public class FragmentDemo extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentDemo.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentDemo newInstance(String param1, String param2) {
         FragmentDemo fragment = new FragmentDemo();
         Bundle args = new Bundle();
@@ -78,7 +71,11 @@ public class FragmentDemo extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.activity_demo, container, false);
+        View view = inflater.inflate(R.layout.fragment_demo, container, false);
+        TextView txtSprint = view.findViewById(R.id.txtSprint);
+        TextView txtRemaining = view.findViewById(R.id.txtRemaining);
+        txtSprint.setText(Objects.requireNonNull(model.getCurrentSprint().getValue()).getName());
+
         mBoardView = view.findViewById(R.id.board_view);
         mBoardView.setSnapToColumnsWhenScrolling(true);
         mBoardView.setSnapToColumnWhenDragging(true);
@@ -96,12 +93,26 @@ public class FragmentDemo extends Fragment {
 
             @Override
             public void onItemDragEnded(int fromColumn, int fromRow, int toColumn, int toRow) {
-                if (fromColumn != toColumn || fromRow != toRow) {
+                if (fromColumn != toColumn) {
 //                    Toast.makeText(mBoardView.getContext(), "End - column: " + toColumn + " row: " + toRow, Toast.LENGTH_SHORT).show();
 
                     try {
                         if (mBoardView.getAdapter(toColumn).getItemList().get(toRow) instanceof Pair){
-                            Pair<Long, String> test = ((Pair<Long, String>) mBoardView.getAdapter(toColumn).getItemList().get(toRow));
+                            Backlog test = ((Pair<Long, Backlog>) mBoardView.getAdapter(toColumn).getItemList().get(toRow)).second;
+                            switch (toColumn){
+                                case 0:
+                                    test.setStatus("To Do");
+                                    break;
+                                case 1:
+                                    test.setStatus("On Progress");
+                                    break;
+                                case 2:
+                                    test.setStatus("Completed");
+                                    break;
+                            }
+                            test.setModifieddate(new Date());
+                            test.setModifiedby(model.getUser().getEmail());
+                            model.editBacklog(test);
                         }
 
 //                        Toast.makeText(mBoardView.getContext(), test.second, Toast.LENGTH_SHORT).show();

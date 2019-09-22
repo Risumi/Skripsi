@@ -44,7 +44,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
     ArrayList<Progress> listProgress;
     final int ADD_PROJECT =1;
     User user;
-    private static final String BASE_URL = "http://jectman.herokuapp.com/api/graphql";
+    private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
     AlertDialog.Builder builder;
 
     @Override

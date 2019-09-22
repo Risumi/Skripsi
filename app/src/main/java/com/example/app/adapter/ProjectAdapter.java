@@ -51,7 +51,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         current = projectArrayList.get(position);
         holder.ProjectName.setText(current.getName());
         holder.ProjectStatus.setText(current.getId());
-        String desc = current.getDescription();
+//        String desc = current.getDescription();
         float progress = 0;
         for (int i = 0 ; i < progressArrayList.size();i++){
             if (progressArrayList.get(i).getIdProject().equalsIgnoreCase(current.getId())){
@@ -69,10 +69,10 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             }
         }
         holder.ProjectProgress.setText(Integer.toString((int)progress)+"%");
-        if (desc.length()>45){
-            desc = desc.substring(0,45)+"...";
-        }
-        holder.ProjectDesc.setText(desc);
+//        if (desc.length()>45){
+//            desc = desc.substring(0,45)+"...";
+//        }
+//        holder.ProjectDesc.setText(desc);
     }
 
     @Override
@@ -91,7 +91,6 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
             super(itemView);
             ProjectName = itemView.findViewById(R.id.txtName);
             ProjectStatus = itemView.findViewById(R.id.txtStatus);
-            ProjectDesc = itemView.findViewById(R.id.txtDescription);
             ProjectProgress = itemView.findViewById(R.id.txtProgress);
             cardView = itemView.findViewById(R.id.cardView);
             cardView.setOnClickListener(this);

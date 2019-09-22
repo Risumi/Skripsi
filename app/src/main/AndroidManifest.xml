@@ -10,7 +10,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true">
-        <activity android:name=".activity.DemoActivity"></activity>
         <activity
             android:name=".activity.ActivityRegister"
             android:parentActivityName=".activity.ActivityLogin" />

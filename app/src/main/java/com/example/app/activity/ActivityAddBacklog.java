@@ -142,7 +142,9 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             if (validateFields(etBlName)){
                 name = etBlName.getText().toString();
                 desc = etBlDesc.getText().toString();
-//                    assignee = "";
+                if (status==null){
+                    status = ddStatus.getAdapter().getItem(0).toString();
+                }
                 if (resultIntent.getIntExtra("req code",1)==2){
                     newBacklog = new Backlog(
                             resultIntent.getStringExtra("blsID"),

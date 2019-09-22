@@ -26,9 +26,13 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.app.AbstractExpandableDataProvider;
 import com.example.app.ListenerGraphql;
 import com.example.app.adapter.AlertAddUser;
+import com.example.app.fragment.ExampleExpandableDataProviderFragment;
+import com.example.app.fragment.ExpandableDraggableSwipeableExampleFragment;
 import com.example.app.fragment.FragmentDemo;
+import com.example.app.fragment.FragmentDemo2;
 import com.example.app.fragment.FragmentSprintReports;
 import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
@@ -49,6 +53,8 @@ import java.util.ArrayList;
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener  {
     private Fragment fragment;
+    private static final String FRAGMENT_TAG_DATA_PROVIDER = "data provider";
+    private static final String FRAGMENT_LIST_VIEW = "list view";
     private FloatingActionButton fab,fab2,fab3;
     FloatingActionsMenu fam;
     Intent intent;
@@ -182,6 +188,10 @@ public class ActivityMain extends AppCompatActivity
             fam.setVisibility(View.GONE);
         }else if (id == R.id.nav_demo){
             fragment = FragmentDemo.newInstance("","");
+            fam.collapse();
+            fam.setVisibility(View.GONE);
+        }else if (id == R.id.nav_demo2){
+            fragment = FragmentDemo2.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
         }
@@ -455,5 +465,25 @@ public class ActivityMain extends AppCompatActivity
     @Override
     public void addUser(String email) {
         model.addUser(email,PID);
+    }
+
+    public void onGroupItemClicked(int groupPosition) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_LIST_VIEW);
+        AbstractExpandableDataProvider.GroupData data = getDataProvider().getGroupItem(groupPosition);
+
+        Toast.makeText(this,"G Pos : "+Integer.toString(groupPosition),Toast.LENGTH_SHORT).show();
+
+    }
+
+    public void onChildItemClicked(int groupPosition, int childPosition) {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_LIST_VIEW);
+        AbstractExpandableDataProvider.ChildData data = getDataProvider().getChildItem(groupPosition, childPosition);
+
+        Toast.makeText(this,"G Pos : "+(groupPosition)+" C Pos : "+(childPosition),Toast.LENGTH_SHORT).show();
+    }
+
+    public AbstractExpandableDataProvider getDataProvider() {
+        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DATA_PROVIDER);
+        return ((ExampleExpandableDataProviderFragment) fragment).getDataProvider();
     }
 }
