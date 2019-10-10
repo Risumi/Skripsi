@@ -1,0 +1,11 @@
+mutation CompleteSprint($backlog:[BacklogInput],$modifiedby:String,$sprint:SprintInput,$newSprint:SprintInput){
+  editSprintO(sprint:$sprint){
+    ok
+  }
+  createSprintO(sprint:$newSprint){
+    ok
+  }
+  setStatus(backlog:$backlog,modifiedby:$modifiedby){
+    ok
+  }
+}

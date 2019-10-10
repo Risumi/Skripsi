@@ -1,0 +1,65 @@
+query Main($id:String!){
+  epic(id:$id){
+    id
+    name
+    summary
+    createddate
+    createdby{
+      nama
+    }
+    modifieddate
+    modifiedby{
+      nama
+    }
+  }
+ 
+  userproject(id:$id){
+    email{
+      email
+      nama
+    }
+  }
+  backlog(id:$id){
+    id
+    idSprint{
+      id
+    }
+    idEpic{
+      id
+    }
+    name
+    status
+    description
+    assignee{
+      email
+    }
+    createddate
+    createdby{
+      nama
+    }
+    modifieddate
+    modifiedby{
+      nama
+    }     
+  }
+  sprint(id:$id){
+    id        
+    name
+    begindate  
+    enddate
+    goal    
+    status
+    retrospective
+    createddate
+    createdby{
+      nama    
+    }
+    modifieddate
+    modifiedby{
+      nama
+    }    
+  }
+}
+
+
+

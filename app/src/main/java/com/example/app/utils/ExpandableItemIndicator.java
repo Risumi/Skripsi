@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.example.app;
+package com.example.app.utils;
 
 import android.content.Context;
 import android.os.Build;

@@ -22,15 +22,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.app.AbstractExpandableDataProvider;
-import com.example.app.DrawableUtils;
-import com.example.app.ExpandableItemIndicator;
+import com.example.app.utils.AbstractExpandableDataProvider;
+import com.example.app.utils.ExpandableItemIndicator;
 import com.example.app.R;
-import com.example.app.ViewUtils;
+import com.example.app.utils.ViewUtils;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.DraggableItemState;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.ItemDraggableRange;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.ExpandableDraggableItemAdapter;
@@ -59,7 +56,7 @@ public class ExpandableDraggableSwipeableExampleAdapter
     public interface EventListener {
         void onDragFinished(int fromGroupPosition,int toGroupPosition, int toChildPosition);
         void onItemViewClicked(View v);
-        void onMenuClicked(MenuItem m);
+        void onMenuClicked(MenuItem m,int GroupPos);
     }
 
     public static abstract class MyBaseViewHolder extends AbstractDraggableItemViewHolder implements ExpandableItemViewHolder {
@@ -94,16 +91,14 @@ public class ExpandableDraggableSwipeableExampleAdapter
         }
     }
     public static abstract class MyBaseViewHolder2 extends AbstractExpandableItemViewHolder {
-        public FrameLayout mContainer;
-        public View mDragHandle;
-        public TextView mTextView, mTextView2;
-        public ImageView mImageView;
+        ConstraintLayout mContainer;
+        TextView mTextView, mTextView2;
+        View mImageView;
         private final ExpandableItemState mExpandState = new ExpandableItemState();
 
-        public MyBaseViewHolder2(View v) {
+        MyBaseViewHolder2(View v) {
             super(v);
             mContainer = v.findViewById(R.id.container);
-            mDragHandle = v.findViewById(R.id.drag_handle);
             mTextView = v.findViewById(R.id.title);
             mTextView2 = v.findViewById(R.id.totIssue);
             mImageView = v.findViewById(R.id.imageView);
@@ -212,7 +207,7 @@ public class ExpandableDraggableSwipeableExampleAdapter
         holder.itemView.setOnClickListener(mItemViewOnClickListener);
 
         // set text
-        holder.mTextView.setText(item.getSprint().getName());
+
 
         holder.mTextView2.setText(mProvider.getChildCount(groupPosition)+" Issue");
 
@@ -222,8 +217,12 @@ public class ExpandableDraggableSwipeableExampleAdapter
             boolean animateIndicator = expandState.hasExpandedStateChanged();
             holder.mIndicator.setExpandedState(expandState.isExpanded(), animateIndicator);
         }
-        if (groupPosition==(mProvider.getGroupCount()-1)){
+        if (groupPosition==(0)){
+            holder.mTextView.setText(item.getSprint().getName());
             holder.mImageView.setVisibility(View.GONE);
+        }else {
+            String sprintName = item.getSprint().getName()+" - "+item.getSprint().getStatus();
+            holder.mTextView.setText(sprintName);
         }
         holder.mImageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -234,7 +233,7 @@ public class ExpandableDraggableSwipeableExampleAdapter
                 popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        mEventListener.onMenuClicked(item);
+                        mEventListener.onMenuClicked(item,groupPosition);
                         return true;
                     }
                 });
@@ -293,6 +292,11 @@ public class ExpandableDraggableSwipeableExampleAdapter
 
         final int offsetX = containerView.getLeft() + (int) (containerView.getTranslationX() + 0.5f);
         final int offsetY = containerView.getTop() + (int) (containerView.getTranslationY() + 0.5f);
+
+        Log.d("Offset X",Integer.toString(offsetX));
+        Log.d("Offset Y",Integer.toString(offsetY));
+
+        Log.d("Expand", ((Boolean) !ViewUtils.hitTest(dragHandleView, x - offsetX, y - offsetY)).toString());
 
         return !ViewUtils.hitTest(dragHandleView, x - offsetX, y - offsetY);
     }

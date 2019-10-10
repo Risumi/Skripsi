@@ -26,19 +26,16 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.app.AbstractExpandableDataProvider;
-import com.example.app.ListenerGraphql;
+import com.example.app.utils.AbstractExpandableDataProvider;
+import com.example.app.utils.ListenerGraphql;
 import com.example.app.adapter.AlertAddUser;
 import com.example.app.fragment.ExampleExpandableDataProviderFragment;
-import com.example.app.fragment.ExpandableDraggableSwipeableExampleFragment;
-import com.example.app.fragment.FragmentDemo;
-import com.example.app.fragment.FragmentDemo2;
-import com.example.app.fragment.FragmentSprintReports;
-import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentBacklog;
+import com.example.app.fragment.FragmentDemo;
+import com.example.app.fragment.FragmentSprint;
+import com.example.app.model.Backlog;
 import com.example.app.fragment.FragmentEpic;
 import com.example.app.fragment.FragmentSetting;
-import com.example.app.fragment.FragmentSprint;
 import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.model.Epic;
@@ -65,8 +62,6 @@ public class ActivityMain extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-
 
         model = ViewModelProviders.of(this).get(MainViewModel.class);
         model.instantiateListener(this);
@@ -112,7 +107,7 @@ public class ActivityMain extends AppCompatActivity
         transaction.commit();
 //        setFab();
 
-        model.fetchEpic(PID);
+        model.fetchMain(PID);
         model.setUser(user);
 
         getSupportActionBar().setTitle(intent.getStringExtra("PName"));
@@ -145,9 +140,9 @@ public class ActivityMain extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
+//        if (id == R.id.action_settings) {
+//            return true;
+//        }
         return super.onOptionsItemSelected(item);
     }
 
@@ -164,17 +159,17 @@ public class ActivityMain extends AppCompatActivity
             fab.setVisibility(View.GONE);
             fab2.setVisibility(View.GONE);
             fab3.setVisibility(View.VISIBLE);
-        } else if (id == R.id.nav_backlog) {
+        }/* else if (id == R.id.nav_backlog) {
             fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
             fam.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
             fab2.setVisibility(View.VISIBLE);
             fab3.setVisibility(View.GONE);
         } else if (id == R.id.nav_sprint) {
             fragment = FragmentSprint.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
-        } else if (id == R.id.nav_setting) {
+        }*/ else if (id == R.id.nav_setting) {
             fragment = FragmentSetting.newInstance(intent.getParcelableExtra("project"),PID);
             fam.collapse();
             fam.setVisibility(View.GONE);
@@ -183,17 +178,20 @@ public class ActivityMain extends AppCompatActivity
             fam.collapse();
             fam.setVisibility(View.GONE);
         }*/else if (id == R.id.nav_sprint_report){
-            fragment = FragmentSprintReports.newInstance("","");
-            fam.collapse();
-            fam.setVisibility(View.GONE);
-        }else if (id == R.id.nav_demo){
             fragment = FragmentDemo.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
-        }else if (id == R.id.nav_demo2){
-            fragment = FragmentDemo2.newInstance("","");
+        }else if (id == R.id.nav_demo){
+            fragment = FragmentSprint.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
+        }else if (id == R.id.nav_demo2){
+            fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
+            fam.collapse();
+            fam.setVisibility(View.VISIBLE);
+            fab.setVisibility(View.GONE);
+            fab2.setVisibility(View.VISIBLE);
+            fab3.setVisibility(View.GONE);
         }
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -231,9 +229,9 @@ public class ActivityMain extends AppCompatActivity
             fab.setVisibility(View.GONE);
             fab2.setVisibility(View.GONE);
             fab3.setVisibility(View.VISIBLE);
-        }else if (fragmentInFrame instanceof FragmentSprint){
+        }/*else if (fragmentInFrame instanceof FragmentSprint){
             fam.setVisibility(View.GONE);
-        }
+        }*/
         else {
 //            fab.hide();
             fam.setVisibility(View.GONE);
@@ -245,13 +243,12 @@ public class ActivityMain extends AppCompatActivity
 //        Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
 //                .setAction("Action", null).show();
         if (view==fab){
-            Intent intent = new Intent(this, ActivityAddSprint.class);
+            /*Intent intent = new Intent(this, ActivityAddSprint.class);
             intent.putExtra("req code",REQ_ADD_SPRINT);
             intent.putExtra("PID",PID);
             intent.putExtra("SCount",model.getSprintCount().getValue());
             intent.putExtra("User",model.getUser());
-
-            startActivityForResult(intent,REQ_ADD_SPRINT);
+            startActivityForResult(intent,REQ_ADD_SPRINT);*/
         }else if(view==fab2){
             Intent intent = new Intent(this, ActivityAddBacklog.class);
             ArrayList<String> spinnerArray = new ArrayList<>();
@@ -308,17 +305,25 @@ public class ActivityMain extends AppCompatActivity
         }
         if (requestCode == REQ_EDIT_BACKLOG) {
             if (resultCode == RESULT_OK) {
-                Backlog newBacklog = data.getParcelableExtra("result");
+                Backlog editBacklog = data.getParcelableExtra("result");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+//                if (fragmentInFrame instanceof FragmentBacklog){
+//                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),editBacklog,data.getStringExtra("adapter"));
+//                }
                 if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).EditDataSet(data.getIntExtra("position",0),newBacklog,data.getStringExtra("adapter"));
+                    ((FragmentBacklog) fragmentInFrame).EditDataSet(
+                            data.getIntExtra("group pos",0),
+                            data.getIntExtra("child pos",0),
+                            editBacklog,
+                            data.getIntExtra("index",0),
+                            data.getIntExtra("index2",-1));
                 }
             }
             else if (resultCode == 2){
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 Backlog delBacklog = data.getParcelableExtra("backlog");
                 if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).RemoveDataSet(data.getIntExtra("position",0),delBacklog,data.getStringExtra("adapter"));
+                    ((FragmentBacklog) fragmentInFrame).RemoveDataSet(data.getIntExtra("group pos",0),data.getIntExtra("child pos",0),delBacklog);
                 }
                 Toast.makeText(this,"Deleted",Toast.LENGTH_LONG).show();
             }
@@ -326,11 +331,11 @@ public class ActivityMain extends AppCompatActivity
         if (requestCode == REQ_ADD_SPRINT) {
             if (resultCode == RESULT_OK) {
                 Sprint newSprint = data.getParcelableExtra("sprint");
-                model.getSprintCount().setValue(model.getSprintCount().getValue()+1);
+//                model.getSprintCount().setValue(model.getSprintCount().getValue()+1);
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragmentInFrame instanceof FragmentBacklog){
-                    ((FragmentBacklog) fragmentInFrame).setSprint(newSprint);
-                }
+//                if (fragmentInFrame instanceof FragmentBacklog){
+//                    ((FragmentBacklog) fragmentInFrame).addSprint(newSprint);
+//                }
             }
         }
         if (requestCode == REQ_ADD_EPIC) {
@@ -346,12 +351,17 @@ public class ActivityMain extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Sprint newSprint = data.getParcelableExtra("Sprint");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-                if (fragmentInFrame instanceof FragmentBacklog){
-                    model.getListSprint().getValue().set(data.getIntExtra("indexSprint",0),newSprint);
-//                    Log.d("Index", ((Integer) data.getIntExtra("indexSprint", 0)).toString());
-                    ((FragmentBacklog) fragmentInFrame).notifySpinner(newSprint);
-                    model.editSprint(newSprint);
-                    model.setCurrentSprint(newSprint);
+//                if (fragmentInFrame instanceof FragmentBacklog){
+////                    model.getListSprint().getValue().set(data.getIntExtra("indexSprint",0),newSprint);
+////                    Log.d("Index", ((Integer) data.getIntExtra("indexSprint", 0)).toString());
+////                    ((FragmentBacklog) fragmentInFrame).notifySpinner(newSprint);
+//                    model.editSprint(newSprint);
+////                    model.setCurrentSprint(newSprint);
+//                }
+                if (fragmentInFrame instanceof FragmentBacklog) {
+                    Log.d("a","au");
+//                    model.editSprint(newSprint);
+                    ((FragmentBacklog) fragmentInFrame).startSprint(newSprint);
                 }
             }
         }
@@ -402,11 +412,11 @@ public class ActivityMain extends AppCompatActivity
     @Override
     public void setCurrentSprint(Sprint sprint) {
         model.getListBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
-        model.getListFilterBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
+//        model.getListFilterBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
         model.getListBacklogSprint().getValue().clear();
-        model.setCurrentSprint(sprint);
+//        model.setCurrentSprint(sprint);
         Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-        ((FragmentBacklog) fragmentInFrame).notifyAdapter();
+//        ((FragmentBacklog) fragmentInFrame).notifyAdapter();
     }
 
     @Override
@@ -445,7 +455,7 @@ public class ActivityMain extends AppCompatActivity
                             dialog.cancel();
                             if (code=="fetch"){
                                 model.reset();
-                                model.fetchEpic(PID);
+                                model.fetchMain(PID);
                             }
 
                         }

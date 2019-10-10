@@ -26,10 +26,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.app.AbstractExpandableDataProvider;
+import com.example.app.utils.AbstractExpandableDataProvider;
 import com.example.app.R;
 import com.example.app.activity.ActivityMain;
-import com.example.app.activity.ExpandableDraggableSwipeableExampleActivity;
 import com.example.app.adapter.ExpandableDraggableSwipeableExampleAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
@@ -116,7 +115,7 @@ public class ExpandableDraggableSwipeableExampleFragment extends Fragment
             }
 
             @Override
-            public void onMenuClicked(MenuItem m) {
+            public void onMenuClicked(MenuItem m,int a) {
                 switch (m.getItemId()){
                     case R.id.start_sprint:
                         Toast.makeText(getContext(), "Start", Toast.LENGTH_SHORT).show();

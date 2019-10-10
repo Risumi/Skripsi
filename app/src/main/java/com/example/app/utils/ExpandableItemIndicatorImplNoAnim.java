@@ -14,12 +14,14 @@
  *    limitations under the License.
  */
 
-package com.example.app;
+package com.example.app.utils;
 
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+
+import com.example.app.R;
 
 import androidx.annotation.DrawableRes;
 import androidx.appcompat.widget.AppCompatImageView;

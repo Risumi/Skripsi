@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.example.app;
+package com.example.app.utils;
 
 
 import com.example.app.model.Backlog;
@@ -22,7 +22,6 @@ import com.example.app.model.Sprint;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -40,37 +39,29 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
     private long mLastRemovedChildParentGroupId = -1;
     private int mLastRemovedChildPosition = -1;
 
-    public ExampleExpandableDataProvider(ArrayList<Sprint> listSprint, ArrayList<Backlog> listBacklogSprint, ArrayList<Backlog> listBacklog) {
+    public ExampleExpandableDataProvider(Sprint Sprint, /*ArrayList<Backlog> listBacklogSprint, */ArrayList<Backlog> listBacklog) {
         mData = new LinkedList<>();
 
-        for (int i = 0; i < listSprint.size(); i++) {
-            //noinspection UnnecessaryLocalVariable
-            final long groupId = i;
-            Sprint sprint = listSprint.get(i);
-            final ConcreteGroupData group = new ConcreteGroupData(groupId, sprint);
-            final List<ChildData> children = new ArrayList<>();
-
-            for (int j = 0; j < listBacklogSprint.size(); j++) {
-                final long childId = group.generateNewChildId();
-                Backlog backlog = listBacklogSprint.get(j);
-                if (sprint.getId().equalsIgnoreCase(backlog.getIdSprint())){
-                    children.add(new ConcreteChildData(childId, backlog));
-                }
-            }
-            mData.add(new Pair<>(group, children));
-        }
-
         Sprint bl= new Sprint("", "", "Backlog", null, null, "", "", "", null, "", null, "");
-        final ConcreteGroupData concreteGroupData = new ConcreteGroupData(mData.size()+1, bl);
-        final List<ChildData> childData= new ArrayList<>();
+        ConcreteGroupData backlog = new ConcreteGroupData(0, bl);
+        ConcreteGroupData sprint= new ConcreteGroupData(1, Sprint);
+
+        List<ChildData> children1 = new ArrayList<>();
+        List<ChildData> children2 = new ArrayList<>();
 
         for (int j = 0; j < listBacklog.size(); j++) {
-            final long childId = concreteGroupData.generateNewChildId();
-            Backlog backlog = listBacklog.get(j);
-            childData.add(new ConcreteChildData(childId, backlog));
+            final long childId = backlog.generateNewChildId();
+            Backlog issue = listBacklog.get(j);
+//            Log.d("Sprint ID",Sprint.getId());
+            if (!issue.getIdSprint().equals(Sprint.getId())){
+                children1.add(new ConcreteChildData(childId, issue));
+            }else {
+                children2.add(new ConcreteChildData(childId, issue));
+            }
 
         }
-        mData.add(new Pair<>(concreteGroupData, childData));
+        mData.add(new Pair<>(backlog, children1));
+        mData.add(new Pair<>(sprint, children2));
     }
 
 
@@ -158,17 +149,27 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
         mLastRemovedGroupPosition = -1;
     }
 
-    @Override
-    public void insertGroupItem(GroupData groupData) {
-//        final ConcreteGroupData group = new ConcreteGroupData(mData.size(), "test");
-//        final List<ChildData> children = new ArrayList<>();
-//        mData.add(new Pair<>(group,children));
+    public void editChildItem(int groupPosition,int childPosition,Backlog backlog){
+        mData.get(groupPosition).second.get(childPosition).setBacklog(backlog);
     }
 
     @Override
-    public void insertChildItem(int groupPosition, ChildData childData) {
-//        final long childId = ((ConcreteGroupData)mData.get(groupPosition).first).generateNewChildId();
-//        mData.get(groupPosition).second.add(new ConcreteChildData(childId,"Test"));
+    public void editGroupItem(int groupPosition, Sprint sprint) {
+        mData.get(groupPosition).first.setSprint(sprint);
+    }
+
+    @Override
+    public void insertGroupItem(Sprint sprint) {
+        final ConcreteGroupData group = new ConcreteGroupData(mData.size(), sprint);
+        final List<ChildData> children = new ArrayList<>();
+
+        mData.add(new Pair<>(group,children));
+    }
+
+    @Override
+    public void insertChildItem(int groupPosition, Backlog backlog) {
+        final long childId = ((ConcreteGroupData)mData.get(groupPosition).first).generateNewChildId();
+        mData.get(groupPosition).second.add(new ConcreteChildData(childId,backlog));
     }
 
 
@@ -235,7 +236,7 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
     public static final class ConcreteGroupData extends GroupData {
 
         private final long mId;
-        private final Sprint mSprint;
+        private Sprint mSprint;
         private boolean mPinned;
         private long mNextChildId;
 
@@ -249,6 +250,16 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
         public long getGroupId() {
             return mId;
         }
+
+        @Override
+        public void setSprint(Sprint sprint) {
+            mSprint = sprint;
+        }
+
+//        @Override
+//        public void setGroupId(int id) {
+//            mId = id;
+//        }
 
         @Override
         public boolean isSectionHeader() {
@@ -272,7 +283,7 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
     public static final class ConcreteChildData extends ChildData {
 
         private long mId;
-        private final Backlog mBacklog;
+        private Backlog mBacklog;
 
         ConcreteChildData(long id, Backlog backlog) {
             mId = id;
@@ -289,6 +300,9 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
             return mBacklog;
         }
 
+        public void setBacklog(Backlog backlog){
+            mBacklog = backlog;
+        }
 
         public void setChildId(long id) {
             this.mId = id;

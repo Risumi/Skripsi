@@ -16,21 +16,11 @@
 
 package com.example.app.activity;
 
-import android.os.Bundle;
-import android.widget.Toast;
-
-import com.example.app.AbstractExpandableDataProvider;
-import com.example.app.ExampleExpandableDataProvider;
-import com.example.app.fragment.ExampleExpandableDataProviderFragment;
-import com.example.app.fragment.ExpandableDraggableSwipeableExampleFragment;
-import com.example.app.R;
 //import com.h6ah4i.android.example.advrecyclerview.common.data.AbstractExpandableDataProvider;
 //import com.h6ah4i.android.example.advrecyclerview.common.fragment.ExampleExpandableDataProviderFragment;
 //import com.h6ah4i.android.example.advrecyclerview.common.fragment.ExpandableItemPinnedMessageDialogFragment;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 public class ExpandableDraggableSwipeableExampleActivity extends AppCompatActivity {
 //    private static final String FRAGMENT_TAG_DATA_PROVIDER = "data provider";

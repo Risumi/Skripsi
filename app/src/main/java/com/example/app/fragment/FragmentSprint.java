@@ -1,44 +1,47 @@
 package com.example.app.fragment;
 
 
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
-
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 
 import android.util.Log;
+import android.util.Pair;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.app.ListenerSprint;
-import com.example.app.model.Backlog;
 import com.example.app.MainViewModel;
 import com.example.app.R;
-import com.example.app.adapter.SprintAdapter;
+import com.example.app.adapter.ItemAdapter;
+import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
+import com.woxthebox.draglistview.BoardView;
+import com.woxthebox.draglistview.DragItemAdapter;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Objects;
 
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link FragmentSprint#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSprint extends Fragment implements ListenerSprint, View.OnClickListener {
+public class FragmentSprint extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -48,20 +51,16 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
     private String mParam1;
     private String mParam2;
 
+    BoardView mBoardView;
+    private static int sCreatedItems = 0;
+    private int mColumns;
+    private MainViewModel model;
+
 
     public FragmentSprint() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentSprint.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentSprint newInstance(String param1, String param2) {
         FragmentSprint fragment = new FragmentSprint();
         Bundle args = new Bundle();
@@ -80,164 +79,177 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
     }
-    ArrayList<Backlog> listBacklog, listBacklog2,listBacklog3;
-
-    RecyclerView rvTop;
-    RecyclerView rvBottom;
-    RecyclerView rvMiddle;
-    TextView tvEmptyListTop;
-    TextView tvEmptyListBottom;
-    TextView tvEmptyListMiddle;
-    TextView tvSprint;
-    TextView tvRemaining;
-    Button btnSprint;
-    private MainViewModel model;
-
+    private TextView txtSprint;
+    private TextView txtRemaining;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_sprint, container, false);
+        setHasOptionsMenu(true);
 
-        btnSprint = view.findViewById(R.id.button2);
-        btnSprint.setOnClickListener(this);
-        tvSprint = view.findViewById(R.id.textView7);
-        tvRemaining = view.findViewById(R.id.tvRemaining);
+        txtSprint = view.findViewById(R.id.txtSprint);
+
+        txtRemaining = view.findViewById(R.id.txtRemaining);
+
+
+        mBoardView = view.findViewById(R.id.board_view);
+        mBoardView.setSnapToColumnsWhenScrolling(true);
+        mBoardView.setSnapToColumnWhenDragging(true);
+        mBoardView.setSnapDragItemToTouch(true);
+        mBoardView.setDragEnabled(true);
+        mBoardView.setSnapToColumnInLandscape(false);
+        mBoardView.setColumnSnapPosition(BoardView.ColumnSnapPosition.CENTER);
+        mBoardView.setColumnWidth((int) (getResources().getDisplayMetrics().widthPixels * 0.9));
+
+        mBoardView.setBoardListener(new BoardView.BoardListener() {
+            @Override
+            public void onItemDragStarted(int column, int row) {
+//                Toast.makeText(mBoardView.getContext(), "Start - column: " + column + " row: " + row, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemDragEnded(int fromColumn, int fromRow, int toColumn, int toRow) {
+                if (fromColumn != toColumn) {
+                    try {
+                        if (mBoardView.getAdapter(toColumn).getItemList().get(toRow) instanceof Pair){
+                            Backlog test = ((Pair<Long, Backlog>) mBoardView.getAdapter(toColumn).getItemList().get(toRow)).second;
+                            switch (toColumn){
+                                case 0:
+                                    test.setStatus("To Do");
+                                    break;
+                                case 1:
+                                    test.setStatus("On Progress");
+                                    break;
+                                case 2:
+                                    test.setStatus("Completed");
+                                    break;
+                            }
+                            test.setModifieddate(new Date());
+                            test.setModifiedby(model.getUser().getEmail());
+                            model.editBacklog(test);
+                        }
+
+//                        Toast.makeText(mBoardView.getContext(), test.second, Toast.LENGTH_SHORT).show();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onItemChangedPosition(int oldColumn, int oldRow, int newColumn, int newRow) {
+//                Toast.makeText(mBoardView.getContext(), "Position changed - column: " + newColumn + " row: " + newRow, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemChangedColumn(int oldColumn, int newColumn) {
+                TextView itemCount1 = mBoardView.getHeaderView(oldColumn).findViewById(R.id.item_count);
+                itemCount1.setText(String.valueOf(mBoardView.getAdapter(oldColumn).getItemCount()));
+                TextView itemCount2 = mBoardView.getHeaderView(newColumn).findViewById(R.id.item_count);
+                itemCount2.setText(String.valueOf(mBoardView.getAdapter(newColumn).getItemCount()));
+            }
+
+            @Override
+            public void onFocusedColumnChanged(int oldColumn, int newColumn) {
+                //Toast.makeText(getContext(), "Focused column changed from " + oldColumn + " to " + newColumn, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onColumnDragStarted(int position) {
+                //Toast.makeText(getContext(), "Column drag started from " + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onColumnDragChangedPosition(int oldPosition, int newPosition) {
+                //Toast.makeText(getContext(), "Column changed from " + oldPosition + " to " + newPosition, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onColumnDragEnded(int position) {
+                //Toast.makeText(getContext(), "Column drag ended at " + position, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+
         DateTime now = new DateTime(new Date());
-        DateTime end = new DateTime(new Date());
+        DateTime end  ;
         try {
             end = new DateTime(model.getCurrentSprint().getValue().getEndda());
+            Period diff = new Period(now, end);
+            txtRemaining.setText(((Integer) diff.getDays()).toString()+" days remaining");
         }catch (NullPointerException e){
-
-        }
-        Period diff = new Period(now, end);
-
-        tvRemaining.setText(((Integer) diff.getDays()).toString()+" days remaining");
-        if (model.getCurrentSprint().getValue()!=null){
-            btnSprint.setVisibility(View.VISIBLE);
-            tvSprint.setText(model.getCurrentSprint().getValue().getName());
-            Date date = new Date();
-            if (model.getCurrentSprint().getValue().getName()==null){
-                tvSprint.setText("No Active Sprint");
-            }
-//            Date date1 = new Date(1999,01,01);
-//            if (model.getCurrentSprint().getValue().getBegda().equals(date1)){
-//                btnSprint.setText("Standby");
-//            }
-//            if (date.before(model.getCurrentSprint().getValue().getEndda())){
-//                btnSprint.setText("Running");
-//            }else if (date.after(model.getCurrentSprint().getValue().getEndda())){
-//                btnSprint.setText("Finished");
-//            }
-        }else {
-            btnSprint.setVisibility(View.GONE);
+            e.printStackTrace();
         }
 
-        rvTop = view.findViewById(R.id.rvTop);
-        rvBottom = view.findViewById(R.id.rvBottom);
-        rvMiddle = view.findViewById(R.id.rvMiddle);
-        tvEmptyListTop = view.findViewById(R.id.tvEmptyListTop);
-        tvEmptyListMiddle = view.findViewById(R.id.tvEmptyListMiddle);
-        tvEmptyListBottom = view.findViewById(R.id.tvEmptyListBottom);
-
-        if (model.getCurrentSprint().getValue()!=null){
-            if (model.getToDoBacklog().getValue().size()==0){
-                tvEmptyListTop.setVisibility(View.VISIBLE);
+        if (model.getCurrentSprint().getValue().getName()!=null){
+            if (model.getCurrentSprint().getValue().getStatus().equalsIgnoreCase("Active")){
+                txtSprint.setText(Objects.requireNonNull(model.getCurrentSprint().getValue()).getName());
+            }else {
+                txtSprint.setText("No Active Sprint");
+                txtRemaining.setText("");
             }
-            if (model.getOnProgressBacklog().getValue().size()==0){
-                tvEmptyListMiddle.setVisibility(View.VISIBLE);
-            }
-            if (model.getCompletedBacklog().getValue().size()==0){
-                tvEmptyListBottom.setVisibility(View.VISIBLE);
-            }
+        }else{
+            txtSprint.setText("No Active Sprint");
+            txtRemaining.setText("");
         }
 
-
-        rvTop.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        topListAdapter = new SprintAdapter(model.getToDoBacklog().getValue(),model.getListEpic().getValue(),this);
-        rvTop.setAdapter(topListAdapter);
-        rvTop.setOnDragListener(topListAdapter.getDragInstance());
-        tvEmptyListTop.setOnDragListener(topListAdapter.getDragInstance());
-
-        rvMiddle.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        middleListAdapter = new SprintAdapter(model.getOnProgressBacklog().getValue(),model.getListEpic().getValue(), this);
-        rvMiddle.setAdapter(middleListAdapter);
-        tvEmptyListMiddle.setOnDragListener(middleListAdapter.getDragInstance());
-        rvMiddle.setOnDragListener(middleListAdapter.getDragInstance());
-
-        rvBottom.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        bottomListAdapter = new SprintAdapter(model.getCompletedBacklog().getValue(),model.getListEpic().getValue(), this);
-        rvBottom.setAdapter(bottomListAdapter);
-        tvEmptyListBottom.setOnDragListener(bottomListAdapter.getDragInstance());
-        rvBottom.setOnDragListener(bottomListAdapter.getDragInstance());
-
+        addColumn("To Do",model.getToDoBacklog().getValue());
+        addColumn("On Progress",model.getOnProgressBacklog().getValue());
+        addColumn("Completed",model.getCompletedBacklog().getValue());
         return view;
     }
-    SprintAdapter topListAdapter,middleListAdapter,bottomListAdapter;
-    @Override
-    public void setEmptyListTop(boolean visibility) {
-        tvEmptyListTop.setVisibility(visibility ? View.VISIBLE : View.GONE);
-//        rvTop.setVisibility(visibility ? View.GONE : View.VISIBLE);
-        log();
-    }
 
-    @Override
-    public void setEmptyListMiddle(boolean visibility) {
-        tvEmptyListMiddle.setVisibility(visibility ? View.VISIBLE : View.GONE);
-//        rvMiddle.setVisibility(visibility ? View.GONE : View.VISIBLE);
-        log();
-    }
+    private void addColumn(String title, ArrayList<Backlog> list) {
+        final ArrayList<Pair<Long, Backlog>> mItemArray = new ArrayList<>();
 
-    @Override
-    public void setEmptyListBottom(boolean visibility) {
-        tvEmptyListBottom.setVisibility(visibility ? View.VISIBLE : View.GONE);
-//        rvBottom.setVisibility(visibility ? View.GONE : View.VISIBLE);
-        log();
-    }
-
-    @Override
-    public void setStatus(Backlog backlog, String status) {
-        if (status.equalsIgnoreCase("Top")){
-            backlog.setStatus("To Do");
-            backlog.setModifieddate(new Date());
-            backlog.setModifiedby(model.getUser().getEmail());
-            model.editBacklog(backlog);
-        }else if (status.equalsIgnoreCase("Middle")){
-            backlog.setStatus("On Progress");
-            backlog.setModifieddate(new Date());
-            backlog.setModifiedby(model.getUser().getEmail());
-            model.editBacklog(backlog);
-        }else if (status.equalsIgnoreCase("Bottom")){
-            backlog.setStatus("Completed");
-            backlog.setModifieddate(new Date());
-            backlog.setModifiedby(model.getUser().getEmail());
-            model.editBacklog(backlog);
+        final int column = mColumns;
+        for (int i = 0; i < list.size(); i++) {
+            long id = sCreatedItems++;
+            mItemArray.add(new Pair<>(id, list.get(i)));
         }
+        final ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.column_item, R.id.item_layout, true);
+
+        final View header = View.inflate(getContext(), R.layout.column_header, null);
+        ((TextView) header.findViewById(R.id.text)).setText(title);
+
+        ((TextView) header.findViewById(R.id.item_count)).setText("" + list.size());
+        header.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                long id = sCreatedItems++;
+                Pair item = new Pair<>(id, "Test " + id);
+                mBoardView.addItem(mBoardView.getColumnOfHeader(v), 0, item, true);
+                ((TextView) header.findViewById(R.id.item_count)).setText(String.valueOf(mItemArray.size()));
+            }
+        });
+        mBoardView.addColumn(listAdapter, header, null, false, new LinearLayoutManager(getContext()));
+        mColumns++;
     }
 
-    void log(){
-        Log.d("rvTop", ((Integer) rvTop.getVisibility()).toString());
-        Log.d("rvMiddle",((Integer) rvMiddle.getVisibility()).toString());
-        Log.d("rvBottom",((Integer) rvBottom.getVisibility()).toString());
-        Log.d("tvTop", ((Integer) tvEmptyListTop.getVisibility()).toString());
-        Log.d("tvMiddle",((Integer) tvEmptyListMiddle.getVisibility()).toString());
-        Log.d("tvBottom",((Integer) tvEmptyListBottom.getVisibility()).toString());
+
+    @Override
+    public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
+        inflater.inflate(R.menu.sprint_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
-    public void onClick(View view) {
-        if (view == btnSprint){
-            initializeAlertDialog();
-            builder.show();
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+        if (item.getItemId() == R.id.complete_sprint) {
+//            model.editSprint(model.getCurrentSprint().getValue());
+            if (model.getCurrentSprint().getValue().getName()!=null){
+                initializeAlertDialog();
+            }
         }
+        return super.onOptionsItemSelected(item);
     }
-
     AlertDialog.Builder builder;
 
     void initializeAlertDialog(){
         builder = new AlertDialog.Builder(this.getActivity());
         builder.setMessage("Complete "+model.getCurrentSprint().getValue().getName()+"  ?");
         builder.setCancelable(false);
-
         builder.setPositiveButton(
                 "Yes",
                 new DialogInterface.OnClickListener() {
@@ -248,23 +260,45 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                         model.getCurrentSprint().getValue().setModifieddate(new Date());
                         model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
                         model.getCurrentSprint().getValue().setStatus("Done");
-                        model.getListSprintDone().getValue().add(model.getCurrentSprint().getValue());
-                        model.getListBacklogSprintDone().getValue().addAll(bottomListAdapter.getList());
-                        model.getListFilterBacklogSprintDone().getValue().addAll(bottomListAdapter.getList());
-                        model.getListBacklog().getValue().addAll(topListAdapter.getList());
-                        model.getListBacklog().getValue().addAll(middleListAdapter.getList());
-                        model.getListFilterBacklog().getValue().addAll(topListAdapter.getList());
-                        model.getListFilterBacklog().getValue().addAll(middleListAdapter.getList());
-                        model.editSprint(model.getCurrentSprint().getValue());
-                        model.getCurrentSprint().setValue(new Sprint());
-                        model.getListBacklogSprint().getValue().clear();
-                        topListAdapter.getList().clear();
-                        topListAdapter.notifyDataSetChanged();
-                        middleListAdapter.getList().clear();
-                        middleListAdapter.notifyDataSetChanged();
-                        bottomListAdapter.getList().clear();
-                        bottomListAdapter.notifyDataSetChanged();
-                        tvSprint.setText("No Active Sprint");
+                        Sprint sprint =model.getCurrentSprint().getValue();
+                        Sprint newSprint = new Sprint(
+                                model.getCurrentSprint().getValue().getIdProject()+"-S "+(model.getListSprint().getValue().size()+2),
+                                model.getCurrentSprint().getValue().getIdProject(),
+                                "Sprint "+(model.getListSprint().getValue().size()+2),
+                                null,
+                                null,
+                                "",
+                                "Not Active","",new Date(),model.getUser().getEmail(),null,null);
+                        Log.d("Size", ((Integer) model.getListSprint().getValue().size()).toString());
+                        Log.d("ID sprint A",sprint.getId());
+                        Log.d("ID sprint B",newSprint.getId());
+                        Log.d("Email A",model.getUser().getEmail());
+                        Log.d("Email B",newSprint.getCreatedby());
+                        model.getListSprint().getValue().add(newSprint);
+                        model.getCurrentSprint().setValue(newSprint);
+                        ArrayList<Backlog> list = new ArrayList<>();
+                        for (int i = 0 ;i<mBoardView.getColumnCount();i++){
+                            DragItemAdapter dragItemAdapter =mBoardView.getAdapter(i);
+                            Log.d("Adapter", ((Integer) i).toString());
+                            if (dragItemAdapter.getItemList().size()!=0){
+                                for (int a= 0 ;a<dragItemAdapter.getItemList().size();a++){
+                                    if (i!=2){
+                                        ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setIdSprint(newSprint.getId());
+                                    }else {
+                                        ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setStatus("Done");
+                                    }
+                                    ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setModifiedby(model.getUser().getEmail());
+                                    ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setModifieddate(new Date());
+                                    list.add(((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second);
+                                }
+                            }
+//                            list.addAll(dragItemAdapter.getItemList());
+                            dragItemAdapter.getItemList().clear();
+                            dragItemAdapter.notifyDataSetChanged();
+                        }
+                        model.completeSprint(list,sprint,newSprint);
+                        txtSprint.setText("No Active Sprint");
+                        txtRemaining.setText("");
                     }
                 });
 
@@ -275,6 +309,6 @@ public class FragmentSprint extends Fragment implements ListenerSprint, View.OnC
                         dialog.cancel();
                     }
                 });
+        builder.show();
     }
-
 }

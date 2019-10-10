@@ -8,25 +8,28 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.view.animation.LayoutAnimationController;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.example.app.AllProjectQuery;
-import com.example.app.ProgressQuery;
-import com.example.app.ProjectMutation;
-import com.example.app.ProjectUserQuery;
+import com.apollographql.apollo.response.CustomTypeAdapter;
+import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.R;
 import com.example.app.adapter.ProjectAdapter;
 import com.example.app.model.Progress;
 import com.example.app.model.Project;
+import com.example.app.model.Sprint;
 import com.example.app.model.User;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
@@ -34,7 +37,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import graphql.ProgressQuery;
+import graphql.ProjectMutation;
+import graphql.ProjectUserQuery;
+import graphql.SprintMutation;
 import okhttp3.OkHttpClient;
+import type.CustomType;
 
 public class ActivityHome extends AppCompatActivity implements View.OnClickListener{
     private RecyclerView mRecyclerView;
@@ -61,17 +69,17 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
         listProgress = new ArrayList<>();
-//        new fetchProject().execute();
-        fetchProject(user.getEmail());
-//        listProject.add(new Project("Blog Project","BP",true));
-//        listProject.add(new Project("IS Project","IP",true));
-//        listProject.add(new Project("IoT Project","IoP",false));
+
         mAdapter = new ProjectAdapter(this, listProject,listProgress,user);
-        Log.d("fool", ((Integer) mAdapter.getItemCount()).toString());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mRecyclerView.setLayoutAnimation(animation);
 
+        progressDialog = new ProgressDialog(ActivityHome.this);
+        progressDialog.setMessage("Loading ...");
+        progressDialog.setCancelable(false);
+
+        fetchProject(user.getEmail());
     }
 
     @Override
@@ -90,19 +98,12 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         if (requestCode == ADD_PROJECT) {
             if (resultCode == RESULT_OK) {
                 Project newProject = data.getParcelableExtra("result");
-                listProject.add(newProject);
-//                new setData(newProject).execute();
-                mAdapter.notifyDataSetChanged();
-                setData(newProject);
-
+                createProject(newProject);
             }
         }
     }
     ProgressDialog progressDialog;
     private void fetchProject(String email){
-        progressDialog = new ProgressDialog(ActivityHome.this);
-        progressDialog.setMessage("Loading ...");
-        progressDialog.setCancelable(false);
         progressDialog.show();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
@@ -180,9 +181,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
-                if (!event.name().equalsIgnoreCase("COMPLETED")){
-
-                }else {
+                if (event.name().equalsIgnoreCase("COMPLETED")){
                     progressDialog.dismiss();
                 }
             }
@@ -201,11 +200,8 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         });
     }
 
-    private void setData(Project project){
-        ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(ActivityHome.this);
-        progressDialog.setMessage("Loading ...");
-        progressDialog.setCancelable(false);
+    private void createProject(Project project){
+        progressDialog.show();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
 
         ApolloClient apolloClient = ApolloClient.builder()
@@ -223,24 +219,95 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onResponse(@NotNull Response<ProjectMutation.Data> response) {
                 Log.d("berhasil","yay");
+                ActivityHome.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!response.hasErrors()){
+                            listProject.add(project);
+                            mAdapter.notifyDataSetChanged();
+
+                        }else {
+                            Log.d("Error",response.errors().get(0).message());
+                            Toast.makeText(ActivityHome.this, "There is an error, please try again", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
 
             @Override
             public void onFailure(@NotNull ApolloException e) {
-                Log.d("gagal","shit");
+                ActivityHome.this.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(ActivityHome.this, "There is an error, please try again", Toast.LENGTH_SHORT).show();
+                    }
+                });
             }
 
-            /**
-             * Gets called whenever any action happen to this {@link ApolloCall}.
-             *
-             * @param event status that corresponds to a {@link ApolloCall} action
-             */
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
-                if (!event.name().equalsIgnoreCase("COMPLETED")){
-                    progressDialog.show();
-                }else {
+                if (event.name().equalsIgnoreCase("COMPLETED")){
+                    Sprint sprint = new Sprint(
+                            project.getId()+"-S 1",
+                            project.getId(),
+                            "Sprint 1",
+                            null,
+                            null,
+                            "",
+                            "Not Active",null,new Date(),user.getEmail(),null,null);
+                    createSprint(sprint);
+                }
+            }
+        });
+    }
+
+    public void createSprint(Sprint sprint){
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        CustomTypeAdapter<Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
+            @Override public Date decode(CustomTypeValue value) {
+                try {
+                    return formatDate.parse(value.value.toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override public CustomTypeValue encode(Date value) {
+                return new CustomTypeValue.GraphQLString(formatDate.format(value));
+            }
+        };
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
+                .build();
+        SprintMutation sprintMutation = SprintMutation.builder()
+                .id(sprint.getId())
+                .idProject(sprint.getIdProject())
+                .name(sprint.getName())
+                .goal(sprint.getSprintGoal())
+                .status(sprint.getStatus())
+                .createddate(sprint.getCreateddate())
+                .createdby(sprint.getCreatedby())
+                .build();
+        apolloClient.mutate(sprintMutation).enqueue(new ApolloCall.Callback<SprintMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<SprintMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                progressDialog.dismiss();
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                if (event.name().equalsIgnoreCase("COMPLETED")){
                     progressDialog.dismiss();
                 }
             }

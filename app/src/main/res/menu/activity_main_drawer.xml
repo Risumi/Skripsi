@@ -9,13 +9,21 @@
             android:icon="@drawable/ic_baseline_list_24px"
             android:title="Epic"/>
         <item
-            android:id="@+id/nav_backlog"
+            android:id="@+id/nav_demo2"
             android:icon="@drawable/ic_baseline_assessment_24px"
             android:title="Backlog" />
         <item
-            android:id="@+id/nav_sprint"
+            android:id="@+id/nav_demo"
             android:icon="@drawable/ic_data_usage_black_24dp"
             android:title="Active Sprint" />
+<!--        <item-->
+<!--            android:id="@+id/nav_backlog"-->
+<!--            android:icon="@drawable/ic_baseline_assessment_24px"-->
+<!--            android:title="Backlog" />-->
+<!--        <item-->
+<!--            android:id="@+id/nav_sprint"-->
+<!--            android:icon="@drawable/ic_data_usage_black_24dp"-->
+<!--            android:title="Active Sprint" />-->
         <item
             android:id="@+id/nav_sprint_report"
             android:icon="@drawable/ic_baseline_assignment_24px"
@@ -29,14 +37,6 @@
             android:id="@+id/nav_setting"
             android:icon="@drawable/ic_baseline_settings_20px"
             android:title="Project Setting" />
-        <item
-            android:id="@+id/nav_demo"
-            android:icon="@drawable/ic_layers_black_24dp"
-            android:title="Demo" />
-        <item
-            android:id="@+id/nav_demo2"
-            android:icon="@drawable/ic_layers_black_24dp"
-            android:title="Demo2" />
 
         <item
             android:id="@+id/nav_logout"

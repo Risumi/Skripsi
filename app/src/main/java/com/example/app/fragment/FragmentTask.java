@@ -10,7 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.app.Listener;
+import com.example.app.utils.Listener;
 import com.example.app.R;
 import com.example.app.adapter.BacklogAdapter;
 import com.example.app.model.Backlog;

@@ -23,7 +23,7 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_add_project);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         etPName = findViewById(R.id.etPName);
-        etPKey = findViewById(R.id.etPDesc);
+        etPKey = findViewById(R.id.etPKey);
         etDesc = findViewById(R.id.etPDesc);
         btn = findViewById(R.id.button);
         btn.setOnClickListener(this);
@@ -45,12 +45,24 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
     }
 
     private boolean validateFields(EditText editText) {
-        if (editText.getText().toString() == "") {
+        if (editText.getText().toString().equals("")) {
             editText.setError("Field cannot be blank");
             return false;
         }else if (editText.getText().length() < 3) {
             editText.setError("Field must be at least 3 characters");
             return false;
+        }else if (editText.getText().length() > 5){
+            if (editText.getId()==etPKey.getId()){
+                editText.setError("Field must be at most 5 characters");
+                return false;
+            }else {
+                if (editText.getText().length() > 32){
+                    editText.setError("Field must be at most 32 characters");
+                    return false;
+                }else {
+                    return true;
+                }
+            }
         }
         else{
             return true;
@@ -59,10 +71,8 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home:
-                super.onBackPressed();
-                break;
+        if (item.getItemId() == android.R.id.home) {
+            super.onBackPressed();
         }
         return true;
     }

@@ -1,7 +1,6 @@
-package com.example.app;
+package com.example.app.utils;
 
 import com.example.app.model.Backlog;
-import com.example.app.model.Sprint;
 
 public interface Listener {
     void setEmptyListTop(boolean visibility);

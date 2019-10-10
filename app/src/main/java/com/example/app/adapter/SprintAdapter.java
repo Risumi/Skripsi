@@ -2,14 +2,13 @@ package com.example.app.adapter;
 
 import android.content.ClipData;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.app.ListenerSprint;
+import com.example.app.utils.ListenerSprint;
 import com.example.app.R;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
@@ -93,16 +92,7 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
 //        }
 //        return false;
 //    }
-
-    public DragListenerSprint getDragInstance() {
-        if (listener != null) {
-            return new DragListenerSprint(listener);
-        } else {
-            Log.e("ListAdapter", "Listener wasn't initialized!");
-            return null;
-        }
-    }
-
+    
     public void updateList(ArrayList<Backlog> list) {
         this.backlogList = list;
     }

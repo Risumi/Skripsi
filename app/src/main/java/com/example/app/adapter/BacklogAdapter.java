@@ -2,14 +2,13 @@ package com.example.app.adapter;
 
 import android.content.ClipData;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.app.Listener;
+import com.example.app.utils.Listener;
 import com.example.app.R;
 import com.example.app.model.Backlog;
 
@@ -65,14 +64,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         return backlogList.size();
     }
 
-     public DragListenerBacklog getDragInstance() {
-        if (listener != null) {
-            return new DragListenerBacklog(listener);
-        } else {
-            Log.e("ListAdapter", "Listener wasn't initialized!");
-            return null;
-        }
-    }
 
     public void updateList(ArrayList<Backlog> list) {
         this.backlogList = list;

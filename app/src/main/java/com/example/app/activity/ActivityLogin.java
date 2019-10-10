@@ -15,9 +15,8 @@ import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.example.app.ProgressQuery;
 import com.example.app.R;
-import com.example.app.UserLoginQuery;
+
 import com.example.app.model.Progress;
 import com.example.app.model.User;
 import com.google.android.material.button.MaterialButton;
@@ -29,6 +28,7 @@ import java.time.Period;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import graphql.UserLoginQuery;
 import okhttp3.OkHttpClient;
 
 public class ActivityLogin extends AppCompatActivity implements View.OnClickListener{

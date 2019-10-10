@@ -14,7 +14,7 @@
  *    limitations under the License.
  */
 
-package com.example.app;
+package com.example.app.utils;
 
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
@@ -27,11 +27,14 @@ public abstract class AbstractExpandableDataProvider {
     public static abstract class GroupData extends BaseData {
         public abstract boolean isSectionHeader();
         public abstract long getGroupId();
+        public abstract void setSprint(Sprint sprint);
+//        public abstract void setGroupId(int id);
         public abstract Sprint getSprint();
     }
 
     public static abstract class ChildData extends BaseData {
         public abstract long getChildId();
+        public abstract void setBacklog (Backlog backlog);
         public abstract Backlog getBacklog();
     }
 
@@ -47,8 +50,11 @@ public abstract class AbstractExpandableDataProvider {
     public abstract void removeGroupItem(int groupPosition);
     public abstract void removeChildItem(int groupPosition, int childPosition);
 
-    public abstract void insertGroupItem(GroupData groupData);
-    public abstract void insertChildItem(int groupPosition, ChildData childData);
+    public abstract void insertGroupItem(Sprint sprint);
+    public abstract void insertChildItem(int groupPosition, Backlog backlog);
 
     public abstract long undoLastRemoval();
+
+    public abstract void editChildItem(int groupPosition,int childPosition,Backlog backlog);
+    public abstract void editGroupItem(int groupPosition,Sprint sprint);
 }

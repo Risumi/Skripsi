@@ -13,7 +13,6 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
-import com.example.app.BacklogEpicQuery;
 import com.example.app.R;
 import com.example.app.fragment.FragmentDetailEpic;
 import com.example.app.fragment.FragmentTask;
@@ -32,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import graphql.BacklogEpicQuery;
 import okhttp3.OkHttpClient;
 import type.CustomType;
 

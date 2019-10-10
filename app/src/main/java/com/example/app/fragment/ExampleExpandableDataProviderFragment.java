@@ -19,8 +19,8 @@ package com.example.app.fragment;
 
 import android.os.Bundle;
 
-import com.example.app.AbstractExpandableDataProvider;
-import com.example.app.ExampleExpandableDataProvider;
+import com.example.app.utils.AbstractExpandableDataProvider;
+import com.example.app.utils.ExampleExpandableDataProvider;
 
 import androidx.fragment.app.Fragment;
 

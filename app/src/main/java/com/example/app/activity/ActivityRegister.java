@@ -13,14 +13,13 @@ import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.example.app.R;
-import com.example.app.UserLoginQuery;
-import com.example.app.UserMutation;
 import com.example.app.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import graphql.UserMutation;
 import okhttp3.OkHttpClient;
 
 public class ActivityRegister extends AppCompatActivity implements View.OnClickListener{

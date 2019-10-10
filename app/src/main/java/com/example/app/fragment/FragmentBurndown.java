@@ -39,7 +39,7 @@ import java.util.List;
  * create an instance of this fragment.
  */
 public class FragmentBurndown extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
+/*    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -54,14 +54,14 @@ public class FragmentBurndown extends Fragment {
         // Required empty public constructor
     }
 
-    /**
+    *//**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
      * @return A new instance of fragment FragmentBurndown.
-     */
+     *//*
     // TODO: Rename and change types and number of parameters
     public static FragmentBurndown newInstance(String param1, String param2) {
         FragmentBurndown fragment = new FragmentBurndown();
@@ -141,12 +141,12 @@ public class FragmentBurndown extends Fragment {
         dataSet1.setColor(color);
         lineData.addDataSet(dataSet1);
         ValueFormatter valueFormatter = new ValueFormatter() {
-             /**
+             *//**
              * Called when drawing any label, used to change numbers into formatted strings.
              *
              * @param value float to be formatted
              * @return formatted string label
-             */
+             *//*
             @Override
             public String getFormattedValue(float value) {
                 return super.getFormattedValue(Math.round(value));
@@ -179,17 +179,17 @@ public class FragmentBurndown extends Fragment {
     }
 
     class formatter extends ValueFormatter{
-        /**
+        *//**
          * Used to draw axis labels, calls {@link #getFormattedValue(float)} by default.
          *
          * @param value float to be formatted
          * @param axis  axis being labeled
          * @return formatted string label
-         */
+         *//*
         @Override
         public String getAxisLabel(float value, AxisBase axis) {
             DateTimeFormatter fmt = DateTimeFormat.forPattern("dd-MM-yyyy");
             return fmt.print(((Float) value).longValue());
         }
-    }
+    }*/
 }

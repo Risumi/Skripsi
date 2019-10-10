@@ -116,22 +116,21 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             etBlName.setText(editBacklog.getName());
             ddStatus.setText(editBacklog.getStatus(),false);
             status = editBacklog.getStatus();
-            ddEpic.setText(resultIntent.getStringExtra("epicName"),false);
-            String nama= resultIntent.getStringExtra("userName");
+            ddEpic.setText(editBacklog.getEpicName(),false);
+            String nama= editBacklog.getAssignee();
             if (nama.equalsIgnoreCase("")){
                 ddAssignee.setText("Unassigned",false);
             }else {
-                ddAssignee.setText(resultIntent.getStringExtra("userName"),false);
+                ddAssignee.setText(nama,false);
             }
-
             sprintId = editBacklog.getIdSprint();
             etBlDesc.setText(editBacklog.getDescription());
 
-            Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
+//            Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
 
         }
-        Log.d("PID",resultIntent.getStringExtra("PID"));
-        Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
+//        Log.d("PID",resultIntent.getStringExtra("PID"));
+//        Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
 
     }
 
@@ -147,8 +146,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
                 }
                 if (resultIntent.getIntExtra("req code",1)==2){
                     newBacklog = new Backlog(
-                            resultIntent.getStringExtra("blsID"),
-                            resultIntent.getStringExtra("PID"),
+                            editBacklog.getId(),
+                            editBacklog.getIdProject(),
                             sprintId,
                             epicId,
                             name,
