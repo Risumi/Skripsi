@@ -42,7 +42,7 @@ import java.util.List;
 
 
 public class FragmentSprintReports extends Fragment /*implements AdapterView.OnItemSelectedListener*/{
-    /*// TODO: Rename parameter arguments, choose names that match
+/*    // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
@@ -57,14 +57,7 @@ public class FragmentSprintReports extends Fragment /*implements AdapterView.OnI
         // Required empty public constructor
     }
 
-    *//**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentSprintReports.
-     *//*
+
     // TODO: Rename and change types and number of parameters
     public static FragmentSprintReports newInstance(String param1, String param2) {
         FragmentSprintReports fragment = new FragmentSprintReports();
@@ -182,12 +175,12 @@ public class FragmentSprintReports extends Fragment /*implements AdapterView.OnI
         dataSet1.setColor(color);
         lineData.addDataSet(dataSet1);
         ValueFormatter valueFormatter = new ValueFormatter() {
-            *//**
+            *
              * Called when drawing any label, used to change numbers into formatted strings.
              *
              * @param value float to be formatted
              * @return formatted string label
-             *//*
+
             @Override
             public String getFormattedValue(float value) {
                 return super.getFormattedValue(Math.round(value));

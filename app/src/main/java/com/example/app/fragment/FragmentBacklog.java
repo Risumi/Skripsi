@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.app.activity.ActivityMain;
 import com.example.app.utils.AbstractExpandableDataProvider;
 import com.example.app.utils.ExampleExpandableDataProvider;
 import com.example.app.MainViewModel;
@@ -31,6 +32,7 @@ import com.example.app.activity.ActivityStartSprint;
 import com.example.app.adapter.ExpandableDraggableSwipeableExampleAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
+import com.example.app.utils.ListenerAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
@@ -51,7 +53,7 @@ import java.util.Date;
  * create an instance of this fragment.
  */
 public class FragmentBacklog extends Fragment implements RecyclerViewExpandableItemManager.OnGroupCollapseListener,
-        RecyclerViewExpandableItemManager.OnGroupExpandListener{
+        RecyclerViewExpandableItemManager.OnGroupExpandListener {
     // TODO: Rename parameter arguments, choose names that match
 
     private static final String SAVED_STATE_EXPANDABLE_ITEM_MANAGER = "RecyclerViewExpandableItemManager";
@@ -62,7 +64,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
     private RecyclerView.Adapter mWrappedAdapter;
     private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
-    private RecyclerViewSwipeManager mRecyclerViewSwipeManager;
+
     private RecyclerViewTouchActionGuardManager mRecyclerViewTouchActionGuardManager;
     private ExampleExpandableDataProvider mDataProvider;
     final int REQ_START_SPRINT = 5;
@@ -111,7 +113,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
-        mDataProvider = new ExampleExpandableDataProvider(model.getListSprint().getValue().get(model.getListSprint().getValue().size()-1)/*,model.getListBacklogSprint().getValue(),*/,model.getListBacklog().getValue());
+        mDataProvider = new ExampleExpandableDataProvider(model.getListSprint().getValue(),model.getListBacklog().getValue());
     }
 
     @Override
@@ -121,7 +123,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
         return view;
     }
-
+    private ExpandableDraggableSwipeableExampleAdapter myItemAdapter;
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -132,6 +134,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
         mRecyclerViewExpandableItemManager = new RecyclerViewExpandableItemManager(eimSavedState);
         mRecyclerViewExpandableItemManager.setOnGroupExpandListener(this);
         mRecyclerViewExpandableItemManager.setOnGroupCollapseListener(this);
+        mRecyclerViewExpandableItemManager.setDefaultGroupsExpandedState(true);
 
         // touch guard manager  (this class is required to suppress scrolling while swipe-dismiss animation is running)
         mRecyclerViewTouchActionGuardManager = new RecyclerViewTouchActionGuardManager();
@@ -143,12 +146,9 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
         mRecyclerViewDragDropManager.setDraggingItemShadowDrawable(
                 (NinePatchDrawable) ContextCompat.getDrawable(requireContext(), R.drawable.material_shadow_z3));
 
-        // swipe manager
-        mRecyclerViewSwipeManager = new RecyclerViewSwipeManager();
-
         //adapter
-        final ExpandableDraggableSwipeableExampleAdapter myItemAdapter =
-                new ExpandableDraggableSwipeableExampleAdapter(mRecyclerViewExpandableItemManager, mDataProvider);
+
+        myItemAdapter = new ExpandableDraggableSwipeableExampleAdapter(mRecyclerViewExpandableItemManager, mDataProvider);
 
         myItemAdapter.setEventListener(new ExpandableDraggableSwipeableExampleAdapter.EventListener() {
 
@@ -200,7 +200,6 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
         mWrappedAdapter = mRecyclerViewExpandableItemManager.createWrappedAdapter(myItemAdapter);       // wrap for expanding
         mWrappedAdapter = mRecyclerViewDragDropManager.createWrappedAdapter(mWrappedAdapter);           // wrap for dragging
-        mWrappedAdapter = mRecyclerViewSwipeManager.createWrappedAdapter(mWrappedAdapter);      // wrap for swiping
 
         final GeneralItemAnimator animator = new SwipeDismissItemAnimator();
 
@@ -230,7 +229,6 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
         //
         // priority: TouchActionGuard > Swipe > DragAndDrop > ExpandableItem
         mRecyclerViewTouchActionGuardManager.attachRecyclerView(mRecyclerView);
-        mRecyclerViewSwipeManager.attachRecyclerView(mRecyclerView);
         mRecyclerViewDragDropManager.attachRecyclerView(mRecyclerView);
         mRecyclerViewExpandableItemManager.attachRecyclerView(mRecyclerView);
     }
@@ -252,11 +250,6 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
         if (mRecyclerViewDragDropManager != null) {
             mRecyclerViewDragDropManager.release();
             mRecyclerViewDragDropManager = null;
-        }
-
-        if (mRecyclerViewSwipeManager != null) {
-            mRecyclerViewSwipeManager.release();
-            mRecyclerViewSwipeManager = null;
         }
 
         if (mRecyclerViewTouchActionGuardManager != null) {
@@ -319,13 +312,6 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 //            ((ActivityMain) getActivity()).onGroupItemClicked
 //            (groupPosition);
         } else {
-//            ((ActivityMain) getActivity()).onChildItemClicked(groupPosition, childPosition);
-//            getDataProvider().removeChildItem(groupPosition, childPosition);
-//            mRecyclerViewExpandableItemManager.notifyChildItemRemoved(groupPosition, childPosition);
-//            getDataProvider().insertGroupItem(null);
-//            mRecyclerViewExpandableItemManager.notifyGroupItemInserted(getDataProvider().getGroupCount()-1,false);
-//            mDataProvider.insertChildItem(groupPosition,null);
-//            mRecyclerViewExpandableItemManager.notifyChildItemInserted(groupPosition,mDataProvider.getChildCount(groupPosition)-1);
             Intent editBacklog =new Intent(getContext(), ActivityAddBacklog.class);
             int backlogPos = (0);
             if (groupPosition== backlogPos){
@@ -335,10 +321,8 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
             }else {
                 editBacklog.putExtra("backlog",getDataProvider().getChildItem(groupPosition,childPosition).getBacklog());
                 editBacklog.putExtra("index",model.getListBacklogSprint().getValue().indexOf(getDataProvider().getChildItem(groupPosition,childPosition).getBacklog()));
-//                editBacklog.putExtra("index2",model.getListFilterBacklogSprint().getValue().indexOf(getDataProvider().getChildItem(groupPosition,childPosition).getBacklog()));
             }
 
-//            Log.d("position", ((Integer) position).toString());
             ArrayList<String> spinnerArray = new ArrayList<>();
             ArrayList<String> idEpic = new ArrayList<>();
             for (int i=0;i<model.getListEpic().getValue().size();i++){

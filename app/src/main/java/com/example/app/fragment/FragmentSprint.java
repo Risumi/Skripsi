@@ -255,6 +255,7 @@ public class FragmentSprint extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
+                        int lastID = model.getLargestSprintID()+1;
                         model.getListSprint().getValue().remove(model.getCurrentSprint().getValue());
                         model.getCurrentSprint().getValue().setEndda(new Date());
                         model.getCurrentSprint().getValue().setModifieddate(new Date());
@@ -262,18 +263,14 @@ public class FragmentSprint extends Fragment {
                         model.getCurrentSprint().getValue().setStatus("Done");
                         Sprint sprint =model.getCurrentSprint().getValue();
                         Sprint newSprint = new Sprint(
-                                model.getCurrentSprint().getValue().getIdProject()+"-S "+(model.getListSprint().getValue().size()+2),
+                                model.getCurrentSprint().getValue().getIdProject()+"-S "+lastID,
                                 model.getCurrentSprint().getValue().getIdProject(),
-                                "Sprint "+(model.getListSprint().getValue().size()+2),
+                                "Sprint "+lastID,
                                 null,
                                 null,
                                 "",
                                 "Not Active","",new Date(),model.getUser().getEmail(),null,null);
-                        Log.d("Size", ((Integer) model.getListSprint().getValue().size()).toString());
-                        Log.d("ID sprint A",sprint.getId());
-                        Log.d("ID sprint B",newSprint.getId());
-                        Log.d("Email A",model.getUser().getEmail());
-                        Log.d("Email B",newSprint.getCreatedby());
+                        model.getListSprint().getValue().add(sprint);
                         model.getListSprint().getValue().add(newSprint);
                         model.getCurrentSprint().setValue(newSprint);
                         ArrayList<Backlog> list = new ArrayList<>();

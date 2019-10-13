@@ -1,6 +1,7 @@
 package com.example.app.fragment;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -11,10 +12,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.app.MainViewModel;
 import com.example.app.R;
+import com.example.app.activity.ActivityDetailSprint;
 import com.example.app.adapter.SprintReportAdapter;
+import com.example.app.model.Sprint;
 
 
 /**
@@ -72,8 +76,17 @@ public class FragmentDemo extends Fragment {
         View view =inflater.inflate(R.layout.fragment_demo, container, false);
         RecyclerView recyclerView = view.findViewById(R.id.rvSprintReport);
         SprintReportAdapter sprintReportAdapter = new SprintReportAdapter(model.getListSprintDone());
+        sprintReportAdapter.setOnItemClickCallback(new SprintReportAdapter.OnItemClickCallback() {
+            @Override
+            public void onItemClicked(Sprint data) {
+                Intent intent = new Intent(getContext(),ActivityDetailSprint.class);
+                intent.putExtra("sprint",data);
+                getActivity().startActivity(intent);
+            }
+        });
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL,false));
         recyclerView.setAdapter(sprintReportAdapter);
+
 
         return view;
     }

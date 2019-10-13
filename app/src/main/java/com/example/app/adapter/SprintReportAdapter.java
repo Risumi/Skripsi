@@ -8,6 +8,7 @@ import android.widget.TextView;
 
 import com.example.app.R;
 import com.example.app.model.Sprint;
+import com.google.android.material.card.MaterialCardView;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -19,9 +20,15 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapter.SprintReportAdapterViewHolder> {
 
     private ArrayList <Sprint> listSprint;
+    private OnItemClickCallback onItemClickCallback;
+
 
     public SprintReportAdapter(ArrayList<Sprint> listSprint) {
         this.listSprint = listSprint;
+    }
+
+    public void setOnItemClickCallback(OnItemClickCallback onItemClickCallback) {
+        this.onItemClickCallback = onItemClickCallback;
     }
 
     @NonNull
@@ -34,10 +41,17 @@ public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapte
 
     @Override
     public void onBindViewHolder(@NonNull SprintReportAdapterViewHolder holder, int position) {
-        holder.txtName.setText(listSprint.get(position).getName());
-//        String date = formatDate(listSprint.get(position).getBegda())+" - "+formatDate(listSprint.get(position).getEndda());
-        String date = listSprint.get(position).getBegda()+" - "+listSprint.get(position).getEndda();
+        Sprint sprint = listSprint.get(position);
+        holder.txtName.setText(sprint.getName());
+        String date = formatDate(sprint.getBegda())+" - "+formatDate(sprint.getEndda());
+//        String date = listSprint.get(position).getBegda()+" - "+listSprint.get(position).getEndda();
         holder.txtDate.setText(date);
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                onItemClickCallback.onItemClicked(listSprint.get(holder.getAdapterPosition()));
+            }
+        });
     }
 
 
@@ -48,17 +62,25 @@ public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapte
 
     public String formatDate(Date rawDate){
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
-        return formatDate.format(rawDate);
+        String formattedDate = formatDate.format(rawDate);
+        return formattedDate;
     }
 
     class SprintReportAdapterViewHolder extends RecyclerView.ViewHolder {
         TextView txtName;
         TextView txtDate;
+        MaterialCardView cardView;
 
-        public SprintReportAdapterViewHolder(@NonNull View itemView) {
+        SprintReportAdapterViewHolder(@NonNull View itemView) {
             super(itemView);
             this.txtName = itemView.findViewById(R.id.txtName);
             this.txtDate = itemView.findViewById(R.id.txtDate);
+            this.cardView = itemView.findViewById(R.id.cardView);
         }
     }
+
+    public interface OnItemClickCallback {
+        void onItemClicked(Sprint data);
+    }
+
 }

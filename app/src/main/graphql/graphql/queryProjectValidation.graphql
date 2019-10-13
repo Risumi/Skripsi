@@ -1,0 +1,5 @@
+query projectValidation($id:String!){
+  projectValidation(id:$id){
+    id
+  }
+}

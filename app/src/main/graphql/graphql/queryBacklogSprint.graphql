@@ -1,0 +1,10 @@
+query backlogS($id:String){
+  backlogS(id:$id){
+    idBacklog{
+      id
+      name
+    }
+    status
+    date
+  }
+}

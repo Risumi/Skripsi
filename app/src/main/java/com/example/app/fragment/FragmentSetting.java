@@ -142,9 +142,9 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
         }
     }
 
-    AlertDialog.Builder builder;
+    private AlertDialog.Builder builder;
 
-    void initializeAlertDialog(User user){
+    private void initializeAlertDialog(User user){
         builder = new AlertDialog.Builder(getActivity());
         builder.setMessage("Are you sure  ?");
         builder.setCancelable(false);

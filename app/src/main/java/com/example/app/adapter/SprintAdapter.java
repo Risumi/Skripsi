@@ -19,21 +19,13 @@ import java.util.Date;
 
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> implements  View.OnLongClickListener{
+
+public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintViewHolder> {
 
     ArrayList<Backlog> backlogList;
-    ArrayList<Epic> epicList;
-    ListenerSprint listener;
 
-    public SprintAdapter(ArrayList<Backlog> backlogList,ArrayList<Epic> epicList, ListenerSprint listener) {
+    public SprintAdapter(ArrayList<Backlog> backlogList) {
         this.backlogList = backlogList;
-        this.listener = listener;
-        this.epicList = epicList;
-    }
-
-    public SprintAdapter(ArrayList<Backlog> backlogList,ArrayList<Epic> epicList) {
-        this.backlogList = backlogList;
-        this.epicList = epicList;
     }
 
 
@@ -50,22 +42,10 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
     @Override
     public void onBindViewHolder(SprintViewHolder sprintViewHolder, int i) {
         sprintViewHolder.name.setText(backlogList.get(i).getName());
-//        sprintViewHolder.date.setText(formatDate(backlogList.get(i).getEndda()));
-        sprintViewHolder.fl.setTag(i);
         sprintViewHolder.id.setText(backlogList.get(i).getId());
-//        sprintViewHolder.fl.setOnTouchListener(this);
-        sprintViewHolder.fl.setOnLongClickListener(this);
+        sprintViewHolder.date.setText(formatDate(backlogList.get(i).getModifieddate()));
     }
 
-    String getNameEpic(String id){
-        String name = "";
-        for (int i = 0; i<epicList.size();i++){
-            if (id.equalsIgnoreCase(epicList.get(i).getId())){
-                name=epicList.get(i).getName();
-            }
-        }
-        return name;
-    }
 
     @Override
     public int getItemCount() {
@@ -92,30 +72,20 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
 //        }
 //        return false;
 //    }
-    
+
     public void updateList(ArrayList<Backlog> list) {
         this.backlogList = list;
     }
 
-    @Override
-    public boolean onLongClick(View v) {
-        ClipData data = ClipData.newPlainText("", "");
-        View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            v.startDragAndDrop(data, shadowBuilder, v, 0);
-        } else {
-            v.startDrag(data, shadowBuilder, v, 0);
-        }
-        return true;
-    }
 
     class SprintViewHolder extends RecyclerView.ViewHolder{
-        TextView name, id;
+        TextView name, id,date;
         FrameLayout fl;
         public SprintViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.txtName);
             id = itemView.findViewById(R.id.txtID);
+            date = itemView.findViewById(R.id.txtDate);
             fl = itemView.findViewById(R.id.FM1);
         }
     }

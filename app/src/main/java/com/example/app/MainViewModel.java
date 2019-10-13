@@ -953,6 +953,20 @@ public class MainViewModel extends ViewModel {
         return last;
     }
 
+    public int getLargestSprintID(){
+        int last=0;
+        int temp=0;
+        for (int i=0;i<listSprint.getValue().size();i++){
+            temp = Integer.parseInt(listSprint.getValue().get(i).getId().replaceAll("[^0-9]",""));
+            if (last<temp){
+                last = temp;
+            }
+        }
+        Log.d("Last",Integer.toString(last));
+        return last;
+    }
+
+
     public int indexBacklog(Backlog backlog,ArrayList<Backlog> backlogArrayList){
         int index = 0;
         for (int i=0 ;i<backlogArrayList.size();i++){
@@ -969,9 +983,10 @@ public class MainViewModel extends ViewModel {
         for (int i = 0 ;i<listSprint.getValue().size();i++){
             Log.d("Status",listSprint.getValue().get(i).getStatus());
             if (listSprint.getValue().get(i).getStatus().equalsIgnoreCase("Done")){
+                Log.d("ID",listSprint.getValue().get(i).getId());
                 sprints.add(listSprint.getValue().get(i));
             }
         }
-        return  sprints;
+        return sprints;
     }
 }
