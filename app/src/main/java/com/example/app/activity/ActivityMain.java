@@ -287,6 +287,7 @@ public class ActivityMain extends AppCompatActivity
     final int REQ_ADD_SPRINT= 3;
     final int REQ_ADD_EPIC= 4;
     final int REQ_START_SPRINT= 5;
+    final int REQ_EDIT_SPRINT= 6;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

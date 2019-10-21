@@ -62,6 +62,7 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         img2.setOnClickListener(this);
         etStart.setFocusable(false);
         etEnd.setFocusable(false);
+
 //        etEnd.setEnabled(false);
         sprint = intent.getParcelableExtra("Sprint");
 
@@ -87,22 +88,24 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                 Toast.makeText(this,"Start date must before end date",Toast.LENGTH_SHORT).show();
             }
             else {
-                Log.d("Endda",endda.toString());
-                Sprint newSprint = new Sprint(sprint.getId(),
-                        sprint.getIdProject(),
-                        etName.getText().toString(),
-                        begda,
-                        endda,
-                        etGoal.getText().toString(),
-                        "Active",
-                        "",
-                        sprint.getCreateddate(),
-                        sprint.getCreatedby(),
-                        new Date(),
-                        user.getEmail());
-                intent.putExtra("Sprint", newSprint);
-                setResult(RESULT_OK, intent);
-                finish();
+                if (validateFields(etName)&&validateFields(etEnd)){
+                    Log.d("Endda",endda.toString());
+                    Sprint newSprint = new Sprint(sprint.getId(),
+                            sprint.getIdProject(),
+                            etName.getText().toString(),
+                            begda,
+                            endda,
+                            etGoal.getText().toString(),
+                            "Active",
+                            "",
+                            sprint.getCreateddate(),
+                            sprint.getCreatedby(),
+                            new Date(),
+                            user.getEmail());
+                    intent.putExtra("Sprint", newSprint);
+                    setResult(RESULT_OK, intent);
+                    finish();
+                }
             }
         }else if (view ==img1){
             openDateRangePicker(etStart,1);
@@ -217,6 +220,22 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                 endda = getAddWeekDate(formatString(etStart.getText().toString()),3);
                 selection =3;
                 break;
+        }
+    }
+
+    private boolean validateFields(EditText editText) {
+        if (editText.getText().toString() == "") {
+            editText.setError("Field cannot be blank");
+//            if (editText==etEnd){
+//                Toast.makeText(this, "Field cannot be blank", Toast.LENGTH_SHORT).show();
+//            }
+            return false;
+        }else if (editText.getText().length() < 3) {
+            editText.setError("Field must be at least 3 characters");
+            return false;
+        }
+        else{
+            return true;
         }
     }
 }

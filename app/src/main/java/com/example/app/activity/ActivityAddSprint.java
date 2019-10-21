@@ -65,26 +65,29 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
         } else if (view == endDate) {
             openDateRangePicker(endDate, 2);
         } else if (view == button) {
+            if(validateFields(txtSprint)){
+                Sprint newSprint = new Sprint(
+                        resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1),
+                        resultIntent.getStringExtra("PID"),
+                        txtSprint.getText().toString(),
+                        null,
+                        null,
+                        sprintGoal.getText().toString(),
+                        "Created",
+                        null,
+                        new Date(),
+                        user.getEmail(),
+                        null,
+                        null);
+                resultIntent.putExtra("sprint", newSprint);
+                setResult(RESULT_OK, resultIntent);
+                finish();
+            }
 //            begda = new Date();
 //            if (endda == null) {
 //                Toast.makeText(this, "Date cannot be empty", Toast.LENGTH_LONG).show();
 //            } else {
-            Sprint newSprint = new Sprint(
-                    resultIntent.getStringExtra("PID")+"-S "+(resultIntent.getIntExtra("SCount",0)+1),
-                    resultIntent.getStringExtra("PID"),
-                    txtSprint.getText().toString(),
-                    null,
-                    null,
-                    sprintGoal.getText().toString(),
-                    "Created",
-                    null,
-                    new Date(),
-                    user.getEmail(),
-                    null,
-                    null);
-            resultIntent.putExtra("sprint", newSprint);
-            setResult(RESULT_OK, resultIntent);
-            finish();
+
 //            }
         }
     }
@@ -139,5 +142,18 @@ public class ActivityAddSprint extends AppCompatActivity implements View.OnClick
                 break;
         }
         return true;
+    }
+
+    private boolean validateFields(EditText editText) {
+        if (editText.getText().toString() == "") {
+            editText.setError("Field cannot be blank");
+            return false;
+        }else if (editText.getText().length() < 3) {
+            editText.setError("Field must be at least 3 characters");
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }

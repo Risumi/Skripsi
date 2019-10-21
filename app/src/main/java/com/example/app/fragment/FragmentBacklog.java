@@ -67,7 +67,8 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
     private RecyclerViewTouchActionGuardManager mRecyclerViewTouchActionGuardManager;
     private ExampleExpandableDataProvider mDataProvider;
-    final int REQ_START_SPRINT = 5;
+    private final int REQ_START_SPRINT = 5;
+    final int REQ_EDIT_SPRINT = 6;
 
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -179,7 +180,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
             public void onMenuClicked(MenuItem m,int GroupPos) {
                 switch (m.getItemId()){
                     case R.id.start_sprint:
-                        if (model.getCurrentSprint().getValue().getEndda()==null){
+                        if (!model.getCurrentSprint().getValue().getStatus().equalsIgnoreCase("Active")){
                             Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
                             intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
                             intent.putExtra("User",model.getUser());
@@ -190,7 +191,16 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
                         }
                         break;
                     case R.id.edit_sprint:
-                        Toast.makeText(getContext(), "Edit", Toast.LENGTH_SHORT).show();
+                        if (model.getCurrentSprint().getValue().getStatus().equalsIgnoreCase("Active")){
+//                            Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
+//                            intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
+//                            getActivity().startActivityForResult(intent,REQ_EDIT_SPRINT);
+                        }else{
+//                            Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
+//                            intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
+//                            getActivity().startActivityForResult(intent,REQ_EDIT_SPRINT);
+//                            Toast.makeText(getActivity(),"Can't start sprint, there is an active sprint",Toast.LENGTH_SHORT).show();
+                        }
                         break;
                 }
             }

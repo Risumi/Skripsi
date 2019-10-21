@@ -43,9 +43,9 @@ public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapte
     public void onBindViewHolder(@NonNull SprintReportAdapterViewHolder holder, int position) {
         Sprint sprint = listSprint.get(position);
         holder.txtName.setText(sprint.getName());
-        String date = formatDate(sprint.getBegda())+" - "+formatDate(sprint.getEndda());
+//        String date = formatDate(sprint.getBegda())+" - "+formatDate(sprint.getEndda());
 //        String date = listSprint.get(position).getBegda()+" - "+listSprint.get(position).getEndda();
-        holder.txtDate.setText(date);
+        holder.txtDate.setText(sprint.getId());
         holder.cardView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
