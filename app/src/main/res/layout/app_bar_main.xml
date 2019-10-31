@@ -55,7 +55,7 @@
             app:fab_colorNormal="@color/colorWhite"
             app:fab_colorPressed="@color/colorAccent"
             app:fab_size="mini"
-            app:fab_title="Issue"/>
+            app:fab_title="Task"/>
 
         <com.getbase.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab5"

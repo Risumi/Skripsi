@@ -52,8 +52,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
             desc = desc.substring(0,40)+"...";
         }
 //        backlogViewHolder2.BacklogDescription.setText(desc);
-        backlogViewHolder2.fl.setTag(i);
-        backlogViewHolder2.fl.setOnLongClickListener(this);
+
         backlogViewHolder2.backlog = backlogList.get(i);
         backlogViewHolder2.backlogAdapter = this;
 
@@ -84,9 +83,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     public static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView BacklogName;
         TextView BacklogStatus;
-//        TextView BacklogDescription;
-//        TextView BacklogDate;
-        FrameLayout fl;
         private ClickListener listener;
         Backlog backlog;
         BacklogAdapter backlogAdapter;
@@ -97,7 +93,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
             BacklogStatus = itemView.findViewById(R.id.txtStatus);
 //            BacklogDescription = itemView.findViewById(R.id.txtDescription);
 //            BacklogDate = itemView.findViewById(R.id.txtDate);
-            fl = itemView.findViewById(R.id.FM1);
             this.listener = listener;
             itemView.setOnClickListener(this);
         }

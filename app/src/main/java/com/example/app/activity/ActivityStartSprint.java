@@ -226,11 +226,16 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
     private boolean validateFields(EditText editText) {
         if (editText.getText().toString() == "") {
             editText.setError("Field cannot be blank");
-//            if (editText==etEnd){
-//                Toast.makeText(this, "Field cannot be blank", Toast.LENGTH_SHORT).show();
-//            }
             return false;
-        }else if (editText.getText().length() < 3) {
+        }
+        else if (editText.getText().length() > 50){
+            if (editText.getId()==etName.getId()){
+                editText.setError("Field must be at most 50 characters");
+                return false;
+            }
+            return true;
+        }
+        else if (editText.getText().length() < 3) {
             editText.setError("Field must be at least 3 characters");
             return false;
         }

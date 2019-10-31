@@ -75,8 +75,8 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
                 editText.setError("Field must be at most 5 characters");
                 return false;
             }else {
-                if (editText.getText().length() > 32){
-                    editText.setError("Field must be at most 32 characters");
+                if (editText.getText().length() > 50){
+                    editText.setError("Field must be at most 50 characters");
                     return false;
                 }else {
                     return true;

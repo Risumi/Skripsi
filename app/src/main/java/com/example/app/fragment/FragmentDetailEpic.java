@@ -70,15 +70,15 @@ public class FragmentDetailEpic extends Fragment {
         View view = inflater.inflate(R.layout.activity_add_epic, container, false);
         editText = view.findViewById(R.id.etEpicName);
         editText.setFocusable(false);
-        editText.setText(mParam1.getId());
+        editText.setText(mParam1.getName());
 
         editText3 = view.findViewById(R.id.etEpicDesc);
         editText3.setFocusable(false);
         editText3.setText(mParam1.getSummary());
 
-        editText2 = view.findViewById(R.id.eEpicStatus);
-        editText2.setFocusable(false);
-        editText2.setText(mParam1.getName());
+//        editText2 = view.findViewById(R.id.eEpicStatus);
+//        editText2.setFocusable(false);
+//        editText2.setText(mParam1.getName());
 
         button = view.findViewById(R.id.button);
         button.setVisibility(View.GONE);

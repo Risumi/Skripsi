@@ -185,13 +185,16 @@ public class FragmentSprint extends Fragment {
         if (model.getCurrentSprint().getValue().getName()!=null){
             if (model.getCurrentSprint().getValue().getStatus().equalsIgnoreCase("Active")){
                 txtSprint.setText(Objects.requireNonNull(model.getCurrentSprint().getValue()).getName());
+                txtRemaining.setVisibility(View.VISIBLE);
             }else {
                 txtSprint.setText("No Active Sprint");
-                txtRemaining.setText("");
+//                txtRemaining.setText("");
+                txtRemaining.setVisibility(View.GONE);
             }
         }else{
             txtSprint.setText("No Active Sprint");
-            txtRemaining.setText("");
+//            txtRemaining.setText("");
+            txtRemaining.setVisibility(View.GONE);
         }
 
         addColumn("To Do",model.getToDoBacklog().getValue());

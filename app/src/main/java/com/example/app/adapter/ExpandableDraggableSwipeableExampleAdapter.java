@@ -209,7 +209,7 @@ public class ExpandableDraggableSwipeableExampleAdapter
         // set text
 
 
-        holder.mTextView2.setText(mProvider.getChildCount(groupPosition)+" Issue");
+        holder.mTextView2.setText(mProvider.getChildCount(groupPosition)+" Task");
 
         final ExpandableItemState expandState = holder.getExpandState();
 

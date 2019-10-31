@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
@@ -26,6 +27,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.app.model.Project;
 import com.example.app.utils.AbstractExpandableDataProvider;
 import com.example.app.utils.ListenerGraphql;
 import com.example.app.adapter.AlertAddUser;
@@ -58,13 +60,11 @@ public class ActivityMain extends AppCompatActivity
     private MainViewModel model;
     String PID;
     User user;
+    Project project;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        model = ViewModelProviders.of(this).get(MainViewModel.class);
-        model.instantiateListener(this);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -95,23 +95,37 @@ public class ActivityMain extends AppCompatActivity
         TextView navUserEmail = (TextView) headerView.findViewById(R.id.textView);
 
 
-        intent = getIntent();
-        user = intent.getParcelableExtra("User");
-        PID = intent.getStringExtra("PID");
+
+
+        if (savedInstanceState==null){
+            intent = getIntent();
+            user = intent.getParcelableExtra("User");
+            PID = intent.getStringExtra("PID");
+            project = intent.getParcelableExtra("project");
+
+            getSupportActionBar().setTitle(intent.getStringExtra("PName"));
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            fragment = FragmentEpic.newInstance(intent.getStringExtra("PID"),"");
+            transaction.add(R.id.fragmentContainer,fragment);
+            transaction.commit();
+
+            model = ViewModelProviders.of(this).get(MainViewModel.class);
+            model.instantiateListener(this);
+            model.fetchMain(PID);
+            model.setUser(user);
+        }else {
+            user = savedInstanceState.getParcelable("User");
+            PID = savedInstanceState.getString("PID");
+            project =savedInstanceState.getParcelable("Project");
+        }
         navUsername.setText(user.getName());
         navUserEmail.setText(user.getEmail());
 
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = FragmentEpic.newInstance(intent.getStringExtra("PID"),"");
-        transaction.add(R.id.fragmentContainer,fragment);
-        transaction.commit();
+
+
 //        setFab();
 
-        model.fetchMain(PID);
-        model.setUser(user);
 
-        getSupportActionBar().setTitle(intent.getStringExtra("PName"));
-        Log.d("PID",PID);
     }
 
     @Override
@@ -170,7 +184,7 @@ public class ActivityMain extends AppCompatActivity
             fam.collapse();
             fam.setVisibility(View.GONE);
         }*/ else if (id == R.id.nav_setting) {
-            fragment = FragmentSetting.newInstance(intent.getParcelableExtra("project"),PID);
+            fragment = FragmentSetting.newInstance(project,PID);
             fam.collapse();
             fam.setVisibility(View.GONE);
         }/* else if (id == R.id.nav_burndown) {
@@ -186,7 +200,7 @@ public class ActivityMain extends AppCompatActivity
             fam.collapse();
             fam.setVisibility(View.GONE);
         }else if (id == R.id.nav_demo2){
-            fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
+            fragment = FragmentBacklog.newInstance(PID,"");
             fam.collapse();
             fam.setVisibility(View.VISIBLE);
             fab.setVisibility(View.GONE);
@@ -494,5 +508,13 @@ public class ActivityMain extends AppCompatActivity
     public AbstractExpandableDataProvider getDataProvider() {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DATA_PROVIDER);
         return ((ExampleExpandableDataProviderFragment) fragment).getDataProvider();
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("User",user);
+        outState.putParcelable("Project",project);
+        outState.putString("PID",PID);
     }
 }

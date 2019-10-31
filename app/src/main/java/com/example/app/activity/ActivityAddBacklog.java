@@ -222,6 +222,12 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         }else if (editText.getText().length() < 3) {
             editText.setError("Field must be at least 3 characters");
             return false;
+        }else if (editText.getText().length() > 50){
+            if (editText.getId()==etBlName.getId()){
+                editText.setError("Field must be at most 50 characters");
+                return false;
+            }
+            return true;
         }
         else{
             return true;
