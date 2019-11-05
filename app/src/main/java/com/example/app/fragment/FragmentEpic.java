@@ -3,6 +3,7 @@ package com.example.app.fragment;
 
 
 
+import android.content.Intent;
 import android.os.Bundle;
 
 
@@ -20,9 +21,13 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.app.MainViewModel;
+import com.example.app.activity.ActivityEpic;
+import com.example.app.activity.ActivityMain;
 import com.example.app.model.Epic;
 import com.example.app.adapter.EpicAdapter;
 import com.example.app.R;
+import com.example.app.model.Progress;
+import com.example.app.model.Project;
 
 import java.util.ArrayList;
 
@@ -42,7 +47,7 @@ public class FragmentEpic extends Fragment {
     private String mParam1;
     private String mParam2;
     private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private EpicAdapter mAdapter;
     ArrayList<Epic> listEpic;
     private MainViewModel model;
 
@@ -83,21 +88,31 @@ public class FragmentEpic extends Fragment {
             }
         });
     }
-
+    final int REQ_EPIC = 7;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_epic, container, false);
         mRecyclerView=view.findViewById(R.id.rvTop);
-        mAdapter = new EpicAdapter(this.getActivity(), model.getListEpic().getValue());
+        mAdapter = new EpicAdapter(this.getActivity(), model.getListEpic().getValue(),model.getListBacklog().getValue());
         mRecyclerView.setAdapter(mAdapter);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this.getActivity()));
+        mAdapter.setListener(new EpicAdapter.ClickListener() {
+            @Override
+            public void onItemClicked(Epic epic) {
+                Intent intent = new Intent(getContext(), ActivityEpic.class);
+                intent.putExtra("epicID",epic.getId());
+                intent.putExtra("epic",epic);
+                getActivity().startActivityForResult(intent, ActivityMain.REQ_EPIC);
+            }
+        });
         return view;
-
     }
 
     public void AddDataSet(Epic epic){
         model.getListEpic().getValue().add(epic);
+        Progress progress = new Progress(epic.getId(),0,0);
+        model.getListEpicProgress().getValue().add(progress);
         mAdapter.notifyDataSetChanged();
         model.createEpic(epic);
     }

@@ -59,6 +59,11 @@ query Main($id:String!){
       nama
     }    
   }
+  epicProgress(id:$id){
+    id
+    complete
+    count
+  }
 }
 
 

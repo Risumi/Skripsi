@@ -9,6 +9,7 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
+import com.example.app.model.Progress;
 import com.example.app.utils.ListenerAdapter;
 import com.example.app.utils.ListenerGraphql;
 import com.example.app.model.Backlog;
@@ -25,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import graphql.AddUserMutation;
@@ -36,6 +38,7 @@ import graphql.EditProjectMutation;
 import graphql.EpicEditMutation;
 import graphql.EpicMutation;
 import graphql.MainQuery;
+import graphql.ProgressEpicQuery;
 import graphql.RemoveUserMutation;
 import graphql.SprintEditMutation;
 import graphql.SprintMutation;
@@ -54,6 +57,8 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<Epic>> listEpic;
     private MutableLiveData<ArrayList<User>> listUser ;
+
+    private MutableLiveData<ArrayList<Progress>> listEpicProgress;
 
     private User user;
 
@@ -85,6 +90,8 @@ public class MainViewModel extends ViewModel {
         listUser = new MutableLiveData<>();
         listUser.setValue(new ArrayList<>());
 
+        listEpicProgress = new MutableLiveData<>();
+        listEpicProgress.setValue(new ArrayList<>());
     }
 
     public void setUser(User user) {
@@ -119,9 +126,23 @@ public class MainViewModel extends ViewModel {
         return listSprint;
     }
 
+    public MutableLiveData<ArrayList<Progress>> getListEpicProgress() {
+        return listEpicProgress;
+    }
+
     private void setActiveSprint(){
         if (listSprint.getValue().size()!=0){
             Sprint sprint =listSprint.getValue().get(listSprint.getValue().size()-1);
+            int last=0;
+            int temp=0;
+            for (int i=0;i<listSprint.getValue().size();i++){
+                temp = Integer.parseInt(listSprint.getValue().get(i).getId().replaceAll("[^0-9]",""));
+                if (last<temp){
+                    last = temp;
+                    sprint =listSprint.getValue().get(i);
+                }
+            }
+            Log.d("Last",Integer.toString(last));
             if (sprint.getStatus().equalsIgnoreCase("Active")){
                 for (int i = 0; i < listBacklog.getValue().size(); i++) {
                     Backlog backlog =  listBacklog.getValue().get(i);
@@ -160,61 +181,114 @@ public class MainViewModel extends ViewModel {
         apolloClient.query(mainQuery).enqueue(new ApolloCall.Callback<MainQuery.Data>() {
             @Override
             public void onResponse(@NotNull Response<MainQuery.Data> response) {
-                for (int i = 0 ; i<response.data().sprint().size();i++) {
-                    Log.d("Size", ((Integer) response.data().sprint().size()).toString());
-                    listSprint.getValue().add(new Sprint(
-                            response.data().sprint().get(i).id(),
-                            PID,
-                            response.data().sprint().get(i).name(),
-                            response.data().sprint().get(i).begindate(),
-                            response.data().sprint().get(i).enddate(),
-                            response.data().sprint().get(i).goal(),
-                            response.data().sprint().get(i).status(),
-                            "",
-                            response.data().sprint().get(i).createddate(),
-                            response.data().sprint().get(i).createdby()!=null?response.data().sprint().get(i).createdby().nama():"",
-                            response.data().sprint().get(i).modifieddate(),
-                            response.data().sprint().get(i).modifiedby()!=null?response.data().sprint().get(i).modifiedby().nama():""));
-                }
-
-                for (int i = 0 ; i<response.data().backlog().size();i++) {
-                    listBacklog.getValue().add(new Backlog(
-                            response.data().backlog().get(i).id(),
-                            PID,
-                            response.data().backlog().get(i).idSprint()!=null?response.data().backlog().get(i).idSprint().id():"",
-                            response.data().backlog().get(i).idEpic()!=null?response.data().backlog().get(i).idEpic().id():"",
-                            response.data().backlog().get(i).name(),
-                            response.data().backlog().get(i).status(),
-                            response.data().backlog().get(i).assignee()!=null?response.data().backlog().get(i).assignee().email():"",
-                            response.data().backlog().get(i).description(),
-                            response.data().backlog().get(i).createddate(),
-                            response.data().backlog().get(i).createdby()!=null?response.data().backlog().get(i).createdby().nama():"",
-                            response.data().backlog().get(i).modifieddate(),
-                            response.data().backlog().get(i).modifiedby()!=null?response.data().backlog().get(i).modifiedby().nama():""));
-                }
-
-                for (int i = 0 ; i<response.data().userproject().size();i++){
-                    listUser.getValue().add(new User(
-                            response.data().userproject().get(i).email().email(),
-                            response.data().userproject().get(i).email().nama()));
-                }
-
-                for (int i = 0 ; i<response.data().epic().size();i++){
-                    listEpic.getValue().add(new Epic(
-                            response.data().epic().get(i).id(),
-                            PID,
-                            response.data().epic().get(i).name(),
-                            response.data().epic().get(i).summary(),
-                            response.data().epic().get(i).createddate(),
-                            response.data().epic().get(i).createdby()!=null?response.data().epic().get(i).createdby().nama():"",
-                            response.data().epic().get(i).modifieddate(),
-                            response.data().epic().get(i).createdby()!=null?response.data().epic().get(i).createdby().nama():""));
-                }
                 if (response.hasErrors()){
                     Log.d("Error",response.errors().get(0).message());
+                }else {
+                    for (int i = 0 ; i<response.data().sprint().size();i++) {
+                        Log.d("Size", ((Integer) response.data().sprint().size()).toString());
+                        listSprint.getValue().add(new Sprint(
+                                response.data().sprint().get(i).id(),
+                                PID,
+                                response.data().sprint().get(i).name(),
+                                response.data().sprint().get(i).begindate(),
+                                response.data().sprint().get(i).enddate(),
+                                response.data().sprint().get(i).goal(),
+                                response.data().sprint().get(i).status(),
+                                "",
+                                response.data().sprint().get(i).createddate(),
+                                response.data().sprint().get(i).createdby()!=null?response.data().sprint().get(i).createdby().nama():"",
+                                response.data().sprint().get(i).modifieddate(),
+                                response.data().sprint().get(i).modifiedby()!=null?response.data().sprint().get(i).modifiedby().nama():""));
+                    }
+
+                    for (int i = 0 ; i<response.data().backlog().size();i++) {
+                        listBacklog.getValue().add(new Backlog(
+                                response.data().backlog().get(i).id(),
+                                PID,
+                                response.data().backlog().get(i).idSprint()!=null?response.data().backlog().get(i).idSprint().id():"",
+                                response.data().backlog().get(i).idEpic()!=null?response.data().backlog().get(i).idEpic().id():"",
+                                response.data().backlog().get(i).name(),
+                                response.data().backlog().get(i).status(),
+                                response.data().backlog().get(i).assignee()!=null?response.data().backlog().get(i).assignee().email():"",
+                                response.data().backlog().get(i).description(),
+                                response.data().backlog().get(i).createddate(),
+                                response.data().backlog().get(i).createdby()!=null?response.data().backlog().get(i).createdby().nama():"",
+                                response.data().backlog().get(i).modifieddate(),
+                                response.data().backlog().get(i).modifiedby()!=null?response.data().backlog().get(i).modifiedby().nama():""));
+                    }
+
+                    for (int i = 0 ; i<response.data().userproject().size();i++){
+                        listUser.getValue().add(new User(
+                                response.data().userproject().get(i).email().email(),
+                                response.data().userproject().get(i).email().nama()));
+                    }
+
+                    for (int i = 0 ; i<response.data().epic().size();i++){
+                        listEpic.getValue().add(new Epic(
+                                response.data().epic().get(i).id(),
+                                PID,
+                                response.data().epic().get(i).name(),
+                                response.data().epic().get(i).summary(),
+                                response.data().epic().get(i).createddate(),
+                                response.data().epic().get(i).createdby()!=null?response.data().epic().get(i).createdby().nama():"",
+                                response.data().epic().get(i).modifieddate(),
+                                response.data().epic().get(i).createdby()!=null?response.data().epic().get(i).createdby().nama():""));
+                        listEpicProgress.getValue().add(new Progress(
+                                response.data().epicProgress().get(i).id(),
+                                response.data().epicProgress().get(i).count(),
+                                response.data().epicProgress().get(i).complete()
+                        ));
+                    }
+
                 }
             }
 
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("COMPLETED")){
+                    listener.endProgressDialog();
+                    setActiveSprint();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal",e.getMessage());
+                e.printStackTrace();
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"fetch");
+            }
+        });
+    }
+
+    void fetchEpicProgress(String PID){
+        listener.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        ProgressEpicQuery progressEpicQuery= ProgressEpicQuery.builder().id(PID).build();
+        apolloClient.query(progressEpicQuery).enqueue(new ApolloCall.Callback<ProgressEpicQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<ProgressEpicQuery.Data> response) {
+                if (response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }else {
+                    listEpicProgress.getValue().clear();
+                    for (int i = 0 ; i<response.data().epicProgress().size();i++){
+                        listEpicProgress.getValue().add(new Progress(
+                                response.data().epicProgress().get(i).id(),
+                                response.data().epicProgress().get(i).count(),
+                                response.data().epicProgress().get(i).complete()
+                        ));
+                    }
+
+                }
+            }
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
@@ -966,16 +1040,17 @@ public class MainViewModel extends ViewModel {
         return last;
     }
 
-
-    public int indexBacklog(Backlog backlog,ArrayList<Backlog> backlogArrayList){
-        int index = 0;
-        for (int i=0 ;i<backlogArrayList.size();i++){
-            if (backlog.getId().equalsIgnoreCase(backlogArrayList.get(i).getId())){
-                index = i;
-                break;
+    public int getLargestEpicID(){
+        int last=0;
+        int temp=0;
+        for (int i=0;i<listEpic.getValue().size();i++){
+            temp = Integer.parseInt(listEpic.getValue().get(i).getId().replaceAll("[^0-9]",""));
+            if (last<temp){
+                last = temp;
             }
         }
-        return index;
+        Log.d("Last",Integer.toString(last));
+        return last;
     }
 
     public ArrayList<Sprint> getListSprintDone(){

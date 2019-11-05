@@ -28,6 +28,7 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Add Epic");
 //        getActionBar().setHomeButtonEnabled(true);
         setContentView(R.layout.activity_add_epic);
         resultIntent = getIntent();

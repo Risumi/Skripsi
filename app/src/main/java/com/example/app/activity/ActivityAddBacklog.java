@@ -58,6 +58,7 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_add_backlog);
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Add Task");
 
         etBlName = findViewById(R.id.etBlName);
         button = findViewById(R.id.button);
@@ -111,27 +112,32 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 
 
         if (resultIntent.getIntExtra("req code",1)==2){
+            setTitle("Edit Task");
             button2.setVisibility(View.VISIBLE);
             editBacklog = resultIntent.getParcelableExtra("backlog");
             etBlName.setText(editBacklog.getName());
             ddStatus.setText(editBacklog.getStatus(),false);
             status = editBacklog.getStatus();
-            ddEpic.setText(editBacklog.getEpicName(),false);
-            String nama= editBacklog.getAssignee();
-            if (nama.equalsIgnoreCase("")){
+            for (int i = 0 ;i<epicID.size();i++){
+                if (editBacklog.getEpicName().equalsIgnoreCase(epicID.get(i))){
+                    ddEpic.setText(spinnerArray.get(i),false);
+                    break;
+                }
+            }
+            Log.d("nama", Boolean.toString(editBacklog.getAssignee().equals("")));
+            if (editBacklog.getAssignee().equals("")){
                 ddAssignee.setText("Unassigned",false);
             }else {
-                ddAssignee.setText(nama,false);
+                for (int i = 0 ;i<emailUser.size();i++){
+                    if (editBacklog.getAssignee().equalsIgnoreCase(emailUser.get(i))){
+                        ddAssignee.setText(spinnerArray2.get(i+1),false);
+                        break;
+                    }
+                }
             }
             sprintId = editBacklog.getIdSprint();
             etBlDesc.setText(editBacklog.getDescription());
-
-//            Log.d("position", ((Integer) resultIntent.getIntExtra("position",0)).toString());
-
         }
-//        Log.d("PID",resultIntent.getStringExtra("PID"));
-//        Log.d("BlID",resultIntent.getStringExtra("PID")+"-"+(resultIntent.getIntExtra("blID",0)));
-
     }
 
 

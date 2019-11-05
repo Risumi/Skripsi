@@ -44,9 +44,10 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
 
     @Override
     public void onClick(View view) {
-        if (etName.getText().toString().length()<3 || etPassword.getText().toString().length()<3 || etEmail.getText().toString().length() < 10){
-            Toast.makeText(this,"Field must be at least 3 characters",Toast.LENGTH_SHORT).show();
-        }else {
+        validateFields(etName);
+        validateFields(etEmail);
+        validateFields(etPassword);
+        if (validateFields(etName) && validateFields(etEmail) && validateFields(etPassword)){
             createUser(etName.getText().toString(),etEmail.getText().toString(),etPassword.getText().toString());
         }
     }
@@ -129,5 +130,33 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
                         finish();
                     }
                 });
+    }
+
+    private boolean validateFields(EditText editText) {
+        if (editText.getText().toString() == "") {
+            editText.setError("Field cannot be blank");
+            return false;
+        }else if (editText.getText().length() < 6) {
+            editText.setError("Field must be at least 6 characters");
+            return false;
+        }else if (editText.getText().length() > 50){
+            editText.setError("Field must be at most 50 characters");
+            return false;
+        }else if (editText == etEmail ){
+            if (!isValid(editText.getText().toString())){
+                editText.setError("Please enter a valid email address");
+                return false;
+            }else {
+                return true;
+            }
+        }
+        else{
+            return true;
+        }
+    }
+
+    static boolean isValid(String email) {
+        String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+        return email.matches(regex);
     }
 }

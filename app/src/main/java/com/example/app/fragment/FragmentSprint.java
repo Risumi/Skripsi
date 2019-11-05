@@ -31,6 +31,9 @@ import com.woxthebox.draglistview.DragItemAdapter;
 
 import org.joda.time.DateTime;
 import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.format.PeriodFormatter;
+import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -100,7 +103,7 @@ public class FragmentSprint extends Fragment {
         mBoardView.setDragEnabled(true);
         mBoardView.setSnapToColumnInLandscape(false);
         mBoardView.setColumnSnapPosition(BoardView.ColumnSnapPosition.CENTER);
-        mBoardView.setColumnWidth((int) (getResources().getDisplayMetrics().widthPixels * 0.9));
+        mBoardView.setColumnWidth((int) (getResources().getDisplayMetrics().widthPixels * 0.333));
 
         mBoardView.setBoardListener(new BoardView.BoardListener() {
             @Override
@@ -176,8 +179,19 @@ public class FragmentSprint extends Fragment {
         DateTime end  ;
         try {
             end = new DateTime(model.getCurrentSprint().getValue().getEndda());
-            Period diff = new Period(now, end);
-            txtRemaining.setText(((Integer) diff.getDays()).toString()+" days remaining");
+//            Log.d("Now", ((Integer) now.getDayOfMonth()).toString());
+//            Log.d("End",((Integer) end.getDayOfMonth()).toString());
+            Period period = new Period(now, end, PeriodType.dayTime());
+
+            PeriodFormatter formatter = new PeriodFormatterBuilder()
+//                    .printZeroNever()
+                    .appendDays().appendSuffix(" day ", "days ")
+//                    .appendHours().appendSuffix(" hour ", " hours ")
+//                    .appendMinutes().appendSuffix(" minute ", " minutes ")
+//                    .appendSeconds().appendSuffix(" second ", " seconds ")
+                    .toFormatter();
+//            Log.d("Period",((Integer) diff.getDays()).toString());
+            txtRemaining.setText(formatter.print(period)+" remaining");
         }catch (NullPointerException e){
             e.printStackTrace();
         }
@@ -247,9 +261,9 @@ public class FragmentSprint extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-    AlertDialog.Builder builder;
+    private AlertDialog.Builder builder;
 
-    void initializeAlertDialog(){
+    private void initializeAlertDialog(){
         builder = new AlertDialog.Builder(this.getActivity());
         builder.setMessage("Complete "+model.getCurrentSprint().getValue().getName()+"  ?");
         builder.setCancelable(false);

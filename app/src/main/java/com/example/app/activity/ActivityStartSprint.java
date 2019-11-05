@@ -46,6 +46,8 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_start_sprint);
 
+        setTitle("Start Sprint");
+
         intent = getIntent();
         user =intent.getParcelableExtra("User");
         etName = findViewById(R.id.editText4);

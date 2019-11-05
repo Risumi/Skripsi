@@ -39,6 +39,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import graphql.ProgressQuery;
 import graphql.ProjectMutation;
+import graphql.ProjectUQuery;
 import graphql.ProjectUserQuery;
 import graphql.SprintMutation;
 import okhttp3.OkHttpClient;
@@ -78,8 +79,12 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         progressDialog = new ProgressDialog(ActivityHome.this);
         progressDialog.setMessage("Loading ...");
         progressDialog.setCancelable(false);
+    }
 
-        fetchProject(user.getEmail());
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchProjectUser(user.getEmail());
     }
 
     @Override
@@ -103,18 +108,20 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         }
     }
     ProgressDialog progressDialog;
-    private void fetchProject(String email){
+
+    void fetchProjectUser(String email){
         progressDialog.show();
+        listProject.clear();
+        listProgress.clear();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        ProjectUserQuery projectUserQuery= ProjectUserQuery.builder().
-                id(email).build();
-        apolloClient.query(projectUserQuery).enqueue(new ApolloCall.Callback<ProjectUserQuery.Data>() {
+        ProjectUQuery projectUQuery = ProjectUQuery.builder().email(email).build();
+        apolloClient.query(projectUQuery).enqueue(new ApolloCall.Callback<ProjectUQuery.Data>() {
             @Override
-            public void onResponse(@NotNull Response<ProjectUserQuery.Data> response) {
+            public void onResponse(@NotNull Response<ProjectUQuery.Data> response) {
                 Log.d("Size", ((Integer) response.data().projectuser().size()).toString());
                 if(response.hasErrors()){
                     Log.d("Error",response.errors().get(0).message());
@@ -127,6 +134,13 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                             response.data().projectuser().get(i).idProject().description()));
                     Log.d("project name",response.data().projectuser().get(i).idProject().name());
                 }
+                for (int i = 0 ;i<response.data().progress().size();i++){
+                    listProgress.add(new Progress(
+                            response.data().progress().get(i).id(),
+                            response.data().progress().get(i).count(),
+                            response.data().progress().get(i).complete()
+                    ));
+                }
             }
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
@@ -135,58 +149,18 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 if (!event.name().equalsIgnoreCase("COMPLETED")){
 
                 }else {
-                    fetchProgress();
+                    progressDialog.dismiss();
+                    ActivityHome.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            mAdapter.notifyDataSetChanged();
+                        }
+                    });
                 }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal",e.toString());
-                progressDialog.dismiss();
-                ActivityHome.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        initializeAlertDialog(e.getMessage());
-                        AlertDialog alert11 = builder.create();
-                        alert11.show();
-                    }
-                });
-            }
-        });
-    }
-
-    private void fetchProgress(){
-        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-        ApolloClient apolloClient = ApolloClient.builder()
-                .serverUrl(BASE_URL)
-                .okHttpClient(okHttpClient)
-                .build();
-        ProgressQuery progressQuery = ProgressQuery.builder().build();
-        apolloClient.query(progressQuery ).enqueue(new ApolloCall.Callback<ProgressQuery.Data>() {
-            @Override
-            public void onResponse(@NotNull Response<ProgressQuery.Data> response) {
-                for (int i = 0 ;i<response.data().progress().size();i++){
-                    listProgress.add(new Progress(
-                            response.data().progress().get(i).id(),
-                            response.data().progress().get(i).count(),
-                            response.data().progress().get(i).complete()
-                    ));
-                }
-                ActivityHome.this.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        mAdapter.notifyDataSetChanged();
-                    }
-                });
-            }
-            @Override
-            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
-                super.onStatusEvent(event);
-                if (event.name().equalsIgnoreCase("COMPLETED")){
-                    progressDialog.dismiss();
-                }
-            }
-            @Override
-            public void onFailure(@NotNull ApolloException e) {
                 progressDialog.dismiss();
                 ActivityHome.this.runOnUiThread(new Runnable() {
                     @Override
@@ -324,7 +298,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        fetchProject(user.getEmail());
+                        fetchProjectUser(user.getEmail());
                     }
                 });
 

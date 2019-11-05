@@ -45,6 +45,7 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_project);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setTitle("Add Project");
         etPName = findViewById(R.id.etPName);
         etPKey = findViewById(R.id.etPKey);
         etDesc = findViewById(R.id.etPDesc);

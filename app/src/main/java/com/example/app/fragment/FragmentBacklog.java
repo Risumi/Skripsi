@@ -114,7 +114,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
-        mDataProvider = new ExampleExpandableDataProvider(model.getListSprint().getValue(),model.getListBacklog().getValue());
+        mDataProvider = new ExampleExpandableDataProvider(model.getCurrentSprint().getValue(),model.getListBacklog().getValue());
     }
 
     @Override
@@ -330,7 +330,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
             }else {
                 editBacklog.putExtra("backlog",getDataProvider().getChildItem(groupPosition,childPosition).getBacklog());
-                editBacklog.putExtra("index",model.getListBacklogSprint().getValue().indexOf(getDataProvider().getChildItem(groupPosition,childPosition).getBacklog()));
+                editBacklog.putExtra("index",model.getListBacklog().getValue().indexOf(getDataProvider().getChildItem(groupPosition,childPosition).getBacklog()));
             }
 
             ArrayList<String> spinnerArray = new ArrayList<>();
@@ -382,14 +382,11 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
     public void AddDataSet(Backlog backlog){
         model.getListBacklog().getValue().add(backlog);
-//        model.getListFilterBacklog().getValue().add(backlog);
-//        model.getListAllBacklog().getValue().add(backlog);
         getDataProvider().insertChildItem(0,backlog);
         mAdapter.notifyDataSetChanged();
         model.createBacklog(backlog);
     }
-//
-//
+
 public void EditDataSet(int groupPos,int childPos,Backlog backlog,int index,int index2){
     int backlogPos = (0);
 //    int allBacklogIdx = model.indexBacklog(backlog,model.getListAllBacklog().getValue());
@@ -400,7 +397,7 @@ public void EditDataSet(int groupPos,int childPos,Backlog backlog,int index,int 
     if (groupPos == backlogPos){
         model.getListBacklog().getValue().set(index,backlog);
     }else {
-        model.getListBacklogSprint().getValue().set(index,backlog);
+        model.getListBacklog().getValue().set(index,backlog);
         if (index2!=-1){
 //            model.getListFilterBacklogSprint().getValue().set(index2,backlog);
         }

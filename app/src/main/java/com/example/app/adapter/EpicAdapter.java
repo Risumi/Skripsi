@@ -10,7 +10,9 @@ import android.widget.TextView;
 
 import com.example.app.R;
 import com.example.app.activity.ActivityEpic;
+import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
+import com.example.app.model.Progress;
 
 import java.util.ArrayList;
 
@@ -20,15 +22,19 @@ import androidx.recyclerview.widget.RecyclerView;
 public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder> {
 
     LayoutInflater mInflater;
-    ArrayList<Epic> projectArrayList;
+    ArrayList<Epic> epicArrayList;
+//    ArrayList<Progress> progressArrayList;
+    ArrayList<Backlog> backlogArrayList;
     Context _context;
     Epic current;
+    ClickListener clickListener;
 
 
-    public EpicAdapter(Context _context, ArrayList<Epic> projectArrayList) {
+    public EpicAdapter(Context _context, ArrayList<Epic> projectArrayList,ArrayList<Backlog> backlogArrayList) {
         this.mInflater = LayoutInflater.from(_context);
-        this.projectArrayList = projectArrayList;
+        this.epicArrayList= projectArrayList;
         this._context = _context;
+        this.backlogArrayList = backlogArrayList;
     }
 
     @Override
@@ -39,18 +45,50 @@ public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder
 
     @Override
     public void onBindViewHolder(EpicViewHolder holder, int position) {
-        current = projectArrayList.get(position);
+        current = epicArrayList.get(position);
         holder.EpicName.setText(current.getName());
         holder.EpicTask.setText(current.getId());
+        float progress = 0;
+        float completed = 0 ;
+        float count = 0 ;
+        for (int i = 0 ; i < backlogArrayList.size();i++){
+            if (backlogArrayList.get(i).getEpicName().equalsIgnoreCase(current.getId())){
+                count++;
+                if (backlogArrayList.get(i).getStatus().equalsIgnoreCase("Completed")||backlogArrayList.get(i).getStatus().equalsIgnoreCase("Done")){
+                    completed++;
+                }
+            }
+        }
+        try {
+            progress = (completed /count) * 100;
+//                    Log.d("Percentage",Double.toString(progress));
+            if (Float.isNaN(progress)){
+                progress = 0;
+            }
+        }catch (ArithmeticException e){
+            progress = 0;
+        }
+        holder.EpicProgress.setText(Integer.toString((int)progress)+"%");
+        holder.cardView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                clickListener.onItemClicked(epicArrayList.get(position));
+            }
+        });
+    }
+
+    public void setListener (ClickListener clickListener){
+        this.clickListener = clickListener;
     }
 
     @Override
     public int getItemCount() {
-        return projectArrayList.size();
+        return epicArrayList.size();
     }
-    class EpicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class EpicViewHolder extends RecyclerView.ViewHolder {
         TextView EpicName;
         TextView EpicTask;
+        TextView EpicProgress;
         EpicAdapter mAdapter;
         CardView cardView;
 
@@ -58,19 +96,13 @@ public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder
             super(itemView);
             EpicName = itemView.findViewById(R.id.txtName);
             EpicTask = itemView.findViewById(R.id.txtTask);
+            EpicProgress = itemView.findViewById(R.id.txtProgress);
             cardView = itemView.findViewById(R.id.cardView);
-            cardView.setOnClickListener(this);
             this.mAdapter = adapter;
         }
 
-        @Override
-        public void onClick(View view) {
-            Intent intent = new Intent(_context, ActivityEpic.class);
-            intent.putExtra("epicID",projectArrayList.get(getAdapterPosition()).getId());
-            intent.putExtra("epic",projectArrayList.get(getAdapterPosition()));
-            Log.d("epicID",projectArrayList.get(getAdapterPosition()).toString());
-            Log.d("epicID",projectArrayList.get(getAdapterPosition()).getId());
-            _context.startActivity(intent);
-        }
+    }
+    public interface ClickListener {
+        void onItemClicked(Epic epic);
     }
 }

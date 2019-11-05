@@ -45,6 +45,7 @@ import com.example.app.model.Sprint;
 import com.example.app.model.User;
 import com.getbase.floatingactionbutton.FloatingActionButton;
 import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.github.mikephil.charting.formatter.IFillFormatter;
 import com.google.android.material.navigation.NavigationView;
 
 import java.util.ArrayList;
@@ -290,7 +291,7 @@ public class ActivityMain extends AppCompatActivity
             Intent intent = new Intent(this, ActivityAddEpic.class);
             intent.putExtra("req code",REQ_ADD_EPIC);
             intent.putExtra("PID",PID);
-            intent.putExtra("epID",model.getListEpic().getValue().size());
+            intent.putExtra("epID",model.getLargestEpicID());
             intent.putExtra("User",model.getUser());
             startActivityForResult(intent,REQ_ADD_EPIC);
         }
@@ -302,6 +303,7 @@ public class ActivityMain extends AppCompatActivity
     final int REQ_ADD_EPIC= 4;
     final int REQ_START_SPRINT= 5;
     final int REQ_EDIT_SPRINT= 6;
+    public static final int REQ_EPIC = 7;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -378,7 +380,17 @@ public class ActivityMain extends AppCompatActivity
                 }
             }
         }
+        if (requestCode == REQ_EPIC) {
+            if (resultCode == RESULT_OK) {
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentEpic) {
+//                    Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+        Log.d("request code",Integer.toString(requestCode));
     }
+
     ProgressDialog progressDialog;
     @Override
     public void startProgressDialog() {
@@ -493,7 +505,6 @@ public class ActivityMain extends AppCompatActivity
     public void onGroupItemClicked(int groupPosition) {
         final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_LIST_VIEW);
         AbstractExpandableDataProvider.GroupData data = getDataProvider().getGroupItem(groupPosition);
-
         Toast.makeText(this,"G Pos : "+Integer.toString(groupPosition),Toast.LENGTH_SHORT).show();
 
     }

@@ -13,6 +13,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -62,12 +63,15 @@ public class ActivityDetailSprint extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Sprint Report");
         setContentView(R.layout.fragment_sprint_reports);
         Intent intent = getIntent();
         sprint = intent.getParcelableExtra("sprint");
         initializeChart();
         initializeComponent();
         getData(sprint.getId());
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
     }
 
     void initializeComponent(){
@@ -281,5 +285,15 @@ public class ActivityDetailSprint extends AppCompatActivity {
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
         String formattedDate = formatDate.format(rawDate);
         return formattedDate;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home:
+                super.onBackPressed();
+                break;
+        }
+        return true;
     }
 }

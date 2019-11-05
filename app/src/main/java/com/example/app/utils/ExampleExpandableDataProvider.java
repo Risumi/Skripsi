@@ -39,15 +39,13 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
     private long mLastRemovedChildParentGroupId = -1;
     private int mLastRemovedChildPosition = -1;
 
-    public ExampleExpandableDataProvider(ArrayList<Sprint> listSprint, /*ArrayList<Backlog> listBacklogSprint, */ArrayList<Backlog> listBacklog) {
+    public ExampleExpandableDataProvider(Sprint current, /*ArrayList<Backlog> listBacklogSprint, */ArrayList<Backlog> listBacklog) {
         mData = new LinkedList<>();
 
         Sprint bl= new Sprint("", "", "Backlog", null, null, "", "", "", null, "", null, "");
-        Sprint Sprint = new Sprint("", "", "Sprint", null, null, "", "", "", null, "", null, "");
+        Sprint Sprint = current;
         ConcreteGroupData backlog = new ConcreteGroupData(0, bl);
-        if (listSprint.size()!=0){
-            Sprint = listSprint.get(listSprint.size()-1);
-        }
+
         ConcreteGroupData sprint= new ConcreteGroupData(1, Sprint);
 
         List<ChildData> children1 = new ArrayList<>();

@@ -1,5 +1,5 @@
-query Progress{
-  progress{
+query Progress ($email:String){
+  progress(email:$email){
     id
     complete
     count
