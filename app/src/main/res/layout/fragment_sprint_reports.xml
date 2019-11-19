@@ -10,218 +10,68 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
+
+        <include
+            android:id="@+id/include6"
+            layout="@layout/card_overview"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
+            android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:layout_marginEnd="32dp"
-            android:text="Report"
-            android:textSize="18sp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <com.github.mikephil.charting.charts.LineChart
-            android:id="@+id/chart"
-            android:layout_width="250dp"
-            android:layout_height="200dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView13" />
-
-        <TextView
-            android:id="@+id/textView11"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:text="Ideal Effort"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
-            app:layout_constraintStart_toEndOf="@+id/imageView2"
-            app:layout_constraintTop_toTopOf="@+id/imageView2" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+        <include
+            android:id="@+id/include"
+            layout="@layout/card_burndown"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:rotation="-90"
-            android:text="Task"
-            app:layout_constraintBottom_toBottomOf="@+id/chart"
-            app:layout_constraintEnd_toStartOf="@+id/chart"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/chart" />
-
-        <TextView
-            android:id="@+id/textView12"
-            android:layout_width="wrap_content"
-            android:layout_height="21dp"
-            android:layout_marginStart="8dp"
-            android:text="Actual Effort"
-            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
-            app:layout_constraintStart_toEndOf="@+id/imageView3"
-            app:layout_constraintTop_toTopOf="@+id/imageView3" />
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
             android:layout_marginTop="16dp"
-            android:src="@color/line1"
-            app:layout_constraintStart_toStartOf="@+id/chart"
-            app:layout_constraintTop_toBottomOf="@+id/textView10" />
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="16dp"
-            android:src="@color/line2"
-            app:layout_constraintStart_toStartOf="@+id/chart"
-            app:layout_constraintTop_toBottomOf="@+id/imageView2" />
-
-        <TextView
-            android:id="@+id/textView10"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:text="Day"
-            app:layout_constraintEnd_toEndOf="@+id/chart"
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/chart" />
-
-        <TextView
-            android:id="@+id/textView16"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:text="Sprint Goal"
-            app:layout_constraintStart_toStartOf="@+id/textView13"
-            app:layout_constraintTop_toBottomOf="@+id/textView12" />
-        <View
-            android:id="@+id/view4"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#c0c0c0"
-            app:layout_constraintEnd_toEndOf="@+id/textView16"
-            app:layout_constraintStart_toStartOf="@+id/textView16"
-            app:layout_constraintTop_toBottomOf="@+id/textView16"></View>
-
-        <TextView
-            android:id="@+id/textView13"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginTop="16dp"
-            android:text="Burndown Chart"
-            app:layout_constraintStart_toEndOf="@+id/textView"
-            app:layout_constraintTop_toBottomOf="@+id/textView22" />
-        <View
-            android:id="@+id/view3"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#c0c0c0"
-            app:layout_constraintEnd_toEndOf="@+id/textView13"
-            app:layout_constraintStart_toStartOf="@+id/textView13"
-            app:layout_constraintTop_toBottomOf="@+id/textView13"></View>
-
-        <TextView
-            android:id="@+id/textView14"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Completed Issue"
-            app:layout_constraintStart_toStartOf="@+id/textView13"
-            app:layout_constraintTop_toBottomOf="@+id/editText3" />
-        <View
-            android:id="@+id/view"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#c0c0c0"
-            app:layout_constraintEnd_toEndOf="@+id/textView14"
-            app:layout_constraintStart_toStartOf="@+id/textView14"
-            app:layout_constraintTop_toBottomOf="@+id/textView14"></View>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvTop"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="16dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view" />
+            app:layout_constraintTop_toBottomOf="@+id/include6" />
 
-        <TextView
-            android:id="@+id/textView15"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="Issues Not Completed"
-            app:layout_constraintStart_toStartOf="@+id/textView13"
-            app:layout_constraintTop_toBottomOf="@+id/rvTop" />
-        <View
-            android:id="@+id/view2"
-            android:layout_width="0dp"
-            android:layout_height="2dp"
-            android:layout_marginTop="8dp"
-            android:background="#c0c0c0"
-            app:layout_constraintEnd_toEndOf="@+id/textView15"
-            app:layout_constraintStart_toStartOf="@+id/textView15"
-            app:layout_constraintTop_toBottomOf="@+id/textView15"></View>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvBottom"
+        <include
+            android:id="@+id/include3"
+            layout="@layout/card_goal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="8dp"
-            android:layout_marginBottom="8dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include" />
+
+        <include
+            android:id="@+id/include5"
+            layout="@layout/card_completed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/include3" />
+
+        <include
+            android:id="@+id/includeNotComplete"
+            layout="@layout/card_not_completed"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="16dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view2" />
-
-        <EditText
-            android:id="@+id/editText3"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:layout_marginEnd="32dp"
-            android:background="@android:color/transparent"
-            android:editable="false"
-            android:ems="10"
-            android:focusable="auto"
-            android:focusableInTouchMode="false"
-            android:inputType="textMultiLine"
-            android:textColor="@android:color/tertiary_text_light"
-            android:textSize="14sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/view4" />
-
-        <TextView
-            android:id="@+id/textView22"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="8dp"
-            android:text="Date"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/textView2" />
+            app:layout_constraintTop_toBottomOf="@+id/include5" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </ScrollView>

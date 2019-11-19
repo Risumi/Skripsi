@@ -23,6 +23,12 @@ import com.example.app.R;
 import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.model.Sprint;
 import com.example.app.model.User;
+import com.google.android.material.textfield.TextInputLayout;
+
+import org.joda.time.DateTime;
+import org.joda.time.Period;
+import org.joda.time.PeriodType;
+import org.joda.time.Weeks;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -53,7 +59,7 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         etName = findViewById(R.id.editText4);
         etStart = findViewById(R.id.editText5);
         Date now = new Date();
-        etStart.setText(formatDate(now));
+        
         etEnd = findViewById(R.id.editText6);
         etGoal = findViewById(R.id.etGoal);
         btn = findViewById(R.id.button);
@@ -67,17 +73,43 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
 
 //        etEnd.setEnabled(false);
         sprint = intent.getParcelableExtra("Sprint");
-
-        etName.setText(sprint.getName());
-        etGoal.setText(sprint.getSprintGoal());;
+        
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,R.array.Duration,R.layout.dropdown_menu_popup_item);
         spinner=  findViewById(R.id.filled_exposed_dropdown);
         spinner.setAdapter(adapter);
         spinner.setOnItemClickListener(this);
         begda = new Date();
         endda = new Date();
-//        spinner.setText(spinner.getAdapter().getItem(1).toString(), false);
+
+        etStart.setText(formatDate(now));
+        etName.setText(sprint.getName());
+        etGoal.setText(sprint.getSprintGoal());
+        if (intent.getIntExtra("Req code",0)==6){
+//            Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
+            setTitle("Edit Sprint");
+            etStart.setText(formatDate(sprint.getBegda()));
+            etEnd.setText(formatDate(sprint.getEndda()));
+            begda =sprint.getBegda();
+            endda=sprint.getEndda();
+            int weeksBeetwen= Weeks.weeksBetween(new DateTime(sprint.getBegda()), new DateTime(sprint.getEndda())).getWeeks();
+            switch (weeksBeetwen){
+                case 1: spinner.setText("1 week",false);break;
+                case 2: spinner.setText("2 week",false);break;
+                case 3: spinner.setText("3 week",false);break;
+                default: spinner.setText("Custom",false);
+            }
+        }else if (intent.getIntExtra("Req code",0)==8){
+            etStart.setVisibility(View.GONE);
+            etEnd.setVisibility(View.GONE);
+            TextInputLayout textInputLayout =findViewById(R.id.textInputLayout11);
+            textInputLayout.setVisibility(View.GONE);
+//            spinner.setVisibility(View.GONE);
+//            etGoal.setVisibility(View.GONE);
+            img2.setVisibility(View.GONE);
+        }
     }
+
+
 
     @Override
     public void onClick(View view) {
@@ -90,7 +122,7 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                 Toast.makeText(this,"Start date must before end date",Toast.LENGTH_SHORT).show();
             }
             else {
-                if (validateFields(etName)&&validateFields(etEnd)){
+                if (validateFields(etName) && validateFields(etEnd)){
                     Log.d("Endda",endda.toString());
                     Sprint newSprint = new Sprint(sprint.getId(),
                             sprint.getIdProject(),
@@ -107,6 +139,25 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
                     intent.putExtra("Sprint", newSprint);
                     setResult(RESULT_OK, intent);
                     finish();
+                }
+                if (intent.getIntExtra("Req code",0)==8){
+                    if (validateFields(etName) ){
+                        Sprint newSprint = new Sprint(sprint.getId(),
+                                sprint.getIdProject(),
+                                etName.getText().toString(),
+                                sprint.getBegda(),
+                                sprint.getEndda(),
+                                etGoal.getText().toString(),
+                                sprint.getStatus(),
+                                "",
+                                sprint.getCreateddate(),
+                                sprint.getCreatedby(),
+                                new Date(),
+                                user.getEmail());
+                        intent.putExtra("Sprint", newSprint);
+                        setResult(RESULT_OK, intent);
+                        finish();
+                    }
                 }
             }
         }else if (view ==img1){

@@ -302,7 +302,8 @@ public class ActivityMain extends AppCompatActivity
     final int REQ_ADD_SPRINT= 3;
     final int REQ_ADD_EPIC= 4;
     final int REQ_START_SPRINT= 5;
-    final int REQ_EDIT_SPRINT= 6;
+    final int REQ_EDIT_SPRINT_ACTIVE= 6;
+    final int REQ_EDIT_SPRINT_NOT_ACTIVE= 8;
     public static final int REQ_EPIC = 7;
 
     @Override
@@ -362,20 +363,11 @@ public class ActivityMain extends AppCompatActivity
                 }
             }
         }
-        if (requestCode == REQ_START_SPRINT) {
+        if (requestCode == REQ_START_SPRINT || requestCode == REQ_EDIT_SPRINT_ACTIVE|| requestCode == REQ_EDIT_SPRINT_NOT_ACTIVE) {
             if (resultCode == RESULT_OK) {
                 Sprint newSprint = data.getParcelableExtra("Sprint");
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-//                if (fragmentInFrame instanceof FragmentBacklog){
-////                    model.getListSprint().getValue().set(data.getIntExtra("indexSprint",0),newSprint);
-////                    Log.d("Index", ((Integer) data.getIntExtra("indexSprint", 0)).toString());
-////                    ((FragmentBacklog) fragmentInFrame).notifySpinner(newSprint);
-//                    model.editSprint(newSprint);
-////                    model.setCurrentSprint(newSprint);
-//                }
                 if (fragmentInFrame instanceof FragmentBacklog) {
-                    Log.d("a","au");
-//                    model.editSprint(newSprint);
                     ((FragmentBacklog) fragmentInFrame).startSprint(newSprint);
                 }
             }

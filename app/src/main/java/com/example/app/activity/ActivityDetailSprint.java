@@ -52,7 +52,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
 
     LineChart chart ;
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
-    TextView txtDate, tvRvBot;
+    TextView txtDate, txtTitle;
     EditText etGoal;
     RecyclerView rvCompleted, rvNotCompleted;
     SprintAdapter AdapterCompleted, AdapterNotCompleted;
@@ -68,6 +68,8 @@ public class ActivityDetailSprint extends AppCompatActivity {
         Intent intent = getIntent();
         sprint = intent.getParcelableExtra("sprint");
         initializeChart();
+        txtTitle = findViewById(R.id.textView2);
+        txtTitle.setText(sprint.getName()+" Report");
         initializeComponent();
         getData(sprint.getId());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -193,6 +195,9 @@ public class ActivityDetailSprint extends AppCompatActivity {
         apolloClient.query(backlogSQuery).enqueue(new ApolloCall.Callback<BacklogSQuery.Data>() {
             @Override
             public void onResponse(@NotNull Response<BacklogSQuery.Data> response) {
+                if(response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }
                 try {
                     Log.d("BL Epic count ", ((Integer) response.data().backlogS().size()).toString());
                     Log.d("Backlog :",response.data().backlogS().get(0).toString());
@@ -270,9 +275,8 @@ public class ActivityDetailSprint extends AppCompatActivity {
             rvNotCompleted.setVisibility(View.GONE);
             TextView textView = findViewById(R.id.textView15);
             textView.setVisibility(View.GONE);
-            View view = findViewById(R.id.view2);
-            view.setVisibility(View.GONE);
-        }else if (completedList.size()==0){
+        }
+        if (completedList.size()==0){
             rvCompleted.setVisibility(View.GONE);
             TextView textView = findViewById(R.id.textView14);
             textView.setVisibility(View.GONE);

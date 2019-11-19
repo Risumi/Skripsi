@@ -1,0 +1,15 @@
+query ProjectU($email:String!){
+  projectuser(id:$email){
+    idProject{
+      id
+      name
+      description
+      status
+    }
+  }
+  progress(email:$email){
+    id
+    complete
+    count
+  }
+}

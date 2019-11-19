@@ -1,0 +1,7 @@
+query ProgressEpic ($id:String){
+  epicProgress(id:$id){
+    id
+    complete
+    count
+  }
+}

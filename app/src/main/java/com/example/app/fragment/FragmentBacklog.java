@@ -68,7 +68,8 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
     private RecyclerViewTouchActionGuardManager mRecyclerViewTouchActionGuardManager;
     private ExampleExpandableDataProvider mDataProvider;
     private final int REQ_START_SPRINT = 5;
-    final int REQ_EDIT_SPRINT = 6;
+    final int REQ_EDIT_SPRINT_ACTIVE = 6;
+    final int REQ_EDIT_SPRINT_NOT_ACTIVE = 8;
 
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -192,14 +193,17 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
                         break;
                     case R.id.edit_sprint:
                         if (model.getCurrentSprint().getValue().getStatus().equalsIgnoreCase("Active")){
-//                            Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
-//                            intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
-//                            getActivity().startActivityForResult(intent,REQ_EDIT_SPRINT);
+                            Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
+                            intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
+                            intent.putExtra("User",model.getUser());
+                            intent.putExtra("Req code",REQ_EDIT_SPRINT_ACTIVE);
+                            getActivity().startActivityForResult(intent,REQ_EDIT_SPRINT_ACTIVE);
                         }else{
-//                            Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
-//                            intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
-//                            getActivity().startActivityForResult(intent,REQ_EDIT_SPRINT);
-//                            Toast.makeText(getActivity(),"Can't start sprint, there is an active sprint",Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(getActivity(), ActivityStartSprint.class);
+                            intent.putExtra("Sprint",getDataProvider().getGroupItem(GroupPos).getSprint());
+                            intent.putExtra("User",model.getUser());
+                            intent.putExtra("Req code",REQ_EDIT_SPRINT_NOT_ACTIVE);
+                            getActivity().startActivityForResult(intent,REQ_EDIT_SPRINT_NOT_ACTIVE);
                         }
                         break;
                 }

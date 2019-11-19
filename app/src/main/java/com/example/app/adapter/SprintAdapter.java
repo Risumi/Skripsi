@@ -80,13 +80,11 @@ public class SprintAdapter extends RecyclerView.Adapter<SprintAdapter.SprintView
 
     class SprintViewHolder extends RecyclerView.ViewHolder{
         TextView name, id,date;
-        FrameLayout fl;
         public SprintViewHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.txtName);
             id = itemView.findViewById(R.id.txtID);
             date = itemView.findViewById(R.id.txtDate);
-            fl = itemView.findViewById(R.id.FM1);
         }
     }
     public String formatDate(Date rawDate){

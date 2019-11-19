@@ -182,10 +182,9 @@ public class FragmentSprint extends Fragment {
 //            Log.d("Now", ((Integer) now.getDayOfMonth()).toString());
 //            Log.d("End",((Integer) end.getDayOfMonth()).toString());
             Period period = new Period(now, end, PeriodType.dayTime());
-
             PeriodFormatter formatter = new PeriodFormatterBuilder()
 //                    .printZeroNever()
-                    .appendDays().appendSuffix(" day ", "days ")
+                    .appendDays().appendSuffix(" day ", " days ")
 //                    .appendHours().appendSuffix(" hour ", " hours ")
 //                    .appendMinutes().appendSuffix(" minute ", " minutes ")
 //                    .appendSeconds().appendSuffix(" second ", " seconds ")
