@@ -11,6 +11,7 @@ import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.model.Progress;
 import com.example.app.utils.ListenerAdapter;
+import com.example.app.utils.ListenerEpic;
 import com.example.app.utils.ListenerGraphql;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
@@ -34,6 +35,7 @@ import graphql.BacklogEditMutation;
 import graphql.BacklogMutation;
 import graphql.CompleteSprintMutation;
 import graphql.DeleteBacklogMutation;
+import graphql.DeleteEpicMutation;
 import graphql.EditProjectMutation;
 import graphql.EpicEditMutation;
 import graphql.EpicMutation;
@@ -66,6 +68,7 @@ public class MainViewModel extends ViewModel {
 
     private ListenerGraphql listener;
     private ListenerAdapter listenerAdapter;
+    private ListenerEpic listenerEpic;
 
     public MainViewModel() {
         initializeVariable();
@@ -116,6 +119,10 @@ public class MainViewModel extends ViewModel {
 
     public void instantiateListener(ListenerGraphql listener){
         this.listener = listener;
+    }
+
+    public void instantiateListener(ListenerEpic listenerEpic){
+        this.listenerEpic = listenerEpic;
     }
 
     public void instantiateListenerAdapter(ListenerAdapter listener){
@@ -545,6 +552,43 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
+                listener.endProgressDialog();
+                listener.startAlert(e.getMessage(),"createSprint");
+                e.printStackTrace();
+            }
+        });
+    }
+
+    public void deleteEpic(Epic epic){
+        listener.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .build();
+        DeleteEpicMutation deleteEpicMutation = DeleteEpicMutation.builder().id(epic.getId()).build();
+        apolloClient.mutate(deleteEpicMutation).enqueue(new ApolloCall.Callback<DeleteEpicMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<DeleteEpicMutation.Data> response) {
+                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }else{
+                    listenerEpic.onDeleteFinished(epic);
+                }
+            }
+
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("completed")){
+                    listener.endProgressDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
                 listener.endProgressDialog();
                 listener.startAlert(e.getMessage(),"createSprint");
                 e.printStackTrace();
@@ -1063,5 +1107,25 @@ public class MainViewModel extends ViewModel {
             }
         }
         return sprints;
+    }
+
+    public void removeEpic(Epic epic){
+        for (int i = 0 ; i< listEpic.getValue().size();i++){
+            if (listEpic.getValue().get(i).getId().equalsIgnoreCase(epic.getId())){
+                listEpic.getValue().remove(i);
+                break;
+            }
+        }
+        for (int i = 0 ; i< listEpicProgress.getValue().size();i++){
+            if (listEpicProgress.getValue().get(i).getIdProject().equalsIgnoreCase(epic.getId())){
+                listEpicProgress.getValue().remove(i);
+                break;
+            }
+        }
+        for (int i = 0 ; i<listBacklog.getValue().size();i++){
+            if (listBacklog.getValue().get(i).getEpicName().equalsIgnoreCase(epic.getId())){
+                listBacklog.getValue().get(i).setEpicName("");
+            }
+        }
     }
 }

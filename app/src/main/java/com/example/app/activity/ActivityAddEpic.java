@@ -34,7 +34,6 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
         resultIntent = getIntent();
         user = resultIntent.getParcelableExtra("User");
         etEName = findViewById(R.id.etEpicName);
-        etEStatus= findViewById(R.id.eEpicStatus);
         etEDesc = findViewById(R.id.etEpicDesc);
         btn = findViewById(R.id.button);
         btn.setOnClickListener(this);
@@ -61,11 +60,8 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
             return false;
         }
         else if (editText.getText().length() > 50){
-            if (editText.getId()==etEName.getId()){
-                editText.setError("Field must be at most 50 characters");
-                return false;
-            }
-            return true;
+            editText.setError("Field must be at most 50 characters");
+            return false;
         }
         else{
             return true;

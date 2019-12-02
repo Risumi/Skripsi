@@ -29,6 +29,7 @@ import android.widget.Toast;
 
 import com.example.app.model.Project;
 import com.example.app.utils.AbstractExpandableDataProvider;
+import com.example.app.utils.ListenerEpic;
 import com.example.app.utils.ListenerGraphql;
 import com.example.app.adapter.AlertAddUser;
 import com.example.app.fragment.ExampleExpandableDataProviderFragment;
@@ -51,7 +52,7 @@ import com.google.android.material.navigation.NavigationView;
 import java.util.ArrayList;
 
 public class ActivityMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener  {
+        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener , ListenerEpic {
     private Fragment fragment;
     private static final String FRAGMENT_TAG_DATA_PROVIDER = "data provider";
     private static final String FRAGMENT_LIST_VIEW = "list view";
@@ -111,7 +112,8 @@ public class ActivityMain extends AppCompatActivity
             transaction.commit();
 
             model = ViewModelProviders.of(this).get(MainViewModel.class);
-            model.instantiateListener(this);
+            model.instantiateListener((ListenerGraphql) this);
+            model.instantiateListener((ListenerEpic) this);
             model.fetchMain(PID);
             model.setUser(user);
         }else {
@@ -304,7 +306,7 @@ public class ActivityMain extends AppCompatActivity
     final int REQ_START_SPRINT= 5;
     final int REQ_EDIT_SPRINT_ACTIVE= 6;
     final int REQ_EDIT_SPRINT_NOT_ACTIVE= 8;
-    public static final int REQ_EPIC = 7;
+    final int REQ_EPIC = 7;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -376,7 +378,13 @@ public class ActivityMain extends AppCompatActivity
             if (resultCode == RESULT_OK) {
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentEpic) {
-//                    Toast.makeText(this, "Test", Toast.LENGTH_SHORT).show();
+                    Epic epic = data.getParcelableExtra("epic");
+                }
+            }else if(resultCode==RESULT_FIRST_USER){
+                Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                if (fragmentInFrame instanceof FragmentEpic) {
+                    Epic epic = data.getParcelableExtra("epic");
+                    ((FragmentEpic) fragmentInFrame).deleteEpic(epic);
                 }
             }
         }
@@ -519,5 +527,19 @@ public class ActivityMain extends AppCompatActivity
         outState.putParcelable("User",user);
         outState.putParcelable("Project",project);
         outState.putString("PID",PID);
+    }
+
+    @Override
+    public void onDeleteFinished(Epic epic) {
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentInFrame instanceof FragmentEpic){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((FragmentEpic) fragmentInFrame).onDeleteCompleted(epic);
+                }
+            });
+
+        }
     }
 }

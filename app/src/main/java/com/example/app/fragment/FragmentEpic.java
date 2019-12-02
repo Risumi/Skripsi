@@ -19,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.app.MainViewModel;
 import com.example.app.activity.ActivityEpic;
@@ -28,6 +29,7 @@ import com.example.app.adapter.EpicAdapter;
 import com.example.app.R;
 import com.example.app.model.Progress;
 import com.example.app.model.Project;
+import com.example.app.utils.ListenerEpic;
 
 import java.util.ArrayList;
 
@@ -103,7 +105,7 @@ public class FragmentEpic extends Fragment {
                 Intent intent = new Intent(getContext(), ActivityEpic.class);
                 intent.putExtra("epicID",epic.getId());
                 intent.putExtra("epic",epic);
-                getActivity().startActivityForResult(intent, ActivityMain.REQ_EPIC);
+                getActivity().startActivityForResult(intent, REQ_EPIC);
             }
         });
         return view;
@@ -119,4 +121,16 @@ public class FragmentEpic extends Fragment {
     public void notifyAdapter(){
         mAdapter.notifyDataSetChanged();
     }
+
+    public void deleteEpic(Epic epic){
+        model.deleteEpic(epic);
+    }
+
+    public void onDeleteCompleted(Epic epic) {
+        model.removeEpic(epic);
+        mAdapter.notifyDataSetChanged();
+        Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
+    }
+
+
 }

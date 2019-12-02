@@ -28,7 +28,7 @@ public class FragmentDetailEpic extends Fragment {
 
     // TODO: Rename and change types of parameters
     private Epic mParam1;
-    private String mParam2;
+    private int mParam2;
 
 
     public FragmentDetailEpic() {
@@ -44,11 +44,11 @@ public class FragmentDetailEpic extends Fragment {
      * @return A new instance of fragment FragmentDetailEpic.
      */
     // TODO: Rename and change types and number of parameters
-    public static FragmentDetailEpic newInstance(Epic param1, String param2) {
+    public static FragmentDetailEpic newInstance(Epic param1, int param2) {
         FragmentDetailEpic fragment = new FragmentDetailEpic();
         Bundle args = new Bundle();
         args.putParcelable(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
+        args.putInt(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -58,7 +58,7 @@ public class FragmentDetailEpic extends Fragment {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
             mParam1 = getArguments().getParcelable(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam2 = getArguments().getInt(ARG_PARAM2);
         }
     }
 
@@ -67,7 +67,7 @@ public class FragmentDetailEpic extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_add_epic, container, false);
+        View view = inflater.inflate(R.layout.fragment_detail_epic, container, false);
         editText = view.findViewById(R.id.etEpicName);
         editText.setFocusable(false);
         editText.setText(mParam1.getName());
@@ -76,9 +76,9 @@ public class FragmentDetailEpic extends Fragment {
         editText3.setFocusable(false);
         editText3.setText(mParam1.getSummary());
 
-//        editText2 = view.findViewById(R.id.eEpicStatus);
-//        editText2.setFocusable(false);
-//        editText2.setText(mParam1.getName());
+        editText2 = view.findViewById(R.id.etTotalTask);
+        editText2.setFocusable(false);
+        editText2.setText(((Integer) mParam2).toString());
 
         button = view.findViewById(R.id.button);
         button.setVisibility(View.GONE);
@@ -86,4 +86,7 @@ public class FragmentDetailEpic extends Fragment {
         return view;
     }
 
+    public void setTotalTask(String total){
+        editText2.setText(total);
+    }
 }

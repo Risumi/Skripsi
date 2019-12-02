@@ -71,9 +71,8 @@ public class ActivityDetailSprint extends AppCompatActivity {
         txtTitle = findViewById(R.id.textView2);
         txtTitle.setText(sprint.getName()+" Report");
         initializeComponent();
-        getData(sprint.getId());
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
+        getData(sprint.getId());
     }
 
     void initializeComponent(){
@@ -280,8 +279,6 @@ public class ActivityDetailSprint extends AppCompatActivity {
             rvCompleted.setVisibility(View.GONE);
             TextView textView = findViewById(R.id.textView14);
             textView.setVisibility(View.GONE);
-            View view = findViewById(R.id.view);
-            view.setVisibility(View.GONE);
         }
     }
 

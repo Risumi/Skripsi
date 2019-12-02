@@ -132,8 +132,6 @@ public class FragmentSprint extends Fragment {
                             test.setModifiedby(model.getUser().getEmail());
                             model.editBacklog(test);
                         }
-
-//                        Toast.makeText(mBoardView.getContext(), test.second, Toast.LENGTH_SHORT).show();
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -201,12 +199,10 @@ public class FragmentSprint extends Fragment {
                 txtRemaining.setVisibility(View.VISIBLE);
             }else {
                 txtSprint.setText("No Active Sprint");
-//                txtRemaining.setText("");
                 txtRemaining.setVisibility(View.GONE);
             }
         }else{
             txtSprint.setText("No Active Sprint");
-//            txtRemaining.setText("");
             txtRemaining.setVisibility(View.GONE);
         }
 

@@ -1,11 +1,14 @@
 package com.example.app.activity;
 
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -28,6 +31,7 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -40,6 +44,8 @@ public class ActivityEpic extends AppCompatActivity {
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
     ArrayList<Backlog> listBacklogEpic;
     Intent intent;
+    int totalTask;
+    private static final String TAG = "ActivityEpic";
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -48,7 +54,7 @@ public class ActivityEpic extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_epic_detail:
-                    fragment = FragmentDetailEpic.newInstance(epic,"");
+                    fragment = FragmentDetailEpic.newInstance(epic,totalTask);
                     loadFragment(fragment);
                     return true;
                 case R.id.navigation_list_task:
@@ -64,7 +70,7 @@ public class ActivityEpic extends AppCompatActivity {
     Epic epic;
 
     EditText evName, evStatus, evDesc;
-
+    String epicID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,8 +78,9 @@ public class ActivityEpic extends AppCompatActivity {
 
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        Intent intent = getIntent();
-        String epicID = intent.getStringExtra("epicID");
+        intent = getIntent();
+
+        epicID = intent.getStringExtra("epicID");
         epic =intent.getParcelableExtra("epic");
         getData(epicID);
 
@@ -83,7 +90,7 @@ public class ActivityEpic extends AppCompatActivity {
         intent =getIntent();
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        fragment = FragmentDetailEpic.newInstance(epic,"");
+        fragment = FragmentDetailEpic.newInstance(epic,0);
         transaction.add(R.id.fragmentContainer,fragment);
         listBacklogEpic = new ArrayList<>();
         transaction.commit();
@@ -96,7 +103,11 @@ public class ActivityEpic extends AppCompatActivity {
         transaction.commit();
     }
 
-
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.epic_menu,menu);
+        return true;
+    }
 
     private void getData(String epicID){
         ProgressDialog progressDialog;
@@ -147,17 +158,18 @@ public class ActivityEpic extends AppCompatActivity {
                                 null,
                                 ""));
 //                        Log.d("Backlog :",response.data().backlogE().get(i).name());
+                        totalTask = listBacklogEpic.size();
                     }
                 }catch (Exception e){
                     Log.d("Exception",e.getMessage());
                 }
-
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        ((FragmentDetailEpic) fragment).setTotalTask(((Integer) totalTask).toString());
+                    }
+                });
             }
-            /**
-             * Gets called whenever any action happen to this {@link ApolloCall}.
-             *
-             * @param event status that corresponds to a {@link ApolloCall} action
-             */
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
@@ -170,7 +182,9 @@ public class ActivityEpic extends AppCompatActivity {
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
+                progressDialog.dismiss();
                 Log.d("Gagal",e.toString());
+                startAlert(e.getMessage());
             }
         });
     }
@@ -179,8 +193,32 @@ public class ActivityEpic extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home:
-                setResult(RESULT_OK);
+                intent.putExtra("epic",epic);
+                setResult(RESULT_OK,intent);
                 finish();
+                break;
+            case R.id.delete_epic:
+                AlertDialog.Builder builderDelete = new AlertDialog.Builder(this);
+                builderDelete.setMessage("Are you sure ?");
+                builderDelete.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                        intent.putExtra("epic",epic);
+                        setResult(RESULT_FIRST_USER,intent);
+                        finish();
+                    }
+                });
+                builderDelete.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+                AlertDialog alertDialog = builderDelete.create();
+                alertDialog.show();
+                break;
+            case R.id.edit_epic:
                 break;
         }
         return true;
@@ -188,7 +226,47 @@ public class ActivityEpic extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        setResult(RESULT_OK);
+        intent.putExtra("epic",epic);
+        setResult(RESULT_OK,intent);
         finish();
+    }
+
+    AlertDialog.Builder builder;
+
+    public void startAlert(String error) {
+        ActivityEpic.this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                initializeAlertDialog(error);
+                AlertDialog alert11 = builder.create();
+                alert11.show();
+            }
+        });
+    }
+
+    void initializeAlertDialog(String error){
+        builder = new AlertDialog.Builder(this);
+
+        builder.setMessage("Error : "+ error+"\nRetry ?");
+        builder.setCancelable(false);
+
+        builder.setPositiveButton(
+                "Yes",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.cancel();
+                        getData(epicID);
+                    }
+                });
+
+        builder.setNegativeButton(
+                "No",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        intent.putExtra("epic",epic);
+                        setResult(RESULT_OK,intent);
+                        finish();
+                    }
+                });
     }
 }
