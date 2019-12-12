@@ -3,6 +3,37 @@ package com.example.app.activity;
 import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.example.app.MainViewModel;
+import com.example.app.R;
+import com.example.app.adapter.AlertAddUser;
+import com.example.app.fragment.ExampleExpandableDataProviderFragment;
+import com.example.app.fragment.FragmentBacklog;
+import com.example.app.fragment.FragmentDemo;
+import com.example.app.fragment.FragmentEpic;
+import com.example.app.fragment.FragmentSetting;
+import com.example.app.fragment.FragmentSprint;
+import com.example.app.model.Backlog;
+import com.example.app.model.Epic;
+import com.example.app.model.Project;
+import com.example.app.model.Sprint;
+import com.example.app.model.User;
+import com.example.app.utils.AbstractExpandableDataProvider;
+import com.example.app.utils.ListenerData;
+import com.example.app.utils.ListenerGraphql;
+import com.getbase.floatingactionbutton.FloatingActionButton;
+import com.getbase.floatingactionbutton.FloatingActionsMenu;
+import com.google.android.material.navigation.NavigationView;
+
+import java.util.ArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,49 +41,14 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
-import android.content.Intent;
-import android.os.Bundle;
-
-import android.util.Log;
-import android.view.View;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.ViewModelProviders;
 
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.app.model.Project;
-import com.example.app.utils.AbstractExpandableDataProvider;
-import com.example.app.utils.ListenerEpic;
-import com.example.app.utils.ListenerGraphql;
-import com.example.app.adapter.AlertAddUser;
-import com.example.app.fragment.ExampleExpandableDataProviderFragment;
-import com.example.app.fragment.FragmentBacklog;
-import com.example.app.fragment.FragmentDemo;
-import com.example.app.fragment.FragmentSprint;
-import com.example.app.model.Backlog;
-import com.example.app.fragment.FragmentEpic;
-import com.example.app.fragment.FragmentSetting;
-import com.example.app.MainViewModel;
-import com.example.app.R;
-import com.example.app.model.Epic;
-import com.example.app.model.Sprint;
-import com.example.app.model.User;
-import com.getbase.floatingactionbutton.FloatingActionButton;
-import com.getbase.floatingactionbutton.FloatingActionsMenu;
-import com.github.mikephil.charting.formatter.IFillFormatter;
-import com.google.android.material.navigation.NavigationView;
-
-import java.util.ArrayList;
-
 public class ActivityMain extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener , ListenerEpic {
+        implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener , ListenerData {
     private Fragment fragment;
     private static final String FRAGMENT_TAG_DATA_PROVIDER = "data provider";
     private static final String FRAGMENT_LIST_VIEW = "list view";
@@ -113,7 +109,7 @@ public class ActivityMain extends AppCompatActivity
 
             model = ViewModelProviders.of(this).get(MainViewModel.class);
             model.instantiateListener((ListenerGraphql) this);
-            model.instantiateListener((ListenerEpic) this);
+            model.instantiateListener((ListenerData) this);
             model.fetchMain(PID);
             model.setUser(user);
         }else {
@@ -224,7 +220,7 @@ public class ActivityMain extends AppCompatActivity
         return true;
     }
 
-    private void loadFragment(Fragment fragment) {
+    public void loadFragment(Fragment fragment) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment);
         transaction.addToBackStack(null);
@@ -379,6 +375,8 @@ public class ActivityMain extends AppCompatActivity
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
                 if (fragmentInFrame instanceof FragmentEpic) {
                     Epic epic = data.getParcelableExtra("epic");
+                    ((FragmentEpic) fragmentInFrame).editEpic(epic);
+
                 }
             }else if(resultCode==RESULT_FIRST_USER){
                 Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
@@ -435,16 +433,6 @@ public class ActivityMain extends AppCompatActivity
     }
 
     @Override
-    public void setCurrentSprint(Sprint sprint) {
-        model.getListBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
-//        model.getListFilterBacklog().getValue().addAll(model.getListBacklogSprint().getValue());
-        model.getListBacklogSprint().getValue().clear();
-//        model.setCurrentSprint(sprint);
-        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
-//        ((FragmentBacklog) fragmentInFrame).notifyAdapter();
-    }
-
-    @Override
     public void setToast(String message) {
         ActivityMain.this.runOnUiThread(new Runnable() {
             @Override
@@ -452,7 +440,6 @@ public class ActivityMain extends AppCompatActivity
                 Toast.makeText(ActivityMain.this,message,Toast.LENGTH_SHORT).show();
             }
         });
-
     }
 
     AlertDialog.Builder builder;
@@ -539,7 +526,45 @@ public class ActivityMain extends AppCompatActivity
                     ((FragmentEpic) fragmentInFrame).onDeleteCompleted(epic);
                 }
             });
+        }
+    }
 
+    @Override
+    public void onCreateFinished(Epic epic) {
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentInFrame instanceof FragmentEpic){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((FragmentEpic) fragmentInFrame).onCreateCompleted(epic);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onCreateFinished(Backlog backlog) {
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentInFrame instanceof FragmentBacklog){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((FragmentBacklog) fragmentInFrame).onAddCompleted(backlog);
+                }
+            });
+        }
+    }
+
+    @Override
+    public void onDeleteFinished(int groupPos,int childPos,Backlog backlog) {
+        Fragment fragmentInFrame = this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+        if (fragmentInFrame instanceof FragmentBacklog){
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    ((FragmentBacklog) fragmentInFrame).onDeleteCompleted(groupPos,childPos,backlog);
+                }
+            });
         }
     }
 }

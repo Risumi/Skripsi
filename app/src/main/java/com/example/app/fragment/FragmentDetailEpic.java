@@ -2,6 +2,7 @@ package com.example.app.fragment;
 
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,5 +89,11 @@ public class FragmentDetailEpic extends Fragment {
 
     public void setTotalTask(String total){
         editText2.setText(total);
+    }
+
+    public void changeEpic(Epic epic) {
+        editText.setText(epic.getName());
+        editText3.setText(epic.getSummary());
+        Log.d("Boom Id",epic.getName());
     }
 }

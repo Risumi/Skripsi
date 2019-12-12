@@ -1,38 +1,24 @@
 package com.example.app.activity;
 
-import android.app.DialogFragment;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-import android.widget.Toast;
 
-import com.appeaser.sublimepickerlibrary.datepicker.SelectedDate;
-import com.appeaser.sublimepickerlibrary.helpers.SublimeOptions;
-import com.appeaser.sublimepickerlibrary.recurrencepicker.SublimeRecurrencePicker;
-import com.example.app.model.Backlog;
-import com.example.app.fragment.FragmentDatePicker;
 import com.example.app.R;
-import com.example.app.model.Project;
+import com.example.app.model.Backlog;
 import com.example.app.model.User;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -40,12 +26,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
 {
     Button button, button2;
     EditText etBlName, etBlDesc;
-    String mDateStart;
-    String mDateEnd;
     String status, name,desc;
     String assignee="";
-    TextView tvDate;
-    Date begdda, endda;
     Backlog newBacklog, editBacklog;
     Intent resultIntent;
     String epicId="";

@@ -21,16 +21,10 @@
         <item>On Progress</item>
         <item>Completed</item>
     </string-array>
-    <string-array name="Asignee">
-        <item>Select Asignee</item>
-        <item>Rizky Suhaimi</item>
-        <item>Taruna Makki</item>
-        <item>Anugerah Wijaya</item>
-        <item>Charles Sanggalangi</item>
-    </string-array>
     <string-array name="Duration">
         <item>1 week</item>
         <item>2 week</item>
         <item>3 week</item>
     </string-array>
+    <string name="error_msg">"An error has occurred,\nPlease try again"</string>
 </resources>

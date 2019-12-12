@@ -27,7 +27,7 @@ import java.util.List;
 
 import androidx.core.util.Pair;
 
-public class ExampleExpandableDataProvider extends AbstractExpandableDataProvider {
+public class ExpandableDataProvider extends AbstractExpandableDataProvider {
     private List<Pair<GroupData, List<ChildData>>> mData;
 
     // for undo group item
@@ -39,7 +39,7 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
     private long mLastRemovedChildParentGroupId = -1;
     private int mLastRemovedChildPosition = -1;
 
-    public ExampleExpandableDataProvider(Sprint current, /*ArrayList<Backlog> listBacklogSprint, */ArrayList<Backlog> listBacklog) {
+    public ExpandableDataProvider(Sprint current, /*ArrayList<Backlog> listBacklogSprint, */ArrayList<Backlog> listBacklog) {
         mData = new LinkedList<>();
 
         Sprint bl= new Sprint("", "", "Backlog", null, null, "", "", "", null, "", null, "");
@@ -176,7 +176,6 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
         mData.get(groupPosition).second.add(new ConcreteChildData(childId,backlog));
     }
 
-
     @Override
     public long undoLastRemoval() {
         if (mLastRemovedGroup != null) {
@@ -236,6 +235,7 @@ public class ExampleExpandableDataProvider extends AbstractExpandableDataProvide
 
         return RecyclerViewExpandableItemManager.getPackedPositionForChild(groupPosition, insertedPosition);
     }
+
 
     public static final class ConcreteGroupData extends GroupData {
 

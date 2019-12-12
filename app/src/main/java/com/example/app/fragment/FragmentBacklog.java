@@ -22,9 +22,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.app.activity.ActivityMain;
 import com.example.app.utils.AbstractExpandableDataProvider;
-import com.example.app.utils.ExampleExpandableDataProvider;
+import com.example.app.utils.ExpandableDataProvider;
 import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.activity.ActivityAddBacklog;
@@ -32,14 +31,12 @@ import com.example.app.activity.ActivityStartSprint;
 import com.example.app.adapter.ExpandableDraggableSwipeableExampleAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
-import com.example.app.utils.ListenerAdapter;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.SimpleListDividerDecorator;
 import com.h6ah4i.android.widget.advrecyclerview.draggable.RecyclerViewDragDropManager;
 import com.h6ah4i.android.widget.advrecyclerview.expandable.RecyclerViewExpandableItemManager;
-import com.h6ah4i.android.widget.advrecyclerview.swipeable.RecyclerViewSwipeManager;
 import com.h6ah4i.android.widget.advrecyclerview.touchguard.RecyclerViewTouchActionGuardManager;
 import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 
@@ -66,7 +63,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
 
     private RecyclerViewTouchActionGuardManager mRecyclerViewTouchActionGuardManager;
-    private ExampleExpandableDataProvider mDataProvider;
+    private ExpandableDataProvider mDataProvider;
     private final int REQ_START_SPRINT = 5;
     final int REQ_EDIT_SPRINT_ACTIVE = 6;
     final int REQ_EDIT_SPRINT_NOT_ACTIVE = 8;
@@ -115,7 +112,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
-        mDataProvider = new ExampleExpandableDataProvider(model.getCurrentSprint().getValue(),model.getListBacklog().getValue());
+        mDataProvider = new ExpandableDataProvider(model.getCurrentSprint().getValue(),model.getListBacklog().getValue());
     }
 
     @Override
@@ -385,52 +382,51 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
     }
 
     public void AddDataSet(Backlog backlog){
-        model.getListBacklog().getValue().add(backlog);
-        getDataProvider().insertChildItem(0,backlog);
-        mAdapter.notifyDataSetChanged();
         model.createBacklog(backlog);
     }
 
-public void EditDataSet(int groupPos,int childPos,Backlog backlog,int index,int index2){
-    int backlogPos = (0);
-//    int allBacklogIdx = model.indexBacklog(backlog,model.getListAllBacklog().getValue());
-//    model.getListAllBacklog().getValue().set(allBacklogIdx,backlog);
-    Log.d("Group ",Integer.toString(groupPos));
-    Log.d("Child ",Integer.toString(childPos));
-    Log.d("Index",Integer.toString(index));
-    if (groupPos == backlogPos){
-        model.getListBacklog().getValue().set(index,backlog);
-    }else {
-        model.getListBacklog().getValue().set(index,backlog);
-        if (index2!=-1){
-//            model.getListFilterBacklogSprint().getValue().set(index2,backlog);
-        }
+    public void onAddCompleted(Backlog backlog){
+        model.getListBacklog().getValue().add(backlog);
+        getDataProvider().insertChildItem(0,backlog);
+        mAdapter.notifyDataSetChanged();
+    }
 
-    }
-    getDataProvider().editChildItem(groupPos,childPos,backlog);
-//    mRecyclerViewExpandableItemManager.notifyChildItemChanged(groupPos,childPos,backlog);
-    notifyChildItemChanged(groupPos,childPos);
-    mAdapter.notifyDataSetChanged();
-    model.editBacklog(backlog);
-}
-    public void RemoveDataSet(int groupPos,int childPos,Backlog backlog){
+
+    public void EditDataSet(int groupPos,int childPos,Backlog backlog,int index,int index2){
         int backlogPos = (0);
-//        Log.d("Backlog Pos", ((Integer) backlogPos).toString());
-        if (groupPos != backlogPos){
-//            model.getListBacklogSprint().getValue().remove(backlog);
-            getDataProvider().removeChildItem(groupPos,childPos);
-            mAdapter.notifyDataSetChanged();
-            model.deleteBacklog(backlog);
+    //    int allBacklogIdx = model.indexBacklog(backlog,model.getListAllBacklog().getValue());
+    //    model.getListAllBacklog().getValue().set(allBacklogIdx,backlog);
+        Log.d("Group ",Integer.toString(groupPos));
+        Log.d("Child ",Integer.toString(childPos));
+        Log.d("Index",Integer.toString(index));
+        if (groupPos == backlogPos){
+            model.getListBacklog().getValue().set(index,backlog);
         }else {
-//            model.getListBacklog().getValue().remove(backlog);
-//            model.getListFilterBacklog().getValue().remove(backlog);
-            getDataProvider().removeChildItem(groupPos,childPos);
-            mAdapter.notifyDataSetChanged();
-            model.deleteBacklog(backlog);
+            model.getListBacklog().getValue().set(index,backlog);
+            if (index2!=-1){
+    //            model.getListFilterBacklogSprint().getValue().set(index2,backlog);
+            }
+
         }
-//        mRecyclerViewExpandableItemManager.notifyChildItemRemoved(groupPos,childPos);
+        getDataProvider().editChildItem(groupPos,childPos,backlog);
+    //    mRecyclerViewExpandableItemManager.notifyChildItemChanged(groupPos,childPos,backlog);
+        notifyChildItemChanged(groupPos,childPos);
+        mAdapter.notifyDataSetChanged();
+        model.editBacklog(backlog);
     }
+    public void RemoveDataSet(int groupPos,int childPos,Backlog backlog){
+        model.deleteBacklog(groupPos,childPos,backlog);
+//        int backlogPos = (0);
+//        if (groupPos != backlogPos){
+//            getDataProvider().removeChildItem(groupPos,childPos);
+//            mAdapter.notifyDataSetChanged();
+//        }else {
+//            getDataProvider().removeChildItem(groupPos,childPos);
+//            mAdapter.notifyDataSetChanged();
 //
+//        }
+    }
+
     public void startSprint(Sprint sprint){
         model.editSprint(sprint);
 //        model.getListSprint().getValue().set(model.getListSprint().getValue().size()-1,sprint);
@@ -438,5 +434,17 @@ public void EditDataSet(int groupPos,int childPos,Backlog backlog,int index,int 
         getDataProvider().editGroupItem(1,sprint);
         mAdapter.notifyDataSetChanged();
         model.setCurrentSprint(sprint);
+    }
+
+    public void onDeleteCompleted(int groupPos,int childPos,Backlog backlog) {
+        int backlogPos = (0);
+        if (groupPos != backlogPos){
+            getDataProvider().removeChildItem(groupPos,childPos);
+            mAdapter.notifyDataSetChanged();
+
+        }else {
+            getDataProvider().removeChildItem(groupPos,childPos);
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }

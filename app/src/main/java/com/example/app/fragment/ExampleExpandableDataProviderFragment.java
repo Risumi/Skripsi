@@ -20,19 +20,19 @@ package com.example.app.fragment;
 import android.os.Bundle;
 
 import com.example.app.utils.AbstractExpandableDataProvider;
-import com.example.app.utils.ExampleExpandableDataProvider;
+import com.example.app.utils.ExpandableDataProvider;
 
 import androidx.fragment.app.Fragment;
 
 public class ExampleExpandableDataProviderFragment extends Fragment {
-    private ExampleExpandableDataProvider mDataProvider;
+    private ExpandableDataProvider mDataProvider;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setRetainInstance(true);  // keep the mDataProvider instance
-//        mDataProvider = new ExampleExpandableDataProvider();
+//        mDataProvider = new ExpandableDataProvider();
     }
 
     public AbstractExpandableDataProvider getDataProvider() {

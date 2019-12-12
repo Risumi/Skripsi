@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.EditText;
 import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
@@ -21,6 +20,7 @@ import com.example.app.fragment.FragmentDetailEpic;
 import com.example.app.fragment.FragmentTask;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
+import com.example.app.model.User;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import org.jetbrains.annotations.NotNull;
@@ -31,11 +31,13 @@ import java.util.ArrayList;
 import java.util.Date;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import graphql.BacklogEpicQuery;
+import graphql.EpicEditMutation;
 import okhttp3.OkHttpClient;
 import type.CustomType;
 
@@ -44,6 +46,7 @@ public class ActivityEpic extends AppCompatActivity {
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
     ArrayList<Backlog> listBacklogEpic;
     Intent intent;
+    User user;
     int totalTask;
     private static final String TAG = "ActivityEpic";
 
@@ -69,7 +72,6 @@ public class ActivityEpic extends AppCompatActivity {
     Fragment fragment;
     Epic epic;
 
-    EditText evName, evStatus, evDesc;
     String epicID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,8 @@ public class ActivityEpic extends AppCompatActivity {
 
         epicID = intent.getStringExtra("epicID");
         epic =intent.getParcelableExtra("epic");
+        user =intent.getParcelableExtra("User");
+        Log.d(TAG, "onCreate: "+user.getEmail());
         getData(epicID);
 
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
@@ -219,6 +223,11 @@ public class ActivityEpic extends AppCompatActivity {
                 alertDialog.show();
                 break;
             case R.id.edit_epic:
+                Intent editIntent = new Intent(this,ActivityAddEpic.class);
+                editIntent.putExtra("epic",epic);
+                editIntent.putExtra("req code",10);
+                editIntent.putExtra("User",user);
+                startActivityForResult(editIntent,10);
                 break;
         }
         return true;
@@ -268,5 +277,98 @@ public class ActivityEpic extends AppCompatActivity {
                         finish();
                     }
                 });
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 10) {
+            if (resultCode == RESULT_OK) {
+                Epic editepic = data.getParcelableExtra("result");
+                editEpic(editepic);
+            }
+        }
+    }
+
+    public void editEpic(Epic epic){
+        ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(ActivityEpic.this);
+        progressDialog.setMessage("Loading ...");
+        progressDialog.setCancelable(false);
+
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        CustomTypeAdapter <Date> dateCustomTypeAdapter = new CustomTypeAdapter<Date>() {
+            @Override public Date decode(CustomTypeValue value) {
+                try {
+                    return formatDate.parse(value.value.toString());
+                } catch (ParseException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override public CustomTypeValue encode(Date value) {
+                return new CustomTypeValue.GraphQLString(formatDate.format(value));
+            }
+        };
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
+                .build();
+        EpicEditMutation epicMutation = EpicEditMutation.builder()
+                .id(epic.getId())
+                .idProject(epic.getIdProject())
+                .name(epic.getName())
+                .summary(epic.getSummary())
+                .modifieddate(epic.getModifieddate())
+                .modifiedby(epic.getModifiedby())
+                .build();
+        apolloClient.mutate(epicMutation).enqueue(new ApolloCall.Callback<EpicEditMutation.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<EpicEditMutation.Data> response) {
+                if (response.hasErrors()){
+                    setToast("An error has occurred,\nPlease try again");
+                    Log.d(TAG, "onResponse: "+response.errors().get(0).message());
+                }else{
+                    Log.d("Berhasil","yay");
+                    ActivityEpic.this.epic = epic;
+                    ActivityEpic.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Fragment fragmentInFrame = ActivityEpic.this.getSupportFragmentManager().findFragmentById(R.id.fragmentContainer);
+                            if (fragmentInFrame instanceof FragmentDetailEpic){
+                                ((FragmentDetailEpic) fragmentInFrame).changeEpic(epic);
+                            }
+                        }
+                    });
+                }
+            }
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+                Log.d("Gagal","shit");
+                progressDialog.dismiss();
+                setToast("An error has occurred,\nPlease try again");
+                e.printStackTrace();
+            }
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (!event.name().equalsIgnoreCase("COMPLETED")){
+                    progressDialog.show();
+                }else {
+                    progressDialog.dismiss();
+                }
+            }
+        });
+    }
+
+    void setToast(String msg){
+        this.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                Toast.makeText(ActivityEpic.this, msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

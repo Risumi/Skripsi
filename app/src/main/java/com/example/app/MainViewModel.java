@@ -11,7 +11,7 @@ import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
 import com.example.app.model.Progress;
 import com.example.app.utils.ListenerAdapter;
-import com.example.app.utils.ListenerEpic;
+import com.example.app.utils.ListenerData;
 import com.example.app.utils.ListenerGraphql;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
@@ -27,7 +27,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 import graphql.AddUserMutation;
@@ -68,7 +67,7 @@ public class MainViewModel extends ViewModel {
 
     private ListenerGraphql listener;
     private ListenerAdapter listenerAdapter;
-    private ListenerEpic listenerEpic;
+    private ListenerData listenerData;
 
     public MainViewModel() {
         initializeVariable();
@@ -121,8 +120,8 @@ public class MainViewModel extends ViewModel {
         this.listener = listener;
     }
 
-    public void instantiateListener(ListenerEpic listenerEpic){
-        this.listenerEpic = listenerEpic;
+    public void instantiateListener(ListenerData listenerData){
+        this.listenerData = listenerData;
     }
 
     public void instantiateListenerAdapter(ListenerAdapter listener){
@@ -357,13 +356,16 @@ public class MainViewModel extends ViewModel {
 
                 if (response.hasErrors()){
                     Log.d("Response", response.errors().get(0).message());
+                    listener.setToast("An error has occurred,\nPlease try again");
+                }else{
+                    listenerData.onCreateFinished(backlog);
                 }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 listener.endProgressDialog();
-                listener.startAlert(e.getMessage(),"createBacklog");
+                listener.setToast("An error has occurred,\nPlease try again");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
@@ -416,6 +418,8 @@ public class MainViewModel extends ViewModel {
                 Log.d("Berhasil","yay");
                 if (response.hasErrors()){
                     Log.d("Response", response.errors().get(0).message());
+                }else{
+
                 }
 
             }
@@ -523,7 +527,7 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void deleteBacklog(Backlog backlog){
+    public void deleteBacklog(int groupPos,int childPos,Backlog backlog){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
@@ -537,6 +541,9 @@ public class MainViewModel extends ViewModel {
                 Log.d("Berhasil","yay");
                 if (response.hasErrors()){
                     Log.d("Error",response.errors().get(0).message());
+                    listener.setToast("An error has occurred,\nPlease try again");
+                }else{
+                    listenerData.onDeleteFinished(groupPos,childPos,backlog);
                 }
             }
 
@@ -553,7 +560,7 @@ public class MainViewModel extends ViewModel {
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 listener.endProgressDialog();
-                listener.startAlert(e.getMessage(),"createSprint");
+                listener.setToast("An error has occurred,\nPlease try again");
                 e.printStackTrace();
             }
         });
@@ -573,8 +580,9 @@ public class MainViewModel extends ViewModel {
                 Log.d("Berhasil","yay");
                 if (response.hasErrors()){
                     Log.d("Error",response.errors().get(0).message());
+                    listener.setToast("An error has occurred,\nPlease try again");
                 }else{
-                    listenerEpic.onDeleteFinished(epic);
+                    listenerData.onDeleteFinished(epic);
                 }
             }
 
@@ -590,7 +598,7 @@ public class MainViewModel extends ViewModel {
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 listener.endProgressDialog();
-                listener.startAlert(e.getMessage(),"createSprint");
+                listener.setToast("An error has occurred,\nPlease try again");
                 e.printStackTrace();
             }
         });
@@ -746,13 +754,16 @@ public class MainViewModel extends ViewModel {
                 Log.d("Berhasil","yay");
                 if (response.hasErrors()){
                     Log.d("Response", response.errors().get(0).message());
+                    listener.setToast("An error has occurred,\nPlease try again");
+                }else{
+                    listenerData.onCreateFinished(epic);
                 }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 listener.endProgressDialog();
-                listener.startAlert(e.getMessage(),"createEpic");
+                listener.setToast("An error has occurred,\nPlease try again");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
@@ -798,13 +809,17 @@ public class MainViewModel extends ViewModel {
         apolloClient.mutate(epicMutation).enqueue(new ApolloCall.Callback<EpicEditMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<EpicEditMutation.Data> response) {
-                Log.d("Berhasil","yay");
+                if (response.hasErrors()){
+                    listener.setToast("An error has occurred,\nPlease try again");
+                }else{
+                    Log.d("Berhasil","yay");
+                }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 listener.endProgressDialog();
-                listener.startAlert(e.getMessage(),"createEpic");
+                listener.setToast("An error has occurred,\nPlease try again");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
@@ -1125,6 +1140,15 @@ public class MainViewModel extends ViewModel {
         for (int i = 0 ; i<listBacklog.getValue().size();i++){
             if (listBacklog.getValue().get(i).getEpicName().equalsIgnoreCase(epic.getId())){
                 listBacklog.getValue().get(i).setEpicName("");
+            }
+        }
+    }
+
+    public void editEpicValue(Epic epic) {
+        for (int i = 0 ; i< listEpic.getValue().size();i++){
+            if (listEpic.getValue().get(i).getId().equalsIgnoreCase(epic.getId())){
+                listEpic.getValue().set(i,epic);
+                break;
             }
         }
     }

@@ -3,13 +3,6 @@ package com.example.app.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-
 import android.util.Log;
 import android.util.Pair;
 import android.view.LayoutInflater;
@@ -19,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.app.MainViewModel;
 import com.example.app.R;
@@ -38,6 +30,12 @@ import org.joda.time.format.PeriodFormatterBuilder;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Objects;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -319,5 +317,23 @@ public class FragmentSprint extends Fragment {
                     }
                 });
         builder.show();
+    }
+
+    public Backlog setStatus(int fromColumn, int toColumn,Backlog task){
+        if (fromColumn != toColumn) {
+            switch (toColumn){
+                case 0:
+                    task.setStatus("To Do");
+                    break;
+                case 1:
+                    task.setStatus("On Progress");
+                    break;
+                case 2:
+                    task.setStatus("Completed");
+                    break;
+            }
+
+        }
+        return task;
     }
 }

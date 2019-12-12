@@ -5,33 +5,26 @@ package com.example.app.fragment;
 
 import android.content.Intent;
 import android.os.Bundle;
-
-
-import androidx.annotation.Nullable;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.app.MainViewModel;
-import com.example.app.activity.ActivityEpic;
-import com.example.app.activity.ActivityMain;
-import com.example.app.model.Epic;
-import com.example.app.adapter.EpicAdapter;
 import com.example.app.R;
+import com.example.app.activity.ActivityEpic;
+import com.example.app.adapter.EpicAdapter;
+import com.example.app.model.Epic;
 import com.example.app.model.Progress;
-import com.example.app.model.Project;
-import com.example.app.utils.ListenerEpic;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -105,6 +98,7 @@ public class FragmentEpic extends Fragment {
                 Intent intent = new Intent(getContext(), ActivityEpic.class);
                 intent.putExtra("epicID",epic.getId());
                 intent.putExtra("epic",epic);
+                intent.putExtra("User",model.getUser());
                 getActivity().startActivityForResult(intent, REQ_EPIC);
             }
         });
@@ -112,10 +106,6 @@ public class FragmentEpic extends Fragment {
     }
 
     public void AddDataSet(Epic epic){
-        model.getListEpic().getValue().add(epic);
-        Progress progress = new Progress(epic.getId(),0,0);
-        model.getListEpicProgress().getValue().add(progress);
-        mAdapter.notifyDataSetChanged();
         model.createEpic(epic);
     }
     public void notifyAdapter(){
@@ -132,5 +122,16 @@ public class FragmentEpic extends Fragment {
         Toast.makeText(getContext(), "Deleted", Toast.LENGTH_SHORT).show();
     }
 
+    public void onCreateCompleted(Epic epic){
+        model.getListEpic().getValue().add(epic);
+        Progress progress = new Progress(epic.getId(),0,0);
+        model.getListEpicProgress().getValue().add(progress);
+        mAdapter.notifyDataSetChanged();
 
+    }
+
+    public void editEpic(Epic epic) {
+        model.editEpicValue(epic);
+        mAdapter.notifyDataSetChanged();
+    }
 }
