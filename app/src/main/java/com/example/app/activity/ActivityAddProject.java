@@ -9,35 +9,27 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
-import com.apollographql.apollo.response.CustomTypeAdapter;
-import com.apollographql.apollo.response.CustomTypeValue;
-import com.example.app.model.Project;
 import com.example.app.R;
-import com.example.app.model.User;
+import com.example.app.model.Project;
 
 import org.jetbrains.annotations.NotNull;
-
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import graphql.ProjectValidationQuery;
-import graphql.SprintMutation;
 import okhttp3.OkHttpClient;
-import type.CustomType;
 
 public class ActivityAddProject extends AppCompatActivity implements View.OnClickListener{
 
     EditText etPName, etPKey, etDesc;
     Button btn;
+    private AlertDialog.Builder builder;
+
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
 
     @Override
@@ -152,7 +144,7 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
             }
         });
     }
-    private AlertDialog.Builder builder;
+
 
     private void initializeAlertDialog(){
         builder = new AlertDialog.Builder(this);

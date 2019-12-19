@@ -49,6 +49,10 @@ public class ActivityEpic extends AppCompatActivity {
     User user;
     int totalTask;
     private static final String TAG = "ActivityEpic";
+    Fragment fragment;
+    Epic epic;
+    String epicID;
+    AlertDialog.Builder builder;
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -69,10 +73,7 @@ public class ActivityEpic extends AppCompatActivity {
         }
     };
 
-    Fragment fragment;
-    Epic epic;
 
-    String epicID;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -239,8 +240,6 @@ public class ActivityEpic extends AppCompatActivity {
         setResult(RESULT_OK,intent);
         finish();
     }
-
-    AlertDialog.Builder builder;
 
     public void startAlert(String error) {
         ActivityEpic.this.runOnUiThread(new Runnable() {

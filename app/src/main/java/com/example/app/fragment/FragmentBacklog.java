@@ -5,15 +5,6 @@ import android.content.Intent;
 import android.graphics.drawable.NinePatchDrawable;
 import android.os.Build;
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Parcelable;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -22,15 +13,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.app.utils.AbstractExpandableDataProvider;
-import com.example.app.utils.ExpandableDataProvider;
 import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.activity.ActivityAddBacklog;
 import com.example.app.activity.ActivityStartSprint;
-import com.example.app.adapter.ExpandableDraggableSwipeableExampleAdapter;
+import com.example.app.adapter.ExpandableDraggableAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
+import com.example.app.utils.AbstractExpandableDataProvider;
+import com.example.app.utils.ExpandableDataProvider;
 import com.h6ah4i.android.widget.advrecyclerview.animator.GeneralItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.animator.SwipeDismissItemAnimator;
 import com.h6ah4i.android.widget.advrecyclerview.decoration.ItemShadowDecorator;
@@ -42,6 +33,14 @@ import com.h6ah4i.android.widget.advrecyclerview.utils.WrapperAdapterUtils;
 
 import java.util.ArrayList;
 import java.util.Date;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -61,23 +60,22 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
     private RecyclerView.Adapter mWrappedAdapter;
     private RecyclerViewExpandableItemManager mRecyclerViewExpandableItemManager;
     private RecyclerViewDragDropManager mRecyclerViewDragDropManager;
-
     private RecyclerViewTouchActionGuardManager mRecyclerViewTouchActionGuardManager;
+
     private ExpandableDataProvider mDataProvider;
+    private ExpandableDraggableAdapter myItemAdapter;
     private final int REQ_START_SPRINT = 5;
-    final int REQ_EDIT_SPRINT_ACTIVE = 6;
-    final int REQ_EDIT_SPRINT_NOT_ACTIVE = 8;
+    private final int REQ_EDIT_SPRINT_ACTIVE = 6;
+    private final int REQ_EDIT_SPRINT_NOT_ACTIVE = 8;
+    private final int REQ_EDIT_BACKLOG = 2;
 
-
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
     private MainViewModel model;
-    final int  EDIT_BACKLOG = 2;
+
     private String PID;
 
 
@@ -86,15 +84,6 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment FragmentBacklog.
-     */
-    // TODO: Rename and change types and number of parameters
     public static FragmentBacklog newInstance(String param1, String param2) {
         FragmentBacklog fragment = new FragmentBacklog();
         Bundle args = new Bundle();
@@ -116,13 +105,12 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view= inflater.inflate(R.layout.fragment_backlog, container, false);
 
         return view;
     }
-    private ExpandableDraggableSwipeableExampleAdapter myItemAdapter;
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -147,9 +135,9 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
         //adapter
 
-        myItemAdapter = new ExpandableDraggableSwipeableExampleAdapter(mRecyclerViewExpandableItemManager, mDataProvider);
+        myItemAdapter = new ExpandableDraggableAdapter(mRecyclerViewExpandableItemManager, mDataProvider);
 
-        myItemAdapter.setEventListener(new ExpandableDraggableSwipeableExampleAdapter.EventListener() {
+        myItemAdapter.setEventListener(new ExpandableDraggableAdapter.EventListener() {
 
             @Override
             public void onDragFinished(int fromGroupPosition,int toGroupPosition, int toChildPosition) {
@@ -354,9 +342,9 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
             editBacklog.putExtra("group pos",groupPosition);
             editBacklog.putExtra("child pos",childPosition);
-            editBacklog.putExtra("req code",EDIT_BACKLOG);
+            editBacklog.putExtra("req code", REQ_EDIT_BACKLOG);
             editBacklog.putExtra("User",model.getUser());
-            getActivity().startActivityForResult(editBacklog,EDIT_BACKLOG);
+            getActivity().startActivityForResult(editBacklog, REQ_EDIT_BACKLOG);
         }
     }
 

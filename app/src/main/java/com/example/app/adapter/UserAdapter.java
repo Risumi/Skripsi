@@ -1,18 +1,13 @@
 package com.example.app.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.app.R;
-import com.example.app.activity.ActivityEpic;
-import com.example.app.model.Backlog;
 import com.example.app.model.User;
 
 import java.util.ArrayList;
@@ -79,6 +74,5 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.UserViewHolder
         public interface ClickListener {
             public void onItemClicked(int position, User user, UserAdapter adapter);
         }
-
     }
 }

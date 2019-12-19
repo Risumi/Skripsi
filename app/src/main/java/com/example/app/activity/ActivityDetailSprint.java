@@ -1,23 +1,12 @@
 package com.example.app.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-import graphql.BacklogEpicQuery;
-import graphql.BacklogSQuery;
-import okhttp3.OkHttpClient;
-import type.CustomType;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.apollographql.apollo.ApolloCall;
@@ -26,9 +15,8 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
-import com.example.app.MainViewModel;
 import com.example.app.R;
-import com.example.app.adapter.SprintAdapter;
+import com.example.app.adapter.SprintDetailAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
 import com.github.mikephil.charting.charts.LineChart;
@@ -48,6 +36,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import graphql.BacklogSQuery;
+import okhttp3.OkHttpClient;
+import type.CustomType;
+
 public class ActivityDetailSprint extends AppCompatActivity {
 
     LineChart chart ;
@@ -55,7 +51,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
     TextView txtDate, txtTitle;
     EditText etGoal;
     RecyclerView rvCompleted, rvNotCompleted;
-    SprintAdapter AdapterCompleted, AdapterNotCompleted;
+    SprintDetailAdapter AdapterCompleted, AdapterNotCompleted;
     Sprint sprint;
     ArrayList<Backlog> completedList, notCompletedList;
 
@@ -86,13 +82,13 @@ public class ActivityDetailSprint extends AppCompatActivity {
         rvCompleted = findViewById(R.id.rvTop);
         rvCompleted.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         completedList = new ArrayList<>();
-        AdapterCompleted = new SprintAdapter(completedList);
+        AdapterCompleted = new SprintDetailAdapter(completedList);
         rvCompleted.setAdapter(AdapterCompleted);
 
         rvNotCompleted= findViewById(R.id.rvBottom);
         rvNotCompleted.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         notCompletedList = new ArrayList<>();
-        AdapterNotCompleted= new SprintAdapter(notCompletedList);
+        AdapterNotCompleted= new SprintDetailAdapter(notCompletedList);
         rvNotCompleted.setAdapter(AdapterNotCompleted);
     }
 

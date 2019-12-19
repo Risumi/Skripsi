@@ -12,7 +12,6 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +25,6 @@ import com.example.app.model.User;
 import com.google.android.material.textfield.TextInputLayout;
 
 import org.joda.time.DateTime;
-import org.joda.time.Period;
-import org.joda.time.PeriodType;
 import org.joda.time.Weeks;
 
 import java.text.ParseException;
@@ -47,6 +44,8 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
     Sprint sprint;
     Date begda,endda;
     User user;
+    int selection = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -109,8 +108,6 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         }
     }
 
-
-
     @Override
     public void onClick(View view) {
         if (view==btn){
@@ -167,7 +164,7 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
 //            etEnd.setText(formatDate(endda));
         }
     }
-    int selection = 0;
+
     private void openDateRangePicker(final TextView textView, final int i) {
         FragmentDatePicker pickerFrag = new FragmentDatePicker();
         pickerFrag.setCallback(new FragmentDatePicker.Callback() {
@@ -216,7 +213,6 @@ public class ActivityStartSprint extends AppCompatActivity implements View.OnCli
         String formattedDate = formatDate.format(rawDate);
         return formattedDate;
     }
-
 
     public Date formatString(String string) {
         SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");

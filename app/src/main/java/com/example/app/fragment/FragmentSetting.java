@@ -3,18 +3,6 @@ package com.example.app.fragment;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-
-
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AlertDialog;
-
-import androidx.fragment.app.Fragment;
-import androidx.lifecycle.Observer;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +18,14 @@ import com.example.app.model.Project;
 import com.example.app.model.User;
 
 import java.util.ArrayList;
+
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 
 /**
@@ -47,7 +43,11 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
     private Project project;
     private String PID;
     private MainViewModel model;
+    EditText txtName,txtDescription, txtKey;
 
+    Button btnAdd, btnConfirm;
+    RecyclerView rvUser;
+    UserAdapter mAdapter;
     public FragmentSetting() {
         // Required empty public constructor
     }
@@ -86,11 +86,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
             }
         });
     }
-    EditText txtName,txtDescription, txtKey;
 
-    Button btnAdd, btnConfirm;
-    RecyclerView rvUser;
-    UserAdapter mAdapter;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

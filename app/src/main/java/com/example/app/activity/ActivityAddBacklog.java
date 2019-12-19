@@ -34,6 +34,8 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
     String sprintId="";
     User user;
     AutoCompleteTextView ddStatus, ddEpic, ddAssignee;
+    AlertDialog.Builder builder;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -122,7 +124,6 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
         }
     }
 
-
     @Override
     public void onClick(View view) {
          if (view == button){
@@ -176,8 +177,6 @@ public class ActivityAddBacklog extends AppCompatActivity implements View.OnClic
             alert11.show();
         }
     }
-
-    AlertDialog.Builder builder;
 
     void initializeAlertDialog(){
         builder = new AlertDialog.Builder(this);

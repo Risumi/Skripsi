@@ -3,7 +3,6 @@ package com.example.app.adapter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import com.example.app.R;
@@ -17,7 +16,7 @@ import java.util.Date;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapter.SprintReportAdapterViewHolder> {
+public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapter.SprintReportViewHolder> {
 
     private ArrayList <Sprint> listSprint;
     private OnItemClickCallback onItemClickCallback;
@@ -33,14 +32,14 @@ public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapte
 
     @NonNull
     @Override
-    public SprintReportAdapterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public SprintReportViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_sprint_report, parent, false);
-        return new SprintReportAdapter.SprintReportAdapterViewHolder(v);
+        return new SprintReportViewHolder(v);
     }
 
 
     @Override
-    public void onBindViewHolder(@NonNull SprintReportAdapterViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull SprintReportViewHolder holder, int position) {
         Sprint sprint = listSprint.get(position);
         holder.txtName.setText(sprint.getName());
 //        String date = formatDate(sprint.getBegda())+" - "+formatDate(sprint.getEndda());
@@ -66,12 +65,12 @@ public class SprintReportAdapter extends RecyclerView.Adapter<SprintReportAdapte
         return formattedDate;
     }
 
-    class SprintReportAdapterViewHolder extends RecyclerView.ViewHolder {
+    class SprintReportViewHolder extends RecyclerView.ViewHolder {
         TextView txtName;
         TextView txtDate;
         MaterialCardView cardView;
 
-        SprintReportAdapterViewHolder(@NonNull View itemView) {
+        SprintReportViewHolder(@NonNull View itemView) {
             super(itemView);
             this.txtName = itemView.findViewById(R.id.txtName);
             this.txtDate = itemView.findViewById(R.id.txtDate);

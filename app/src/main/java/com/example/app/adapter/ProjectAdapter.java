@@ -3,7 +3,6 @@ package com.example.app.adapter;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.TextView;
 
 import com.example.app.R;
 import com.example.app.activity.ActivityMain;
-import com.example.app.model.Backlog;
 import com.example.app.model.Progress;
 import com.example.app.model.Project;
 import com.example.app.model.User;
@@ -79,6 +77,7 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
     public int getItemCount() {
         return projectArrayList.size();
     }
+
     class ProjectViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView ProjectName;
         TextView ProjectStatus;
@@ -108,3 +107,15 @@ public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ProjectV
         }
     }
 }
+
+
+
+
+
+
+
+
+
+
+
+

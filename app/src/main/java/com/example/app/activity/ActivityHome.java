@@ -37,24 +37,21 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import graphql.ProgressQuery;
 import graphql.ProjectMutation;
 import graphql.ProjectUQuery;
-import graphql.ProjectUserQuery;
 import graphql.SprintMutation;
 import okhttp3.OkHttpClient;
 import type.CustomType;
 
 public class ActivityHome extends AppCompatActivity implements View.OnClickListener{
-    private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
     ArrayList<Project> listProject;
     ArrayList<Progress> listProgress;
     final int ADD_PROJECT =1;
     User user;
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
     AlertDialog.Builder builder;
+    ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +62,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(this);
-        mRecyclerView = findViewById(R.id.rv_project);
+        RecyclerView mRecyclerView = findViewById(R.id.rv_project);
         int resId = R.anim.layout_animation_fall_down;
         LayoutAnimationController animation = AnimationUtils.loadLayoutAnimation(this, resId);
         listProject = new ArrayList<>();
@@ -107,7 +104,6 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
             }
         }
     }
-    ProgressDialog progressDialog;
 
     void fetchProjectUser(String email){
         progressDialog.show();

@@ -2,43 +2,7 @@ package com.example.app.fragment;
 
 
 
-import android.os.Bundle;
-
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.ViewModelProviders;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
-
-import com.example.app.MainViewModel;
-import com.example.app.R;
-import com.example.app.adapter.SprintAdapter;
-import com.example.app.model.Sprint;
-import com.github.mikephil.charting.charts.LineChart;
-import com.github.mikephil.charting.components.Description;
-import com.github.mikephil.charting.components.XAxis;
-import com.github.mikephil.charting.data.Entry;
-import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.ValueFormatter;
-
-import org.joda.time.DateTime;
-
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 
 
 public class FragmentSprintReports extends Fragment /*implements AdapterView.OnItemSelectedListener*/{
@@ -117,11 +81,11 @@ public class FragmentSprintReports extends Fragment /*implements AdapterView.OnI
 //        listEpic.add(new Epic("DOT-E 2",null,"Front end",null,null,null,null,null));
 
         rvCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-        AdapterCompleted = new SprintAdapter(model.getListBacklogSprintDone().getValue(),model.getListEpic().getValue());
+        AdapterCompleted = new SprintDetailAdapter(model.getListBacklogSprintDone().getValue(),model.getListEpic().getValue());
         rvCompleted.setAdapter(AdapterCompleted);
 
 //        rvNotCompleted.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
-//        AdapterNotCompleted = new SprintAdapter(listNotCompleted,listEpic);
+//        AdapterNotCompleted = new SprintDetailAdapter(listNotCompleted,listEpic);
 //        rvNotCompleted.setAdapter(AdapterNotCompleted);
 //
 //        view2 = view.findViewById(R.id.view2);
@@ -133,7 +97,7 @@ public class FragmentSprintReports extends Fragment /*implements AdapterView.OnI
 
         return view;
     }
-    SprintAdapter AdapterCompleted, AdapterNotCompleted;
+    SprintDetailAdapter AdapterCompleted, AdapterNotCompleted;
     void initializeChart(View view){
         chart = view.findViewById(R.id.chart);
         int daysDiff = 7;

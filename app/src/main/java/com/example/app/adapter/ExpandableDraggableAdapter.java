@@ -43,11 +43,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.widget.PopupMenu;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-public class ExpandableDraggableSwipeableExampleAdapter
-        extends AbstractExpandableItemAdapter<ExpandableDraggableSwipeableExampleAdapter.MyGroupViewHolder, ExpandableDraggableSwipeableExampleAdapter.MyChildViewHolder>
-        implements ExpandableDraggableItemAdapter<ExpandableDraggableSwipeableExampleAdapter.MyGroupViewHolder, ExpandableDraggableSwipeableExampleAdapter.MyChildViewHolder>
+public class ExpandableDraggableAdapter
+        extends AbstractExpandableItemAdapter<ExpandableDraggableAdapter.MyGroupViewHolder, ExpandableDraggableAdapter.MyChildViewHolder>
+        implements ExpandableDraggableItemAdapter<ExpandableDraggableAdapter.MyGroupViewHolder, ExpandableDraggableAdapter.MyChildViewHolder>
         {
-    private static final String TAG = "MyEDSItemAdapter";
 
     private AbstractExpandableDataProvider mProvider;
     private EventListener mEventListener;
@@ -59,7 +58,7 @@ public class ExpandableDraggableSwipeableExampleAdapter
         void onMenuClicked(MenuItem m,int GroupPos);
     }
 
-    public static abstract class MyBaseViewHolder extends AbstractDraggableItemViewHolder implements ExpandableItemViewHolder {
+        public static abstract class MyBaseViewHolder extends AbstractDraggableItemViewHolder implements ExpandableItemViewHolder {
         public ConstraintLayout mContainer;
         public View mDragHandle;
         public TextView mTextView, mTextView2;
@@ -135,7 +134,7 @@ public class ExpandableDraggableSwipeableExampleAdapter
         }
     }
 
-    public ExpandableDraggableSwipeableExampleAdapter(
+    public ExpandableDraggableAdapter(
             RecyclerViewExpandableItemManager expandableItemManager,
             AbstractExpandableDataProvider dataProvider) {
         mProvider = dataProvider;

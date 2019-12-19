@@ -15,7 +15,7 @@ import android.widget.TextView;
 
 import com.example.app.MainViewModel;
 import com.example.app.R;
-import com.example.app.adapter.ItemAdapter;
+import com.example.app.adapter.SprintAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
 import com.woxthebox.draglistview.BoardView;
@@ -56,7 +56,9 @@ public class FragmentSprint extends Fragment {
     private static int sCreatedItems = 0;
     private int mColumns;
     private MainViewModel model;
-
+    private TextView txtSprint;
+    private TextView txtRemaining;
+    private AlertDialog.Builder builder;
 
     public FragmentSprint() {
         // Required empty public constructor
@@ -80,8 +82,7 @@ public class FragmentSprint extends Fragment {
         }
         model = ViewModelProviders.of(this.getActivity()).get(MainViewModel.class);
     }
-    private TextView txtSprint;
-    private TextView txtRemaining;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -218,7 +219,7 @@ public class FragmentSprint extends Fragment {
             long id = sCreatedItems++;
             mItemArray.add(new Pair<>(id, list.get(i)));
         }
-        final ItemAdapter listAdapter = new ItemAdapter(mItemArray, R.layout.column_item, R.id.item_layout, true);
+        final SprintAdapter listAdapter = new SprintAdapter(mItemArray, R.layout.column_item, R.id.item_layout, true);
 
         final View header = View.inflate(getContext(), R.layout.column_header, null);
         ((TextView) header.findViewById(R.id.text)).setText(title);
@@ -254,7 +255,7 @@ public class FragmentSprint extends Fragment {
         }
         return super.onOptionsItemSelected(item);
     }
-    private AlertDialog.Builder builder;
+
 
     private void initializeAlertDialog(){
         builder = new AlertDialog.Builder(this.getActivity());

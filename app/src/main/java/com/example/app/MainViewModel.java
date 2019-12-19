@@ -9,15 +9,14 @@ import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.apollographql.apollo.response.CustomTypeAdapter;
 import com.apollographql.apollo.response.CustomTypeValue;
-import com.example.app.model.Progress;
-import com.example.app.utils.ListenerAdapter;
-import com.example.app.utils.ListenerData;
-import com.example.app.utils.ListenerGraphql;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
+import com.example.app.model.Progress;
 import com.example.app.model.Project;
 import com.example.app.model.Sprint;
 import com.example.app.model.User;
+import com.example.app.utils.ListenerData;
+import com.example.app.utils.ListenerGraphql;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -44,7 +43,6 @@ import graphql.RemoveUserMutation;
 import graphql.SprintEditMutation;
 import graphql.SprintMutation;
 import okhttp3.OkHttpClient;
-
 import type.BacklogInput;
 import type.CustomType;
 import type.SprintInput;
@@ -66,7 +64,6 @@ public class MainViewModel extends ViewModel {
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
 
     private ListenerGraphql listener;
-    private ListenerAdapter listenerAdapter;
     private ListenerData listenerData;
 
     public MainViewModel() {
@@ -122,10 +119,6 @@ public class MainViewModel extends ViewModel {
 
     public void instantiateListener(ListenerData listenerData){
         this.listenerData = listenerData;
-    }
-
-    public void instantiateListenerAdapter(ListenerAdapter listener){
-        listenerAdapter = listener;
     }
 
     public MutableLiveData<ArrayList<Sprint>> getListSprint() {
@@ -1020,8 +1013,6 @@ public class MainViewModel extends ViewModel {
     public MutableLiveData<Sprint> getCurrentSprint(){
         return this.currentSprint;
     }
-
-
 
     public MutableLiveData<ArrayList<Backlog>> getListBacklog() {
         return listBacklog;

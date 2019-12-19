@@ -1,18 +1,14 @@
 package com.example.app.adapter;
 
 import android.content.Context;
-import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.app.R;
-import com.example.app.activity.ActivityEpic;
 import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
-import com.example.app.model.Progress;
 
 import java.util.ArrayList;
 
@@ -21,13 +17,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 public class EpicAdapter extends RecyclerView.Adapter<EpicAdapter.EpicViewHolder> {
 
-    LayoutInflater mInflater;
-    ArrayList<Epic> epicArrayList;
-//    ArrayList<Progress> progressArrayList;
-    ArrayList<Backlog> backlogArrayList;
-    Context _context;
-    Epic current;
-    ClickListener clickListener;
+    private LayoutInflater mInflater;
+    private ArrayList<Epic> epicArrayList;
+    private ArrayList<Backlog> backlogArrayList;
+    private Context _context;
+    private Epic current;
+    private ClickListener clickListener;
 
 
     public EpicAdapter(Context _context, ArrayList<Epic> projectArrayList,ArrayList<Backlog> backlogArrayList) {

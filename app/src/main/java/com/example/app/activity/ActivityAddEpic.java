@@ -18,10 +18,12 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class ActivityAddEpic extends AppCompatActivity implements View.OnClickListener {
 
-    EditText etEName, etEStatus, etEDesc;
+    EditText etEName, etEDesc;
     Button btn;
     User user;
     Intent resultIntent;
+    Epic editEpic;
+    int req_code = 0 ;
 
 
     @Override
@@ -44,8 +46,6 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
             etEDesc.setText(editEpic.getSummary());
         }
     }
-    Epic editEpic;
-    int req_code = 0 ;
 
     @Override
     public void onClick(View view) {

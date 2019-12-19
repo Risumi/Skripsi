@@ -15,9 +15,8 @@ import android.widget.Toast;
 import com.example.app.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.AlertAddUser;
-import com.example.app.fragment.ExampleExpandableDataProviderFragment;
 import com.example.app.fragment.FragmentBacklog;
-import com.example.app.fragment.FragmentDemo;
+import com.example.app.fragment.FragmentSprintReport;
 import com.example.app.fragment.FragmentEpic;
 import com.example.app.fragment.FragmentSetting;
 import com.example.app.fragment.FragmentSprint;
@@ -26,7 +25,6 @@ import com.example.app.model.Epic;
 import com.example.app.model.Project;
 import com.example.app.model.Sprint;
 import com.example.app.model.User;
-import com.example.app.utils.AbstractExpandableDataProvider;
 import com.example.app.utils.ListenerData;
 import com.example.app.utils.ListenerGraphql;
 import com.getbase.floatingactionbutton.FloatingActionButton;
@@ -50,8 +48,6 @@ import androidx.lifecycle.ViewModelProviders;
 public class ActivityMain extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener ,View.OnClickListener, ListenerGraphql, AlertAddUser.AlertListener , ListenerData {
     private Fragment fragment;
-    private static final String FRAGMENT_TAG_DATA_PROVIDER = "data provider";
-    private static final String FRAGMENT_LIST_VIEW = "list view";
     private FloatingActionButton fab,fab2,fab3;
     FloatingActionsMenu fam;
     Intent intent;
@@ -59,6 +55,18 @@ public class ActivityMain extends AppCompatActivity
     String PID;
     User user;
     Project project;
+    ProgressDialog progressDialog;
+    AlertDialog.Builder builder;
+
+    final int REQ_ADD_BACKLOG = 1;
+    final int REQ_EDIT_BACKLOG = 2;
+    final int REQ_ADD_SPRINT= 3;
+    final int REQ_ADD_EPIC= 4;
+    final int REQ_START_SPRINT= 5;
+    final int REQ_EDIT_SPRINT_ACTIVE= 6;
+    final int REQ_EDIT_SPRINT_NOT_ACTIVE= 8;
+    final int REQ_EPIC = 7;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -186,12 +194,9 @@ public class ActivityMain extends AppCompatActivity
             fragment = FragmentSetting.newInstance(project,PID);
             fam.collapse();
             fam.setVisibility(View.GONE);
-        }/* else if (id == R.id.nav_burndown) {
-            fragment = FragmentBurndown.newInstance("","");
-            fam.collapse();
-            fam.setVisibility(View.GONE);
-        }*/else if (id == R.id.nav_sprint_report){
-            fragment = FragmentDemo.newInstance("","");
+        }
+        else if (id == R.id.nav_sprint_report){
+            fragment = FragmentSprintReport.newInstance("","");
             fam.collapse();
             fam.setVisibility(View.GONE);
         }else if (id == R.id.nav_demo){
@@ -295,15 +300,6 @@ public class ActivityMain extends AppCompatActivity
         }
     }
 
-    final int REQ_ADD_BACKLOG = 1;
-    final int REQ_EDIT_BACKLOG = 2;
-    final int REQ_ADD_SPRINT= 3;
-    final int REQ_ADD_EPIC= 4;
-    final int REQ_START_SPRINT= 5;
-    final int REQ_EDIT_SPRINT_ACTIVE= 6;
-    final int REQ_EDIT_SPRINT_NOT_ACTIVE= 8;
-    final int REQ_EPIC = 7;
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -389,7 +385,6 @@ public class ActivityMain extends AppCompatActivity
         Log.d("request code",Integer.toString(requestCode));
     }
 
-    ProgressDialog progressDialog;
     @Override
     public void startProgressDialog() {
 
@@ -442,8 +437,6 @@ public class ActivityMain extends AppCompatActivity
         });
     }
 
-    AlertDialog.Builder builder;
-
     void initializeAlertDialog(String error,String code){
         builder = new AlertDialog.Builder(this);
         if (code.equalsIgnoreCase("no email")){
@@ -487,25 +480,6 @@ public class ActivityMain extends AppCompatActivity
     @Override
     public void addUser(String email) {
         model.addUser(email,PID);
-    }
-
-    public void onGroupItemClicked(int groupPosition) {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_LIST_VIEW);
-        AbstractExpandableDataProvider.GroupData data = getDataProvider().getGroupItem(groupPosition);
-        Toast.makeText(this,"G Pos : "+Integer.toString(groupPosition),Toast.LENGTH_SHORT).show();
-
-    }
-
-    public void onChildItemClicked(int groupPosition, int childPosition) {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_LIST_VIEW);
-        AbstractExpandableDataProvider.ChildData data = getDataProvider().getChildItem(groupPosition, childPosition);
-
-        Toast.makeText(this,"G Pos : "+(groupPosition)+" C Pos : "+(childPosition),Toast.LENGTH_SHORT).show();
-    }
-
-    public AbstractExpandableDataProvider getDataProvider() {
-        final Fragment fragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG_DATA_PROVIDER);
-        return ((ExampleExpandableDataProviderFragment) fragment).getDataProvider();
     }
 
     @Override

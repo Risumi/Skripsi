@@ -5,12 +5,11 @@ import android.os.Build;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.example.app.utils.Listener;
 import com.example.app.R;
 import com.example.app.model.Backlog;
+import com.example.app.utils.Listener;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -35,8 +34,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.card_backlog, parent, false);
         return new BacklogAdapter.BacklogViewHolder2(v,clickListener);
     }
-
-
 
     public ArrayList<Backlog> getList() {
         return backlogList;
@@ -63,7 +60,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         return backlogList.size();
     }
 
-
     public void updateList(ArrayList<Backlog> list) {
         this.backlogList = list;
     }
@@ -80,6 +76,12 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
         return true;
     }
 
+    public String formatDate(Date rawDate){
+        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
+        String formattedDate = formatDate.format(rawDate);
+        return formattedDate;
+    }
+
     public static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView BacklogName;
         TextView BacklogStatus;
@@ -91,8 +93,6 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
             super(itemView);
             BacklogName = itemView.findViewById(R.id.txtName);
             BacklogStatus = itemView.findViewById(R.id.txtStatus);
-//            BacklogDescription = itemView.findViewById(R.id.txtDescription);
-//            BacklogDate = itemView.findViewById(R.id.txtDate);
             this.listener = listener;
             itemView.setOnClickListener(this);
         }
@@ -108,11 +108,8 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
             public void onItemClicked(int position,Backlog backlog,BacklogAdapter adapter);
         }
     }
-    public String formatDate(Date rawDate){
-        SimpleDateFormat formatDate = new SimpleDateFormat("dd MMMM yyyy");
-        String formattedDate = formatDate.format(rawDate);
-        return formattedDate;
-    }
+
+
 
 
 }
