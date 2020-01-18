@@ -1,10 +1,14 @@
-query backlogS($id:String){
+query backlogS($id:String!){
   backlogS(id:$id){
     idBacklog{
       id
       name
     }
     status
+  }
+  sprintReport(id:$id){
     date
+    completeBacklog
+    totalBacklog
   }
 }

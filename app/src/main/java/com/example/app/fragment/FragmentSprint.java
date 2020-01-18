@@ -225,15 +225,6 @@ public class FragmentSprint extends Fragment {
         ((TextView) header.findViewById(R.id.text)).setText(title);
 
         ((TextView) header.findViewById(R.id.item_count)).setText("" + list.size());
-        header.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                long id = sCreatedItems++;
-                Pair item = new Pair<>(id, "Test " + id);
-                mBoardView.addItem(mBoardView.getColumnOfHeader(v), 0, item, true);
-                ((TextView) header.findViewById(R.id.item_count)).setText(String.valueOf(mItemArray.size()));
-            }
-        });
         mBoardView.addColumn(listAdapter, header, null, false, new LinearLayoutManager(getContext()));
         mColumns++;
     }

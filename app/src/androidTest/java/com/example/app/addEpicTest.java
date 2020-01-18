@@ -1,12 +1,8 @@
 package com.example.app;
 
-import android.content.Intent;
+import android.widget.EditText;
 
-import com.example.app.activity.ActivityMain;
-import com.example.app.fragment.FragmentSprint;
-import com.example.app.model.Backlog;
-import com.example.app.model.Project;
-import com.example.app.model.User;
+import com.example.app.activity.ActivityAddEpic;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -18,58 +14,64 @@ import androidx.test.annotation.UiThreadTest;
 import androidx.test.rule.ActivityTestRule;
 
 
-
 public class addEpicTest {
     @Rule
-    public ActivityTestRule<ActivityMain> rule = new ActivityTestRule<>(ActivityMain.class,false,false);
+    public ActivityTestRule<ActivityAddEpic> rule = new ActivityTestRule<>(ActivityAddEpic.class);
 
-    ActivityMain mActivity = null;
-    FragmentSprint fragment = null;
-    Backlog task;
+    ActivityAddEpic mActivity = null;
 
     @Before
     public void setUp() throws Exception {
-        task= new Backlog("JECT-1","JECT",null,null,"Backlog","To Do",null,null,null,null,null,null);
-        Intent intent = new Intent();
-        intent.putExtra("PID","JECT");
-        intent.putExtra("User",new User("rizky@gmail.com","Rizky Suhaimi"));
-        intent.putExtra("project",new Project("Project Management","JECT","",null));
-        rule.launchActivity(intent);
         mActivity = rule.getActivity();
-        fragment= FragmentSprint.newInstance("","");
-        mActivity.loadFragment(fragment);
     }
 
     @Test
     @UiThreadTest
     public void Jalur1(){
-        task = fragment.setStatus(1,1,task);
+        EditText view = mActivity.findViewById(R.id.etEpicName);
+        String test  = "";
+        view.setText(test);
+//        Assert.assertThat("Field cannot be blank",view.getText().toString(),is(not(isEmptyString())));
+        Assert.assertEquals("Field cannot be blank",mActivity.validateField(view));
     }
 
     @Test
     @UiThreadTest
     public void Jalur2(){
-        fragment.setStatus(2,1,task);
-        Assert.assertEquals("To do",task.getStatus());
+        EditText view = mActivity.findViewById(R.id.etEpicName);
+        String test  = "Mo";
+        view.setText(test);
+//        Assert.assertThat("Field cannot be blank",view.getText().toString(),is(not(isEmptyString())));
+//        Assert.assertThat("Field must be at least 3 characters",view.getText().toString().length(),greaterThan(3));
+        Assert.assertEquals("Field must be at least 3 characters",mActivity.validateField(view));
     }
 
     @Test
     @UiThreadTest
     public void Jalur3(){
-        fragment.setStatus(1,2,task);
-        Assert.assertEquals("On Progress",task.getStatus());
+        EditText view = mActivity.findViewById(R.id.etEpicName);
+        String test  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
+        view.setText(test);
+//        Assert.assertThat("Field cannot be blank",view.getText().toString(),is(not(isEmptyString())));
+//        Assert.assertThat("Field must be at least 3 characters",view.getText().toString().length(),greaterThan(3));
+//        Assert.assertThat("Field must be at most 50 characters",view.getText().toString().length(),lessThan(50));
+        Assert.assertEquals("Field must be at most 50 characters",mActivity.validateField(view));
     }
 
     @Test
     @UiThreadTest
     public void Jalur4(){
-        fragment.setStatus(1,3,task);
-        Assert.assertEquals("Completed",task.getStatus());
+        EditText view = mActivity.findViewById(R.id.etEpicName);
+        String test  = "Front End";
+        view.setText(test);
+//        Assert.assertThat("Field cannot be blank",view.getText().toString(),is(not(isEmptyString())));
+//        Assert.assertThat("Field must be at least 3 characters",view.getText().toString().length(),greaterThan(3));
+//        Assert.assertThat("Field must be at most 50 characters",view.getText().toString().length(),lessThan(50));
+        Assert.assertEquals("",mActivity.validateField(view));
     }
 
     @After
     public void tearDown() throws Exception {
         mActivity = null;
-        fragment =null;
     }
 }

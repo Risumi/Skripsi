@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -54,7 +55,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
     SprintDetailAdapter AdapterCompleted, AdapterNotCompleted;
     Sprint sprint;
     ArrayList<Backlog> completedList, notCompletedList;
-
+    ArrayList<BacklogSQuery.SprintReport> chartData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,6 @@ public class ActivityDetailSprint extends AppCompatActivity {
         setContentView(R.layout.fragment_sprint_reports);
         Intent intent = getIntent();
         sprint = intent.getParcelableExtra("sprint");
-        initializeChart();
         txtTitle = findViewById(R.id.textView2);
         txtTitle.setText(sprint.getName()+" Report");
         initializeComponent();
@@ -90,11 +90,13 @@ public class ActivityDetailSprint extends AppCompatActivity {
         notCompletedList = new ArrayList<>();
         AdapterNotCompleted= new SprintDetailAdapter(notCompletedList);
         rvNotCompleted.setAdapter(AdapterNotCompleted);
+
+        chartData = new ArrayList<>();
     }
 
     void initializeChart(){
         chart = findViewById(R.id.chart);
-        int daysDiff = 7;
+        int daysDiff = chartData.size();
 
         DateTime dateTime = new DateTime();
         Log.d("daysDiff", ((Integer) daysDiff).toString());
@@ -114,18 +116,15 @@ public class ActivityDetailSprint extends AppCompatActivity {
 
         List<Entry> entries1 = new ArrayList<Entry>();
         List<DateTime> exTime = new ArrayList<>();
-        for(int i = 0 ;i<daysDiff;i++) {
-            exTime.add(tempDate.plusDays(i));
-        }
+//        for(int i = 0 ;i<daysDiff;i++) {
+//            exTime.add(tempDate.plusDays(i));
+//        }
 //        dateTime = tempDate.plusDays(i);
-        entries1.add(new Entry(0,(6)));
-        entries1.add(new Entry(1,(5)));
-        entries1.add(new Entry(2,(5)));
-        entries1.add(new Entry(3,(3)));
-        entries1.add(new Entry(4,(3)));
-        entries1.add(new Entry(5,(2)));
-        entries1.add(new Entry(6,(0)));
 
+        for (int i = 0 ;i<daysDiff;i++){
+            int unCompletedBacklog = chartData.get(i).totalBacklog()-chartData.get(i).completeBacklog();
+            entries1.add(new Entry(i,(unCompletedBacklog)));
+        }
 
 //        }
         LineDataSet dataSet1 = new LineDataSet(entries1, "Actual Effort");
@@ -139,7 +138,6 @@ public class ActivityDetailSprint extends AppCompatActivity {
             }
         };
         lineData.setValueFormatter(valueFormatter);
-
 
         Description description = new Description();
         description.setText("");
@@ -192,10 +190,11 @@ public class ActivityDetailSprint extends AppCompatActivity {
             public void onResponse(@NotNull Response<BacklogSQuery.Data> response) {
                 if(response.hasErrors()){
                     Log.d("Error",response.errors().get(0).message());
+                    Toast.makeText(ActivityDetailSprint.this, "An Error has occured", Toast.LENGTH_LONG).show();
+                    progressDialog.dismiss();
+                    finish();
                 }
-                try {
-                    Log.d("BL Epic count ", ((Integer) response.data().backlogS().size()).toString());
-                    Log.d("Backlog :",response.data().backlogS().get(0).toString());
+                else{
                     for (int i = 0 ;i<response.data().backlogS().size();i++){
                         if (response.data().backlogS().get(i).status().equalsIgnoreCase("Done")){
                             completedList.add(new Backlog(
@@ -209,7 +208,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
                                     "",
                                     null,
                                     "",
-                                    response.data().backlogS().get(i).date(),
+                                    null,
                                     ""));
                         }else {
                             notCompletedList.add(new Backlog(
@@ -223,22 +222,16 @@ public class ActivityDetailSprint extends AppCompatActivity {
                                     "",
                                     null,
                                     "",
-                                    response.data().backlogS().get(i).date(),
+                                    null,
                                     ""));
                         }
-
                     }
-                }catch (Exception e){
-                    Log.d("Exception",e.getMessage());
-                    progressDialog.dismiss();
+                    if (response.data().sprintReport()!=null){
+                        chartData.addAll(response.data().sprintReport());
+                    }
                 }
-
             }
-            /**
-             * Gets called whenever any action happen to this {@link ApolloCall}.
-             *
-             * @param event status that corresponds to a {@link ApolloCall} action
-             */
+
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
@@ -253,7 +246,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
                             hideRV();
                             AdapterCompleted.notifyDataSetChanged();
                             AdapterNotCompleted.notifyDataSetChanged();
-
+                            initializeChart();
                         }
                     });
                 }

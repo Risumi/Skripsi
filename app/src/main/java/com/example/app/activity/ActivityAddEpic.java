@@ -84,6 +84,20 @@ public class ActivityAddEpic extends AppCompatActivity implements View.OnClickLi
         }
     }
 
+    public String validateField(EditText editText) {
+        if (editText.getText().toString().equalsIgnoreCase("")) {
+            return "Field cannot be blank";
+        }else if (editText.getText().length() < 3) {
+            return "Field must be at least 3 characters";
+        }
+        else if (editText.getText().length() > 50){
+            return "Field must be at most 50 characters";
+        }
+        else{
+            return "";
+        }
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
