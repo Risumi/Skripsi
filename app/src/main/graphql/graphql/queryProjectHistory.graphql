@@ -1,0 +1,7 @@
+query projectHistory($idProject:String!){  
+  projectHistory(id:$idProject){
+    id
+    date
+    message
+  }
+}

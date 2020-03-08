@@ -1,4 +1,4 @@
-package com.example.app;
+package com.example.app.utils;
 
 
 import android.util.Log;
@@ -13,12 +13,12 @@ import com.example.app.model.Backlog;
 import com.example.app.model.Epic;
 import com.example.app.model.Progress;
 import com.example.app.model.Project;
+import com.example.app.model.ProjectHistory;
 import com.example.app.model.Sprint;
 import com.example.app.model.User;
-import com.example.app.utils.ListenerData;
-import com.example.app.utils.ListenerGraphql;
 
 import org.jetbrains.annotations.NotNull;
+import org.joda.time.DateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -39,6 +39,7 @@ import graphql.EpicEditMutation;
 import graphql.EpicMutation;
 import graphql.MainQuery;
 import graphql.ProgressEpicQuery;
+import graphql.ProjectHistoryQuery;
 import graphql.RemoveUserMutation;
 import graphql.SprintEditMutation;
 import graphql.SprintMutation;
@@ -59,11 +60,14 @@ public class MainViewModel extends ViewModel {
 
     private MutableLiveData<ArrayList<Progress>> listEpicProgress;
 
+    private MutableLiveData<ArrayList<ProjectHistory>> listProjectHistory;
+
     private User user;
 
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
 
     private ListenerGraphql listener;
+    private ListenerGraphqlHistory listener2;
     private ListenerData listenerData;
 
     public MainViewModel() {
@@ -91,6 +95,9 @@ public class MainViewModel extends ViewModel {
 
         listEpicProgress = new MutableLiveData<>();
         listEpicProgress.setValue(new ArrayList<>());
+
+        listProjectHistory = new MutableLiveData<>();
+        listProjectHistory.setValue(new ArrayList<>());
     }
 
     public void setUser(User user) {
@@ -115,6 +122,10 @@ public class MainViewModel extends ViewModel {
 
     public void instantiateListener(ListenerGraphql listener){
         this.listener = listener;
+    }
+
+    public void instantiateListener(ListenerGraphqlHistory listener2) {
+        this.listener2 = listener2;
     }
 
     public void instantiateListener(ListenerData listenerData){
@@ -265,7 +276,6 @@ public class MainViewModel extends ViewModel {
     void fetchEpicProgress(String PID){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
-        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
@@ -304,6 +314,67 @@ public class MainViewModel extends ViewModel {
                 e.printStackTrace();
                 listener.endProgressDialog();
                 listener.startAlert(e.getMessage(),"fetch");
+            }
+        });
+    }
+
+    public void fetchProjectHistory(String PID){
+//        listener2.startProgressDialog();
+        OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
+        SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
+        CustomTypeAdapter <DateTime> dateCustomTypeAdapter = new CustomTypeAdapter<DateTime>() {
+            @Override public DateTime decode(CustomTypeValue value) {
+                try {
+                    return new DateTime(value.value.toString());
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @NotNull
+            @Override
+            public CustomTypeValue encode(@NotNull DateTime value) {
+                return null;
+            }
+        };
+        ApolloClient apolloClient = ApolloClient.builder()
+                .serverUrl(BASE_URL)
+                .okHttpClient(okHttpClient)
+                .addCustomTypeAdapter(CustomType.DATETIME,dateCustomTypeAdapter)
+                .build();
+        ProjectHistoryQuery projectHistoryQuery = ProjectHistoryQuery.builder().idProject(PID).build();
+        apolloClient.query(projectHistoryQuery).enqueue(new ApolloCall.Callback<ProjectHistoryQuery.Data>() {
+            @Override
+            public void onResponse(@NotNull Response<ProjectHistoryQuery.Data> response) {
+                if (response.hasErrors()){
+                    Log.d("Error",response.errors().get(0).message());
+                }else {
+                    listProjectHistory.getValue().clear();
+                    for (int i = 0 ; i<response.data().projectHistory().size();i++){
+
+                        listProjectHistory.getValue().add(new ProjectHistory(
+                                response.data().projectHistory().get(i).message(),
+                                ((DateTime) response.data().projectHistory().get(i).date())
+                        ));
+                    }
+                    listener2.setDataToRecyclerView();
+                }
+            }
+
+            @Override
+            public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
+                super.onStatusEvent(event);
+                Log.d("event",event.name());
+                if (event.name().equalsIgnoreCase("COMPLETED")){
+//                    listener2.endProgressDialog();
+                }
+            }
+
+            @Override
+            public void onFailure(@NotNull ApolloException e) {
+//                listener2.endProgressDialog();
+                e.printStackTrace();
+                listener2.setToast(e.getMessage());
             }
         });
     }
@@ -418,7 +489,6 @@ public class MainViewModel extends ViewModel {
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
-                Log.d("Gagal","shit");
                 listener.endProgressDialog();
                 listener.startAlert(e.getMessage(),"createBacklog");
                 e.printStackTrace();
@@ -497,7 +567,6 @@ public class MainViewModel extends ViewModel {
                 .backlog(backlogInputs)
                 .modifiedby(user.getEmail())
                 .build();
-
         apolloClient.mutate(completeSprintMutation).enqueue(new ApolloCall.Callback<CompleteSprintMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<CompleteSprintMutation.Data> response) {
@@ -520,14 +589,14 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void deleteBacklog(int groupPos,int childPos,Backlog backlog){
+    public void deleteBacklog(int groupPos,int childPos,Backlog backlog,String email){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        DeleteBacklogMutation deleteBacklogMutation  = DeleteBacklogMutation.builder().id(backlog.getId()).build();
+        DeleteBacklogMutation deleteBacklogMutation  = DeleteBacklogMutation.builder().id(backlog.getId()).email(email).build();
         apolloClient.mutate(deleteBacklogMutation).enqueue(new ApolloCall.Callback<DeleteBacklogMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<DeleteBacklogMutation.Data> response) {
@@ -559,14 +628,14 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void deleteEpic(Epic epic){
+    public void deleteEpic(Epic epic,String email){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
                 .okHttpClient(okHttpClient)
                 .build();
-        DeleteEpicMutation deleteEpicMutation = DeleteEpicMutation.builder().id(epic.getId()).build();
+        DeleteEpicMutation deleteEpicMutation = DeleteEpicMutation.builder().id(epic.getId()).email(email).build();
         apolloClient.mutate(deleteEpicMutation).enqueue(new ApolloCall.Callback<DeleteEpicMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<DeleteEpicMutation.Data> response) {
@@ -1016,6 +1085,10 @@ public class MainViewModel extends ViewModel {
 
     public MutableLiveData<ArrayList<Backlog>> getListBacklog() {
         return listBacklog;
+    }
+
+    public MutableLiveData<ArrayList<ProjectHistory>> getListProjectHistory() {
+        return listProjectHistory;
     }
 
     public void reset(){

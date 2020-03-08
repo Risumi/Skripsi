@@ -13,7 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.app.MainViewModel;
+import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.SprintAdapter;
 import com.example.app.model.Backlog;
@@ -311,7 +311,7 @@ public class FragmentSprint extends Fragment {
         builder.show();
     }
 
-    public Backlog setStatus(int fromColumn, int toColumn,Backlog task){
+    public Backlog setStatusBacklog(int fromColumn, int toColumn,Backlog task){
         if (fromColumn != toColumn) {
             switch (toColumn){
                 case 0:
@@ -324,8 +324,8 @@ public class FragmentSprint extends Fragment {
                     task.setStatus("Completed");
                     break;
             }
-
         }
         return task;
     }
+
 }

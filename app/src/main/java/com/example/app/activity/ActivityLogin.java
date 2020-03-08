@@ -1,13 +1,10 @@
 package com.example.app.activity;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -16,18 +13,14 @@ import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.example.app.R;
-
-import com.example.app.model.Progress;
 import com.example.app.model.User;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.textfield.TextInputEditText;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.time.Period;
-
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import graphql.UserLoginQuery;
 import okhttp3.OkHttpClient;
 
@@ -52,6 +45,9 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
         btnLogin.setOnClickListener(this);
         btnRegister= findViewById(R.id.button4);
         btnRegister.setOnClickListener(this);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+
     }
 
     @Override

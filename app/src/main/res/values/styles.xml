@@ -8,8 +8,17 @@
         <item name="colorAccent">@color/colorAccent</item>
         <item name="actionModeBackground">@color/colorPrimary</item>
         <item name="actionMenuTextColor">@color/colorWhite</item>
+        <item name="android:actionBarStyle">@style/myTheme.ActionBar</item>
         <!--<item name="android:windowActionBarOverlay">true</item>-->
         <!--<item name="windowActionBarOverlay">true</item>-->
+    </style>
+
+    <style name="myTheme.ActionBar" parent="Theme.MaterialComponents.Light">
+        <item name="android:titleTextStyle">@style/myTheme.ActionBar.Text</item>
+    </style>
+
+    <style name="myTheme.ActionBar.Text" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorWhite</item>
     </style>
 
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />

@@ -7,7 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.app.MainViewModel;
+import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.activity.ActivityDetailSprint;
 import com.example.app.adapter.SprintReportAdapter;

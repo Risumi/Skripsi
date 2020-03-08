@@ -1,5 +1,5 @@
-mutation deleteEpic($id:String!){
-  deleteEpic(id:$id){
+mutation deleteEpic($id:String!,$email:String!){
+  deleteEpic(id:$id,email:$email){
     id
   }
 }

@@ -12,7 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.app.MainViewModel;
+import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.activity.ActivityAddBacklog;
 import com.example.app.activity.ActivityStartSprint;
@@ -399,7 +399,7 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
         model.editBacklog(backlog);
     }
     public void RemoveDataSet(int groupPos,int childPos,Backlog backlog){
-        model.deleteBacklog(groupPos,childPos,backlog);
+        model.deleteBacklog(groupPos,childPos,backlog,model.getUser().getEmail());
 //        int backlogPos = (0);
 //        if (groupPos != backlogPos){
 //            getDataProvider().removeChildItem(groupPos,childPos);

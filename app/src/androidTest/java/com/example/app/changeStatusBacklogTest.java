@@ -52,28 +52,28 @@ public class changeStatusBacklogTest {
     @Test
     @UiThreadTest
     public void Jalur1(){
-        task = fragment.setStatus(0,0,task);
+        task = fragment.setStatusBacklog(0,0,task);
         Assert.assertEquals("To Do",task.getStatus());
     }
 
     @Test
     @UiThreadTest
     public void Jalur2(){
-        task = fragment.setStatus(1,0,task);
+        task = fragment.setStatusBacklog(1,0,task);
         Assert.assertEquals("To Do",task.getStatus());
     }
 
     @Test
     @UiThreadTest
     public void Jalur3(){
-        task = fragment.setStatus(0,1,task);
+        task = fragment.setStatusBacklog(0,1,task);
         Assert.assertEquals("On Progress",task.getStatus());
     }
 
     @Test
     @UiThreadTest
     public void Jalur4(){
-        task = fragment.setStatus(0,2,task);
+        task = fragment.setStatusBacklog(0,2,task);
         Assert.assertEquals("Completed",task.getStatus());
     }
 

@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.app.MainViewModel;
+import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.AlertAddUser;
 import com.example.app.adapter.UserAdapter;

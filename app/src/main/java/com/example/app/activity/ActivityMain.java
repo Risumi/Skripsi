@@ -12,7 +12,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.app.MainViewModel;
+import com.example.app.fragment.FragmentHistory;
+import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.AlertAddUser;
 import com.example.app.fragment.FragmentBacklog;
@@ -127,12 +128,7 @@ public class ActivityMain extends AppCompatActivity
         }
         navUsername.setText(user.getName());
         navUserEmail.setText(user.getEmail());
-
-
-
 //        setFab();
-
-
     }
 
     @Override
@@ -180,17 +176,11 @@ public class ActivityMain extends AppCompatActivity
             fab.setVisibility(View.GONE);
             fab2.setVisibility(View.GONE);
             fab3.setVisibility(View.VISIBLE);
-        }/* else if (id == R.id.nav_backlog) {
-            fragment = FragmentBacklog.newInstance(intent.getStringExtra("PID"),"");
-            fam.setVisibility(View.VISIBLE);
-            fab.setVisibility(View.GONE);
-            fab2.setVisibility(View.VISIBLE);
-            fab3.setVisibility(View.GONE);
-        } else if (id == R.id.nav_sprint) {
-            fragment = FragmentSprint.newInstance("","");
+        } else if (id == R.id.nav_history) {
+            fragment = FragmentHistory.newInstance(project);
             fam.collapse();
             fam.setVisibility(View.GONE);
-        }*/ else if (id == R.id.nav_setting) {
+        } else if (id == R.id.nav_setting) {
             fragment = FragmentSetting.newInstance(project,PID);
             fam.collapse();
             fam.setVisibility(View.GONE);
@@ -214,6 +204,7 @@ public class ActivityMain extends AppCompatActivity
         loadFragment(fragment);
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
+
         if (id == R.id.nav_logout){
             Intent intent = new Intent(this,ActivityLogin.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

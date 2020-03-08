@@ -19,7 +19,8 @@
         <activity
             android:name=".activity.ActivityStartSprint"
             android:parentActivityName=".activity.ActivityMain" />
-        <activity android:name=".activity.ActivityLogin">
+        <activity android:name=".activity.ActivityLogin"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -32,9 +33,6 @@
         <activity
             android:name=".activity.ActivityEpic"
             android:label="@string/title_activity_epic"
-            android:parentActivityName=".activity.ActivityMain" />
-        <activity
-            android:name=".activity.ActivityAddSprint"
             android:parentActivityName=".activity.ActivityMain" />
         <activity
             android:name=".activity.ActivityAddBacklog"

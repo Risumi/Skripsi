@@ -10,7 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-import com.example.app.MainViewModel;
+import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.activity.ActivityEpic;
 import com.example.app.adapter.EpicAdapter;
@@ -113,7 +113,7 @@ public class FragmentEpic extends Fragment {
     }
 
     public void deleteEpic(Epic epic){
-        model.deleteEpic(epic);
+        model.deleteEpic(epic,model.getUser().getEmail());
     }
 
     public void onDeleteCompleted(Epic epic) {

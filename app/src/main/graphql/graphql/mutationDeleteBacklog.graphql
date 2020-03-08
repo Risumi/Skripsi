@@ -1,5 +1,5 @@
-mutation deleteBacklog($id:String!){
-  deleteBacklog(id:$id){
+mutation deleteBacklog($id:String!,$email:String!){
+  deleteBacklog(id:$id,email:$email){
     id
   }
 }
