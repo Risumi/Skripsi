@@ -45,8 +45,9 @@ public class ProjectHistoryAdapter extends
         ProjectHistory item = list.get(position);
         holder.message.setText(item.getMessage());
         DateTime time = item.getDateTime();
-        holder.time.setText(time.getHourOfDay()+":"+time.getMinuteOfHour());
-        DateTimeFormatter fmt = DateTimeFormat.forPattern("dd MMMM yyyy");
+        DateTimeFormatter fmt = DateTimeFormat.forPattern("HH:mm");
+        holder.time.setText(time.toString(fmt));
+        fmt = DateTimeFormat.forPattern("dd MMMM yyyy");
         holder.date.setText(time.toString(fmt));
 
     }

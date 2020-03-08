@@ -319,7 +319,7 @@ public class MainViewModel extends ViewModel {
     }
 
     public void fetchProjectHistory(String PID){
-//        listener2.startProgressDialog();
+        listener2.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         CustomTypeAdapter <DateTime> dateCustomTypeAdapter = new CustomTypeAdapter<DateTime>() {
@@ -366,13 +366,13 @@ public class MainViewModel extends ViewModel {
                 super.onStatusEvent(event);
                 Log.d("event",event.name());
                 if (event.name().equalsIgnoreCase("COMPLETED")){
-//                    listener2.endProgressDialog();
+                    listener2.endProgressDialog();
                 }
             }
 
             @Override
             public void onFailure(@NotNull ApolloException e) {
-//                listener2.endProgressDialog();
+                listener2.endProgressDialog();
                 e.printStackTrace();
                 listener2.setToast(e.getMessage());
             }

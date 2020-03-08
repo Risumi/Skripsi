@@ -3,6 +3,7 @@ package com.example.app.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,7 +14,6 @@ import com.apollographql.apollo.ApolloClient;
 import com.apollographql.apollo.api.Response;
 import com.apollographql.apollo.exception.ApolloException;
 import com.example.app.R;
-import com.example.app.model.User;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -57,6 +57,7 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
         progressDialog = new ProgressDialog(ActivityRegister.this);
         progressDialog.setMessage("Loading ...");
         progressDialog.setCancelable(false);
+        progressDialog.show();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
                 .serverUrl(BASE_URL)
@@ -72,13 +73,20 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
             @Override
             public void onResponse(@NotNull Response<UserMutation.Data> response) {
                 if (response.hasErrors()) {
+                    ActivityRegister.this.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(ActivityRegister.this,"The email has been registered by another user.\nPlease use another email address ", Toast.LENGTH_SHORT).show();
+                        }
+                    });
                     progressDialog.dismiss();
-                    Toast.makeText(ActivityRegister.this,response.errors().get(0).message(), Toast.LENGTH_SHORT).show();
                 }else {
                     ActivityRegister.this.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             Toast.makeText(ActivityRegister.this,"User created", Toast.LENGTH_LONG).show();
+                            progressDialog.dismiss();
+                            finish();
                         }
                     });
                 }
@@ -86,12 +94,6 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
             @Override
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
-                if (!event.name().equalsIgnoreCase("COMPLETED")){
-
-                }else {
-                    progressDialog.dismiss();
-                    finish();
-                }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
