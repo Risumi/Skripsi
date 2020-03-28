@@ -3,7 +3,6 @@ package com.example.app.activity;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -112,7 +111,7 @@ public class ActivityRegister extends AppCompatActivity implements View.OnClickL
 
     void initializeAlertDialog(String error){
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("Error : "+ error+"\nRetry ?");
+        builder.setMessage("An error has occurred"+"\nRetry ?");
         builder.setCancelable(false);
 
         builder.setPositiveButton(

@@ -52,7 +52,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
 
         backlogViewHolder2.backlog = backlogList.get(i);
         backlogViewHolder2.backlogAdapter = this;
-
+        backlogViewHolder2.BacklogAssignee.setText(backlogList.get(i).getAssignee());
     }
 
     @Override
@@ -85,6 +85,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
     public static class BacklogViewHolder2 extends RecyclerView.ViewHolder implements View.OnClickListener{
         TextView BacklogName;
         TextView BacklogStatus;
+        TextView BacklogAssignee;
         private ClickListener listener;
         Backlog backlog;
         BacklogAdapter backlogAdapter;
@@ -93,6 +94,7 @@ public class BacklogAdapter extends RecyclerView.Adapter<BacklogAdapter.BacklogV
             super(itemView);
             BacklogName = itemView.findViewById(R.id.txtName);
             BacklogStatus = itemView.findViewById(R.id.txtStatus);
+            BacklogAssignee = itemView.findViewById(R.id.txtAssignee);
             this.listener = listener;
             itemView.setOnClickListener(this);
         }

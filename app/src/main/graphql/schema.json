@@ -2580,6 +2580,16 @@
                   "defaultValue": null
                 },
                 {
+                  "name": "idSprint",
+                  "description": null,
+                  "type": {
+                    "kind": "SCALAR",
+                    "name": "String",
+                    "ofType": null
+                  },
+                  "defaultValue": null
+                },
+                {
                   "name": "modifiedby",
                   "description": null,
                   "type": {

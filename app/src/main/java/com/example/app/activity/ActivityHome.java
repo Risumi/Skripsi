@@ -193,12 +193,11 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void run() {
                         if (!response.hasErrors()){
-                            listProject.add(project);
                             mAdapter.notifyDataSetChanged();
 
                         }else {
                             Log.d("Error",response.errors().get(0).message());
-                            Toast.makeText(ActivityHome.this, "There is an error, please try again", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(ActivityHome.this, "An error has occured, please try again", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -209,7 +208,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
                 ActivityHome.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        Toast.makeText(ActivityHome.this, "There is an error, please try again", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(ActivityHome.this, "An error has occured, please try again", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
@@ -286,7 +285,7 @@ public class ActivityHome extends AppCompatActivity implements View.OnClickListe
 
     void initializeAlertDialog(String error){
         builder = new AlertDialog.Builder(this);
-        builder.setMessage("Error : "+ error+"\nRetry ?");
+        builder.setMessage("An error has occurred"+"\nRetry ?");
         builder.setCancelable(false);
 
         builder.setPositiveButton(

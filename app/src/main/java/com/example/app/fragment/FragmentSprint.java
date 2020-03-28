@@ -281,7 +281,9 @@ public class FragmentSprint extends Fragment {
                             Log.d("Adapter", ((Integer) i).toString());
                             if (dragItemAdapter.getItemList().size()!=0){
                                 for (int a= 0 ;a<dragItemAdapter.getItemList().size();a++){
+                                    Log.d("Tes", ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.getId()+" "+((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.getStatus());
                                     if (i!=2){
+                                        list.add(((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second);
                                         ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setIdSprint(newSprint.getId());
                                     }else {
                                         ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setStatus("Done");

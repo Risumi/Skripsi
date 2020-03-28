@@ -441,7 +441,7 @@ public class ActivityMain extends AppCompatActivity
                         }
                     });
         }else {
-            builder.setMessage("Error : "+ error+"\nRetry ?");
+            builder.setMessage("An error has occurred"+"\nRetry ?");
             builder.setCancelable(false);
 
             builder.setPositiveButton(
@@ -470,7 +470,18 @@ public class ActivityMain extends AppCompatActivity
 
     @Override
     public void addUser(String email) {
-        model.addUser(email,PID);
+        boolean same = false ;
+        for (int i=0;i<model.getListUser().getValue().size();i++){
+            if (model.getListUser().getValue().get(i).getEmail().equalsIgnoreCase(email)){
+                same = true;
+                break;
+            }
+        }
+        if (!same){
+            model.addUser(email,PID);
+        }else{
+            Toast.makeText(this, "User already exist !", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

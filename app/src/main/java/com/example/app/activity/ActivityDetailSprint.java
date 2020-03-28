@@ -96,34 +96,37 @@ public class ActivityDetailSprint extends AppCompatActivity {
 
     void initializeChart(){
         chart = findViewById(R.id.chart);
-        int daysDiff = chartData.size();
+        int largestTask = 0;
 
         DateTime dateTime = new DateTime();
-        Log.d("daysDiff", ((Integer) daysDiff).toString());
 
         LineData lineData = new LineData();
         DateTime tempDate = dateTime;
 
-        List<Entry> entries = new ArrayList<Entry>();
-        for (int i = 0 ; i<daysDiff;i++){
-            dateTime = tempDate.plusDays(i);
-            entries.add(new Entry(i,(daysDiff-1)-i));
+        for (int i = 0; i < chartData.size(); i++) {
+            if (i==0){
+                largestTask = chartData.get(i).totalBacklog();
+            }else {
+                if (chartData.get(i).totalBacklog()>largestTask){
+                    largestTask=chartData.get(i).totalBacklog();
+                }
+            }
         }
+
+        List<Entry> entries = new ArrayList<Entry>();
         LineDataSet dataSet = new LineDataSet(entries, "Ideal Effort");
         int color = ContextCompat.getColor(this, R.color.line1);
         dataSet.setColor(color);
         lineData.addDataSet(dataSet);
 
         List<Entry> entries1 = new ArrayList<Entry>();
-        List<DateTime> exTime = new ArrayList<>();
-//        for(int i = 0 ;i<daysDiff;i++) {
-//            exTime.add(tempDate.plusDays(i));
-//        }
-//        dateTime = tempDate.plusDays(i);
-
-        for (int i = 0 ;i<daysDiff;i++){
-            int unCompletedBacklog = chartData.get(i).totalBacklog()-chartData.get(i).completeBacklog();
-            entries1.add(new Entry(i,(unCompletedBacklog)));
+        for (int i = 0 ;i<chartData.size();i++){
+            int inCompletedBacklog = chartData.get(i).totalBacklog()-chartData.get(i).completeBacklog();
+            entries1.add(new Entry(i,(inCompletedBacklog)));
+            float calc1= i/ ((float) (chartData.size()-1));
+            float calc2= largestTask*calc1;
+            float idealEffort = largestTask -calc2;
+            entries.add(new Entry(i,idealEffort));
         }
 
 //        }
@@ -134,7 +137,8 @@ public class ActivityDetailSprint extends AppCompatActivity {
         ValueFormatter valueFormatter = new ValueFormatter() {
             @Override
             public String getFormattedValue(float value) {
-                return super.getFormattedValue(Math.round(value));
+                int f = Math.round(value);
+                return Integer.toString(f);
             }
         };
         lineData.setValueFormatter(valueFormatter);
@@ -143,13 +147,13 @@ public class ActivityDetailSprint extends AppCompatActivity {
         description.setText("");
         XAxis xAxis = chart.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-//        xAxis.setValueFormatter(new formatter());
-//        xAxis.setLabelCount(daysDiff/3);
         chart.setDescription(description);    // Hide the description
         chart.getAxisRight().setDrawLabels(false);
         chart.getAxisLeft().setDrawGridLines(false);
         chart.getXAxis().setDrawGridLines(false);
         chart.getLegend().setEnabled(false);
+        chart.setAutoScaleMinMaxEnabled(true);
+        chart.setDoubleTapToZoomEnabled(false);
         chart.setData(lineData);
         chart.invalidate();
 
@@ -254,6 +258,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal",e.toString());
+                Toast.makeText(ActivityDetailSprint.this, "An Error has occured", Toast.LENGTH_LONG).show();
             }
         });
     }

@@ -156,13 +156,12 @@ public class ActivityEpic extends AppCompatActivity {
                                 epicID,
                                 response.data().backlogE().get(i).name(),
                                 response.data().backlogE().get(i).status(),
-                                response.data().backlogE().get(i).id(),
+                                response.data().backlogE().get(i).assignee()==null?"Unassigned":response.data().backlogE().get(i).assignee().nama(),
                                 response.data().backlogE().get(i).description(),
                                 null,
                                 "",
                                 null,
                                 ""));
-//                        Log.d("Backlog :",response.data().backlogE().get(i).name());
                         totalTask = listBacklogEpic.size();
                     }
                 }catch (Exception e){
@@ -255,7 +254,7 @@ public class ActivityEpic extends AppCompatActivity {
     void initializeAlertDialog(String error){
         builder = new AlertDialog.Builder(this);
 
-        builder.setMessage("Error : "+ error+"\nRetry ?");
+        builder.setMessage("An error has occurred"+"\nRetry ?");
         builder.setCancelable(false);
 
         builder.setPositiveButton(

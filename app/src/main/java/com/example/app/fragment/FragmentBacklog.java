@@ -422,10 +422,16 @@ public class FragmentBacklog extends Fragment implements RecyclerViewExpandableI
 
     public void onDeleteCompleted(int groupPos,int childPos,Backlog backlog) {
         int backlogPos = (0);
+        String id = backlog.getId();
+        for (int i =0;i<model.getListBacklog().getValue().size();i++){
+            if (model.getListBacklog().getValue().get(i).getId().equalsIgnoreCase(id)){
+                model.getListBacklog().getValue().remove(i);
+                break;
+            }
+        }
         if (groupPos != backlogPos){
             getDataProvider().removeChildItem(groupPos,childPos);
             mAdapter.notifyDataSetChanged();
-
         }else {
             getDataProvider().removeChildItem(groupPos,childPos);
             mAdapter.notifyDataSetChanged();

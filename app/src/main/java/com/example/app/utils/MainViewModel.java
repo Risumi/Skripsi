@@ -566,6 +566,7 @@ public class MainViewModel extends ViewModel {
                 .sprint(sprintInput)
                 .backlog(backlogInputs)
                 .modifiedby(user.getEmail())
+                .oldSprint(sprint.getId())
                 .build();
         apolloClient.mutate(completeSprintMutation).enqueue(new ApolloCall.Callback<CompleteSprintMutation.Data>() {
             @Override
@@ -977,7 +978,7 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void removeUser(User user,String PID){
+    public void removeUser(User user,String PID,ListenerSetting listenerSetting){
         listener.startProgressDialog();
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
         ApolloClient apolloClient = ApolloClient.builder()
@@ -996,13 +997,14 @@ public class MainViewModel extends ViewModel {
                     Log.d("Response", response.errors().get(0).message());
                 }else {
                     listUser.getValue().remove(user);
-
+                    listenerSetting.setDataToRecyclerView();
                 }
             }
             @Override
             public void onFailure(@NotNull ApolloException e) {
                 Log.d("Gagal","shit");
                 listener.endProgressDialog();
+                listenerSetting.setToast("An error has occured, please try again");
                 e.printStackTrace();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {

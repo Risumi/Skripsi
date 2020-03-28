@@ -10,12 +10,13 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.AlertAddUser;
 import com.example.app.adapter.UserAdapter;
 import com.example.app.model.Project;
 import com.example.app.model.User;
+import com.example.app.utils.ListenerSetting;
+import com.example.app.utils.MainViewModel;
 
 import java.util.ArrayList;
 
@@ -33,7 +34,7 @@ import androidx.recyclerview.widget.RecyclerView;
  * Use the {@link FragmentSetting#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class FragmentSetting extends Fragment implements View.OnClickListener, UserAdapter.UserViewHolder.ClickListener {
+public class FragmentSetting extends Fragment implements View.OnClickListener, UserAdapter.UserViewHolder.ClickListener , ListenerSetting {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -150,7 +151,7 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        model.removeUser(user,PID);
+                        model.removeUser(user,PID,FragmentSetting.this);
                     }
                 });
 
@@ -161,5 +162,21 @@ public class FragmentSetting extends Fragment implements View.OnClickListener, U
                         dialog.cancel();
                     }
                 });
+    }
+
+    @Override
+    public void setDataToRecyclerView() {
+        getActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                mAdapter.notifyDataSetChanged();
+            }
+        });
+
+    }
+
+    @Override
+    public void setToast(String message) {
+        Toast.makeText(getContext(), message, Toast.LENGTH_SHORT).show();
     }
 }

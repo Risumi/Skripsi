@@ -1,7 +1,6 @@
 package com.example.app.activity;
 
 import android.app.ProgressDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -113,36 +112,12 @@ public class ActivityLogin extends AppCompatActivity implements View.OnClickList
                 ActivityLogin.this.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        initializeAlertDialog(e.getMessage());
-                        AlertDialog alert11 = builder.create();
-                        alert11.show();
+                        Toast.makeText(ActivityLogin.this, "An error has occurred, Please try again !", Toast.LENGTH_SHORT).show();
                     }
                 });
             }
         });
     }
 
-    void initializeAlertDialog(String error){
-        builder = new AlertDialog.Builder(this);
-        builder.setMessage("Error : "+ error+"\nRetry ?");
-        builder.setCancelable(false);
 
-        builder.setPositiveButton(
-                "Yes",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        fetchLogin(etEmail.getText().toString(),etPassword.getText().toString());
-                    }
-                });
-
-        builder.setNegativeButton(
-                "No",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.cancel();
-                        finish();
-                    }
-                });
-    }
 }

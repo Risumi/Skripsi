@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.apollographql.apollo.ApolloCall;
 import com.apollographql.apollo.ApolloClient;
@@ -118,6 +119,7 @@ public class ActivityAddProject extends AppCompatActivity implements View.OnClic
             public void onFailure(@NotNull ApolloException e) {
                 progressDialog.dismiss();
                 e.printStackTrace();
+                Toast.makeText(ActivityAddProject.this, "An error has occurred, Please try again !", Toast.LENGTH_SHORT).show();
             }
             public void onStatusEvent(@NotNull ApolloCall.StatusEvent event) {
                 super.onStatusEvent(event);
