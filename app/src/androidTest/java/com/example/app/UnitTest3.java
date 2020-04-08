@@ -14,7 +14,7 @@ import androidx.test.annotation.UiThreadTest;
 import androidx.test.rule.ActivityTestRule;
 
 
-public class addEpicTest {
+public class UnitTest3 {
     @Rule
     public ActivityTestRule<ActivityAddEpic> rule = new ActivityTestRule<>(ActivityAddEpic.class);
 
@@ -27,7 +27,7 @@ public class addEpicTest {
 
     @Test
     @UiThreadTest
-    public void Jalur1(){
+    public void addEpic1(){
         EditText view = mActivity.findViewById(R.id.etEpicName);
         String test  = "";
         view.setText(test);
@@ -37,7 +37,7 @@ public class addEpicTest {
 
     @Test
     @UiThreadTest
-    public void Jalur2(){
+    public void addEpic2(){
         EditText view = mActivity.findViewById(R.id.etEpicName);
         String test  = "Mo";
         view.setText(test);
@@ -48,7 +48,7 @@ public class addEpicTest {
 
     @Test
     @UiThreadTest
-    public void Jalur3(){
+    public void addEpic3(){
         EditText view = mActivity.findViewById(R.id.etEpicName);
         String test  = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua";
         view.setText(test);
@@ -60,7 +60,7 @@ public class addEpicTest {
 
     @Test
     @UiThreadTest
-    public void Jalur4(){
+    public void addEpic4(){
         EditText view = mActivity.findViewById(R.id.etEpicName);
         String test  = "Front End";
         view.setText(test);

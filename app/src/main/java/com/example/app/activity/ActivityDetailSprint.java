@@ -45,7 +45,7 @@ import graphql.BacklogSQuery;
 import okhttp3.OkHttpClient;
 import type.CustomType;
 
-public class ActivityDetailSprint extends AppCompatActivity {
+public class ActivityDetailSprint extends AppCompatActivity implements SprintDetailAdapter.onClickListener {
 
     LineChart chart ;
     private static final String BASE_URL = "http://jectman.risumi.online/api/graphql";
@@ -83,12 +83,14 @@ public class ActivityDetailSprint extends AppCompatActivity {
         rvCompleted.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         completedList = new ArrayList<>();
         AdapterCompleted = new SprintDetailAdapter(completedList);
+        AdapterCompleted.setListener(this);
         rvCompleted.setAdapter(AdapterCompleted);
 
         rvNotCompleted= findViewById(R.id.rvBottom);
         rvNotCompleted.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         notCompletedList = new ArrayList<>();
         AdapterNotCompleted= new SprintDetailAdapter(notCompletedList);
+        AdapterNotCompleted.setListener(this);
         rvNotCompleted.setAdapter(AdapterNotCompleted);
 
         chartData = new ArrayList<>();
@@ -199,6 +201,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
                     finish();
                 }
                 else{
+                    Log.d("Size", ((Integer) response.data().backlogS().size()).toString());
                     for (int i = 0 ;i<response.data().backlogS().size();i++){
                         if (response.data().backlogS().get(i).status().equalsIgnoreCase("Done")){
                             completedList.add(new Backlog(
@@ -250,6 +253,7 @@ public class ActivityDetailSprint extends AppCompatActivity {
                             hideRV();
                             AdapterCompleted.notifyDataSetChanged();
                             AdapterNotCompleted.notifyDataSetChanged();
+
                             initializeChart();
                         }
                     });
@@ -290,5 +294,12 @@ public class ActivityDetailSprint extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    @Override
+    public void onClick(String id) {
+        Intent intent = new Intent(this,ActivityBacklog.class);
+        intent.putExtra("ID Backlog",id);
+        startActivity(intent);
     }
 }

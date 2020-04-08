@@ -27,4 +27,5 @@
         <item>3 week</item>
     </string-array>
     <string name="error_msg">"An error has occurred,\nPlease try again"</string>
+    <string name="title_activity_backlog">ActivityBacklog</string>
 </resources>

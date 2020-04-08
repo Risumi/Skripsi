@@ -1,0 +1,14 @@
+query backlogD($id:String!){
+	backlogD(id:$id){
+    id
+    name
+    status
+    description
+    idEpic{
+      name
+    }
+    assignee{
+      nama
+    }    
+  }
+}

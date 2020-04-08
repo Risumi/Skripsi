@@ -19,7 +19,7 @@ import androidx.test.rule.ActivityTestRule;
 
 
 
-public class changeStatusBacklogTest {
+public class UnitTest2 {
     @Rule
     public ActivityTestRule<ActivityMain> rule = new ActivityTestRule<>(ActivityMain.class,false,false);
 
@@ -32,12 +32,12 @@ public class changeStatusBacklogTest {
         task= new Backlog("JECT-1","JECT",null,null,"Backlog","To Do",null,null,null,null,null,null);
         Intent intent = new Intent();
         intent.putExtra("PID","JECT");
-        intent.putExtra("User",new User("rizky@gmail.com","Rizky Suhaimi"));
+        intent.putExtra("User",new User("rizky@gmail.com","Suhaimi Rizky "));
         intent.putExtra("project",new Project("Project Management","JECT","",null));
         rule.launchActivity(intent);
         mActivity = rule.getActivity();
 //        new Thread().wait(10000);
-        Thread.sleep(5000);
+        Thread.sleep(10000);
         fragment= FragmentSprint.newInstance("","");
         mActivity.loadFragment(fragment);
 //        new Handler().postDelayed(new Runnable() {
@@ -51,28 +51,28 @@ public class changeStatusBacklogTest {
 
     @Test
     @UiThreadTest
-    public void Jalur1(){
+    public void changeStatus1(){
         task = fragment.setStatusBacklog(0,0,task);
         Assert.assertEquals("To Do",task.getStatus());
     }
 
     @Test
     @UiThreadTest
-    public void Jalur2(){
+    public void changeStatus2(){
         task = fragment.setStatusBacklog(1,0,task);
         Assert.assertEquals("To Do",task.getStatus());
     }
 
     @Test
     @UiThreadTest
-    public void Jalur3(){
+    public void changeStatus3(){
         task = fragment.setStatusBacklog(0,1,task);
         Assert.assertEquals("On Progress",task.getStatus());
     }
 
     @Test
     @UiThreadTest
-    public void Jalur4(){
+    public void changeStatus4(){
         task = fragment.setStatusBacklog(0,2,task);
         Assert.assertEquals("Completed",task.getStatus());
     }

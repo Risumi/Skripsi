@@ -13,11 +13,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.app.utils.MainViewModel;
 import com.example.app.R;
 import com.example.app.adapter.SprintAdapter;
 import com.example.app.model.Backlog;
 import com.example.app.model.Sprint;
+import com.example.app.utils.MainViewModel;
 import com.woxthebox.draglistview.BoardView;
 import com.woxthebox.draglistview.DragItemAdapter;
 
@@ -29,6 +29,7 @@ import org.joda.time.format.PeriodFormatterBuilder;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Objects;
 
 import androidx.annotation.NonNull;
@@ -36,6 +37,9 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
+import graphql.CompleteSprintMutation;
+import type.BacklogInput;
+import type.SprintInput;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -257,49 +261,7 @@ public class FragmentSprint extends Fragment {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
                         dialog.cancel();
-                        int lastID = model.getLargestSprintID()+1;
-                        model.getListSprint().getValue().remove(model.getCurrentSprint().getValue());
-                        model.getCurrentSprint().getValue().setEndda(new Date());
-                        model.getCurrentSprint().getValue().setModifieddate(new Date());
-                        model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
-                        model.getCurrentSprint().getValue().setStatus("Done");
-                        Sprint sprint =model.getCurrentSprint().getValue();
-                        Sprint newSprint = new Sprint(
-                                model.getCurrentSprint().getValue().getIdProject()+"-S "+lastID,
-                                model.getCurrentSprint().getValue().getIdProject(),
-                                "Sprint "+lastID,
-                                null,
-                                null,
-                                "",
-                                "Not Active","",new Date(),model.getUser().getEmail(),null,null);
-                        model.getListSprint().getValue().add(sprint);
-                        model.getListSprint().getValue().add(newSprint);
-                        model.getCurrentSprint().setValue(newSprint);
-                        ArrayList<Backlog> list = new ArrayList<>();
-                        for (int i = 0 ;i<mBoardView.getColumnCount();i++){
-                            DragItemAdapter dragItemAdapter =mBoardView.getAdapter(i);
-                            Log.d("Adapter", ((Integer) i).toString());
-                            if (dragItemAdapter.getItemList().size()!=0){
-                                for (int a= 0 ;a<dragItemAdapter.getItemList().size();a++){
-                                    Log.d("Tes", ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.getId()+" "+((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.getStatus());
-                                    if (i!=2){
-                                        list.add(((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second);
-                                        ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setIdSprint(newSprint.getId());
-                                    }else {
-                                        ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setStatus("Done");
-                                    }
-                                    ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setModifiedby(model.getUser().getEmail());
-                                    ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setModifieddate(new Date());
-                                    list.add(((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second);
-                                }
-                            }
-//                            list.addAll(dragItemAdapter.getItemList());
-                            dragItemAdapter.getItemList().clear();
-                            dragItemAdapter.notifyDataSetChanged();
-                        }
-                        model.completeSprint(list,sprint,newSprint);
-                        txtSprint.setText("No Active Sprint");
-                        txtRemaining.setText("");
+                        model.completeSprint(completeSprint());
                     }
                 });
 
@@ -330,4 +292,122 @@ public class FragmentSprint extends Fragment {
         return task;
     }
 
+    public CompleteSprintMutation completeSprint(){
+
+        //Set objek sprint
+        int lastID = model.getLargestSprintID()+1;
+        model.getListSprint().getValue().remove(model.getCurrentSprint().getValue());
+        model.getCurrentSprint().getValue().setEndda(new Date());
+        model.getCurrentSprint().getValue().setModifieddate(new Date());
+        model.getCurrentSprint().getValue().setModifiedby(model.getUser().getEmail());
+        model.getCurrentSprint().getValue().setStatus("Done");
+        Sprint sprint =model.getCurrentSprint().getValue();
+
+        //Set objek sprint baru
+        Sprint newSprint = new Sprint(
+                model.getCurrentSprint().getValue().getIdProject()+"-S "+lastID,
+                model.getCurrentSprint().getValue().getIdProject(),
+                "Sprint "+lastID,
+                null,
+                null,
+                "",
+                "Not Active","",new Date(),model.getUser().getEmail(),null,null);
+
+        //Set sprint
+        model.getListSprint().getValue().add(sprint);
+        model.getListSprint().getValue().add(newSprint);
+        model.getCurrentSprint().setValue(newSprint);
+
+        //Set backlog
+        ArrayList<Backlog> list = new ArrayList<>();
+        for (int i = 0 ;i<mBoardView.getColumnCount();i++){
+            DragItemAdapter dragItemAdapter =mBoardView.getAdapter(i);
+            Log.d("Adapter", ((Integer) i).toString());
+            if (dragItemAdapter.getItemList().size()!=0){
+                for (int a= 0 ;a<dragItemAdapter.getItemList().size();a++){
+                    Log.d("Tes", ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.getId()+" "+((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.getStatus());
+                    if (i!=2){
+                        list.add(((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second);
+                        ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setIdSprint(newSprint.getId());
+                    }else {
+                        ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setStatus("Done");
+                    }
+                    ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setModifiedby(model.getUser().getEmail());
+                    ((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second.setModifieddate(new Date());
+                    list.add(((Pair<Long, Backlog>) dragItemAdapter.getItemList().get(a)).second);
+                }
+            }
+            dragItemAdapter.getItemList().clear();
+            dragItemAdapter.notifyDataSetChanged();
+        }
+
+        //api call
+        CompleteSprintMutation sprintMutation = wrapCompleteSprint(list,sprint,newSprint);
+        txtSprint.setText("No Active Sprint");
+        txtRemaining.setText("");
+        return sprintMutation;
+
+    }
+
+    public void setList(ArrayList<Backlog> list, int i){
+        DragItemAdapter dragItemAdapter =mBoardView.getAdapter(i);
+        final ArrayList<Pair<Long, Backlog>> mItemArray = new ArrayList<>();
+
+        for (int j = 0; j < list.size(); j++) {
+            long id = sCreatedItems++;
+            mItemArray.add(new Pair<>(id, list.get(j)));
+        }
+
+        dragItemAdapter.setItemList(mItemArray);
+    }
+
+    public  void setmColumns(){
+
+    }
+
+    public CompleteSprintMutation wrapCompleteSprint(ArrayList<Backlog> listB, Sprint sprint, Sprint newSprint){
+
+        List<BacklogInput> backlogInputs= new ArrayList<>();
+        for (int i = 0 ; i< listB.size();i++){
+            Backlog backlog = listB.get(i);
+            backlogInputs.add(BacklogInput.builder()
+                    .idBacklog(backlog.getId())
+                    .idSprint(backlog.getIdSprint())
+                    .status(backlog.getStatus())
+                    .date(new Date())
+                    .build());
+        }
+
+        SprintInput newSprintInput  = SprintInput.builder()
+                .id(newSprint.getId())
+                .idProject(newSprint.getIdProject())
+                .name(newSprint.getName())
+                .goal(newSprint.getSprintGoal())
+                .status(newSprint.getStatus())
+                .createddate(new Date())
+                .createdby(model.getUser().getEmail())
+                .build();
+
+        SprintInput sprintInput  = SprintInput.builder()
+                .id(sprint.getId())
+                .name(sprint.getName())
+                .begindate(sprint.getBegda())
+                .enddate(sprint.getEndda())
+                .goal(sprint.getSprintGoal())
+                .status(sprint.getStatus())
+                .retrospective(" ")
+                .modifieddate(new Date())
+                .modifiedby(model.getUser().getEmail())
+                .build();
+
+        CompleteSprintMutation completeSprintMutation= CompleteSprintMutation.builder()
+                .newSprint(newSprintInput)
+                .sprint(sprintInput)
+                .backlog(backlogInputs)
+                .modifiedby(model.getUser().getEmail())
+                .oldSprint(sprint.getId())
+                .build();
+
+        return  completeSprintMutation;
+    }
 }

@@ -16,11 +16,15 @@ import androidx.recyclerview.widget.RecyclerView;
 public class SprintDetailAdapter extends RecyclerView.Adapter<SprintDetailAdapter.backlogViewHolder> {
 
     ArrayList<Backlog> backlogList;
+    onClickListener listener;
 
     public SprintDetailAdapter(ArrayList<Backlog> backlogList) {
         this.backlogList = backlogList;
     }
 
+    public void setListener(onClickListener listener) {
+        this.listener = listener;
+    }
 
     @Override
     public backlogViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -36,6 +40,14 @@ public class SprintDetailAdapter extends RecyclerView.Adapter<SprintDetailAdapte
     public void onBindViewHolder(backlogViewHolder sprintViewHolder, int i) {
         sprintViewHolder.name.setText(backlogList.get(i).getName());
         sprintViewHolder.id.setText(backlogList.get(i).getId());
+        if (listener!=null){
+            sprintViewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    listener.onClick(backlogList.get(i).getId());
+                }
+            });
+        }
     }
 
 
@@ -59,4 +71,7 @@ public class SprintDetailAdapter extends RecyclerView.Adapter<SprintDetailAdapte
         }
     }
 
+    public interface onClickListener{
+        void onClick(String id);
+    }
 }

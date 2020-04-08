@@ -24,7 +24,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -44,9 +43,7 @@ import graphql.RemoveUserMutation;
 import graphql.SprintEditMutation;
 import graphql.SprintMutation;
 import okhttp3.OkHttpClient;
-import type.BacklogInput;
 import type.CustomType;
-import type.SprintInput;
 
 public class MainViewModel extends ViewModel {
     private MutableLiveData<ArrayList<Backlog>> listBacklog;
@@ -503,7 +500,7 @@ public class MainViewModel extends ViewModel {
         });
     }
 
-    public void completeSprint(ArrayList<Backlog> listB, Sprint sprint, Sprint newSprint){
+    public void completeSprint(CompleteSprintMutation completeSprintMutation){
         listener.startProgressDialog();
         SimpleDateFormat formatDate = new SimpleDateFormat("yyyy-MM-dd");
         OkHttpClient okHttpClient = new OkHttpClient.Builder().build();
@@ -528,46 +525,7 @@ public class MainViewModel extends ViewModel {
                 .addCustomTypeAdapter(CustomType.DATE,dateCustomTypeAdapter)
                 .build();
 
-        List<BacklogInput> backlogInputs= new ArrayList<>();
-        for (int i = 0 ; i< listB.size();i++){
-            Backlog backlog = listB.get(i);
-            backlogInputs.add(BacklogInput.builder()
-                    .idBacklog(backlog.getId())
-                    .idSprint(backlog.getIdSprint())
-                    .status(backlog.getStatus())
-                    .date(new Date())
-                    .build());
-        }
 
-        SprintInput newSprintInput  = SprintInput.builder()
-                .id(newSprint.getId())
-                .idProject(newSprint.getIdProject())
-                .name(newSprint.getName())
-                .goal(newSprint.getSprintGoal())
-                .status(newSprint.getStatus())
-                .createddate(new Date())
-                .createdby(user.getEmail())
-                .build();
-
-        SprintInput sprintInput  = SprintInput.builder()
-                .id(sprint.getId())
-                .name(sprint.getName())
-                .begindate(sprint.getBegda())
-                .enddate(sprint.getEndda())
-                .goal(sprint.getSprintGoal())
-                .status(sprint.getStatus())
-                .retrospective(" ")
-                .modifieddate(new Date())
-                .modifiedby(user.getEmail())
-                .build();
-
-        CompleteSprintMutation completeSprintMutation= CompleteSprintMutation.builder()
-                .newSprint(newSprintInput)
-                .sprint(sprintInput)
-                .backlog(backlogInputs)
-                .modifiedby(user.getEmail())
-                .oldSprint(sprint.getId())
-                .build();
         apolloClient.mutate(completeSprintMutation).enqueue(new ApolloCall.Callback<CompleteSprintMutation.Data>() {
             @Override
             public void onResponse(@NotNull Response<CompleteSprintMutation.Data> response) {
